@@ -1,0 +1,178 @@
+{% extends 'NavbarModel.html' %}
+
+{% load static %}
+
+{% block title %}
+  Our Cleaning Services
+{% endblock %}
+
+{% block body %}
+
+<style>
+  .featuresIcon, .featuresContainer{
+    transition: all 0.5s ease-in-out;
+  }
+
+  .features:hover .featuresIcon{
+    transform: scale(1.5) rotate(-48deg);
+  }
+
+  .features:hover .featuresContainer{
+    transition: all 0.5s ease-in-out;
+    transform: rotate(48deg);
+    
+  }
+</style>
+
+  <div class="h-[90vh] sm:h-[70vh] md:h-[90vh] lg:h-screen w-full bg-[url('{% static 'ServiceBackground.jpg' %}')] bg-norepeat bg-cover overflow-hidden">
+    <div class="w-full h-full backdrop-blur-[1.9px] bg-zinc-900 bg-opacity-70">
+      <div class="relative top-[60%] sm:top-[50%] translate-y-[-50%] left-[0%] sm:left-[1] space-y-6 p-6 md:p-10 w-full sm:w-[80%] md:w-[70%] xl:w-[80%]">
+        <h1 class="text-[1.6rem] sm:[2.5rem] md:text-[3rem] xl:text-[5rem] text-zinc-200 font-extrabold">Professional Cleaning Services You Can Trust</h1>
+        <p class="text-sm sm:text-md md:text-lg text-zinc-100">
+          A spotless space, made simple. <br />We provide reliable, high-quality cleaning services for homes and businesses—so you can enjoy a cleaner, healthier environment without the stress.
+        </p>
+
+        <ul>
+          <li class="text-zinc-100 text-xs sm:text-sm md:text-md mt-2">
+            <i class="fa-solid fa-broom text-green-600"></i> Residential & Commercial Cleaning
+          </li>
+          <li class="text-zinc-100 text-xs sm:text-sm md:text-md mt-2">
+            <i class="fa-solid fa-broom text-green-600"></i> Trained & Trusted Professionals
+          </li>
+          <li class="text-zinc-100 text-xs sm:text-sm md:text-md mt-2">
+            <i class="fa-solid fa-broom text-green-600"></i> Flexible Scheduling & Fair Pricing
+          </li>
+        </ul>
+
+        <div>
+          <a href="{% url "contact" %}" class=" outline-none inline-block p-3 sm:p-4 px-12 bg-green-700 text-sm md:text-md font-semibold text-white rounded-[10px] hover:bg-green-800">Get a Free Quote</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% comment %} Services Section {% endcomment %}
+  <div id="serviceBlock" class="mt-10 px-1 lg:px-8 mx-auto w-[90%] md:w-full xl:w-[90%]  2xl:w-[85%] scroll-mt-20">
+    <div class="py-2 space-y-2 md:px-6">
+      <h3 class="text-4xl font-bold text-center md:text-left">Our <span class="text-green-700">Services</span></h3>
+      <p class="text-sm text-zinc-900 text-center md:text-left">Explore our wide range of cleaning and maintenance services. Filter by category to quickly find the solution that fits your space and needs.</p>
+    </div>
+
+    <div class="py-4 text-sm flex items-center hidden">
+      <h1 class="text-green-800 font-semibold text-md pr-2">Categories:</h1>
+      <a class="text-zinc-100 underline cursor-pointer active bg-green-700 p-2 rounded-lg hover:text-zinc-600">All Services</a> <span class="px-1 text-green-800">|</span>
+      <a class="text-zinc-800 underline cursor-pointer hover:text-zinc-600">Residential</a> <span class="px-1 text-green-800">|</span>
+      <a class="text-zinc-800 underline cursor-pointer hover:text-zinc-600">Commercial</a> <span class="px-1 text-green-800">|</span>
+      <a class="text-zinc-800 underline cursor-pointer hover:text-zinc-600">Deep Cleaning</a> <span class="px-1 text-green-800">|</span>
+      <a class="text-zinc-800 underline cursor-pointer hover:text-zinc-600">Outdoor & Garden</a> <span class="px-1 text-green-800">|</span>
+      <a class="text-zinc-800 underline cursor-pointer hover:text-zinc-600">Specialized Services</a>
+    </div>
+
+    <div class="w-full flex justify-center items-center flex-wrap gap-5 mt-5 servicesSection">
+      {% for key, value in services.items %}  <!-- items() function python mein dictionary ke key aur value ko access karne mein madad karti hai-->
+      {% for service in value %}
+      <div class="rounded-xl relative overflow-hidden w-[380px] md:w-[340px] xl:w-[380px] border-[2px] border-zinc-300 p-2 cursor-pointer serviceCard">
+        <div class="rounded-lg overflow-hidden">
+          <img src={{service.imageUrl}} alt="" class="w-full h-[200px] object-cover object-top opacity-90 serviceImage" />
+        </div>
+        <div class="p-2">
+          <h1 class="text-md font-semibold text-zinc-800">{{service.title}}</h1>
+          <p class="text-sm">{{service.description}}</p>
+          <ul class="text-sm py-2">
+            {% for features in service.features %}
+            <li class="py-1"><i class="fa-solid fa-star text-xs"></i>{{features}}</li>
+            {% endfor %}
+          </ul>
+          <div class="flex justify-between items-center py-2">
+            <h3 class="text-zinc-500 text-sm sm:text-md font-semibold">Starting at {{service.startingPrice}}</h3>
+            {% if not service.id == 14 %}
+              <button class="serviceBookBtn w-[50%] p-2 py-3 sm:py-2 bg-green-700 text-xs sm:text-sm md:text-md font-semibold text-white rounded-full hover:bg-green-800" data-services={{service.id}}>Book Now</button>
+            {% else %}
+            <a href="tel:+911234567890" class=" text-center block p-2 py-3 px-8 sm:py-2 bg-green-700 text-xs sm:text-sm md:text-md font-semibold text-white rounded-full hover:bg-green-800" data-services={{service.id}}>Call Us Now</a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+      {% endfor %}
+    </div>
+  </div>
+
+
+  {% comment %} WHY CHOOSE US {% endcomment %}
+  <div class="mt-20 px-8 space-y-4">
+      <h3 class="text-black text-md  sm:text-lg md:text-xl font-semibold">Why <span class="text-green-700">Our Clients</span> Trust Us</h3>
+      <p class="text-black text-xl sm:text-2xl md:text-3xl font-bold">
+      We provide <span class="text-green-700">reliable, eco-friendly, and thorough</span> cleaning services <br class="hidden">that leave your <span class="text-green-700">home or office</span> sparkling.</p>
+
+      <div class="flex flex-col-reverse lg:flex-row items-center xl:h-[75vh] xl:overflow-hidden">
+        <div class="lg:w-[45%] grid grid-cols-2 mt-4">
+          <div>
+            <img src="{% static 'service1.jpg' %}" alt="" class="p-1">
+          <img src="{% static 'service6.jpg' %}" alt="" class="p-1">
+          </div>
+          <div>
+            <img src="{% static 'service7.jpg' %}" alt="" class="p-1">
+          <img src="{% static 'service3.jpg' %}" alt="" class="p-1">
+          </div>
+        </div>
+
+        <div class="lg:w-[55%] grid grid-cols-1 sm:grid-cols-2 lg:px-12 gap-2 sm:gap-0 md:gap-2">
+          <div class="p-2 sm:m-4 features flex justify-start lg:block gap-4">
+            <div class="w-[40px] sm:w-[50px] md:w-[60px] lg:w-[80px] h-[40px] sm:h-[50px] md:h-[60px] lg:h-[80px] lg:mb-4 p-2 flex justify-center items-center bg-emerald-800 text-white rounded-lg inline-block overflow-hidden shrink-0 featuresContainer"><i class="text-xl sm:text-2xl md:text-3xl lg:text-4xl featuresIcon fa-solid fa-shield-heart"></i></div>
+            <div>
+              <h3 class="text-md sm:text-lg md:text-xl font-semibold">Licensed & Insured</h3>
+              <p class="text-sm">Peace of mind knowing your property and belongings are fully protected at all times.</p></div>
+          </div>
+          <div class="p-2 sm:m-4 features flex justify-start lg:block gap-4">
+            <div class="w-[40px] sm:w-[50px] md:w-[60px] lg:w-[80px] h-[40px] sm:h-[50px] md:h-[60px] lg:h-[80px] lg:mb-4 p-2 flex justify-center items-center bg-emerald-800 text-white rounded-lg inline-block overflow-hidden shrink-0 featuresContainer"><i class="text-xl sm:text-2xl md:text-3xl lg:text-4xl featuresIcon fa-solid fa-user-tie"></i></div>
+            <div>
+              <h3 class="text-md sm:text-lg md:text-xl font-semibold">Experienced Staff</h3>
+              <p class="text-sm">Our trained and experienced cleaning professionals deliver consistent, high-quality results.</p></div>
+          </div>
+          <div class="p-2 sm:m-4 features flex justify-start lg:block gap-4">
+            <div class="w-[40px] sm:w-[50px] md:w-[60px] lg:w-[80px] h-[40px] sm:h-[50px] md:h-[60px] lg:h-[80px] lg:mb-4 p-2 flex justify-center items-center bg-emerald-800 text-white rounded-lg inline-block overflow-hidden shrink-0 featuresContainer"><i class="text-xl sm:text-2xl md:text-3xl lg:text-4xl featuresIcon fa-solid fa-leaf"></i></div>
+            <div>
+              <h3 class="text-md sm:text-lg md:text-xl font-semibold">Eco-friendly Products</h3>
+              <p class="text-sm">We use safe, non-toxic cleaning products that protect your family, pets, and the environment.</p></div>
+          </div>
+          <div class="p-2 sm:m-4 features flex justify-start lg:block gap-4">
+            <div class="w-[40px] sm:w-[50px] md:w-[60px] lg:w-[80px] h-[40px] sm:h-[50px] md:h-[60px] lg:h-[80px] lg:mb-4 p-2 flex justify-center items-center bg-emerald-800 text-white rounded-lg inline-block overflow-hidden shrink-0 featuresContainer"><i class="text-xl sm:text-2xl md:text-3xl lg:text-4xl featuresIcon fa-solid fa-thumbs-up"></i></div>
+            <div>
+              <h3 class="text-md sm:text-lg md:text-xl font-semibold">Satisfaction Guarantee</h3>
+              <p class="text-sm">Your satisfaction comes first—we ensure every cleaning meets your expectations.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <a href="#serviceBlock" class="outline-none text-center inline-block w-full md:w-[60%] lg:w-[45%] p-4 lg:!my-8 px-12 bg-green-700 text-xs sm:text-sm md:text-md font-semibold text-white rounded-full hover:bg-green-800">Book a Cleaning Now</a>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  let serviceCard=Array.from(document.getElementsByClassName('serviceCard'));
+  serviceCard.forEach((card)=>{
+    let image=card.querySelector('.serviceImage')
+    card.addEventListener('mouseover',()=>{
+      image.style.transform='scale(1.2)'
+      image.style.transition='transform 0.7s ease'
+    })
+
+    card.addEventListener('mouseout', ()=>{
+      image.style.transform='scale(1)'
+    })
+  })
+
+
+  let serviceBookBtn=Array.from(document.querySelectorAll('.serviceBookBtn'));
+  serviceBookBtn.forEach((btn)=>{
+    const closestBtn=btn.closest('.serviceCard')
+    const serviceId=btn.dataset.services
+
+    closestBtn.addEventListener('click', ()=>{
+      window.location.href=`bookService/${serviceId}/`
+    })
+  })
+</script>
+{% endblock %}

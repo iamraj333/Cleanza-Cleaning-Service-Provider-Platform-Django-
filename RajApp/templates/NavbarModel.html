@@ -1,0 +1,460 @@
+{% comment %} 
+    {% ... %} is used for template tags — special Django commands for logic or actions in your HTML templates.
+ {% endcomment %}
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        {% block title %}
+        Django Web
+        {% endblock title %}
+    </title>
+    <!-- in your base.html -->
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/js/all.min.js" integrity="sha512-6BTOlkauINO65nLhXhthZMtepgJSghyimIalb+crKRPhvhmsCdnIuGcVbR5/aQY2A+260iC1OPy1oCdB6pSSwQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!--JQuery Scripts-->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+    {% comment %} Swiper CDN {% endcomment %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css" />
+
+    {% comment %} SweetAlert2 Popup Message box {% endcomment %}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    {% comment %} Animate.css {% endcomment %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+    <!-- Quill CSS -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <!-- Quill JS -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
+    {% comment %} Google Fonts {% endcomment %}
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Open+Sans&family=Lato&family=Merriweather&family=Poppins&family=Inter&family=Montserrat&family=Nunito&family=Playfair+Display&display=swap" rel="stylesheet">
+
+<style>
+  body{
+    font-family: Poppins;
+    height: 100%;
+  }
+</style>
+
+</head>
+<body id="body" class="font-Poppins relative bg-[#edf0ed] scroll-smooth p-0 m-0 box-border">
+  <div id="freezeBackground" class="absolute top-0 left-0 w-full h-[100%] backdrop-blur-md bg-black bg-opacity-40 z-20 overflow-hidden hidden"></div>
+    <nav class="hidden lg:block fixed top-0 items-center p-4 px-6 pl-8 w-full z-30  duration-200 ease mainNavbar">
+      <div class="flex">
+      <div class="lg:w-[20%] xl:w-[15%]">
+        <a href="{% url "home" %}" class="text-4xl font-bold text-white outline-none"><span class="text-green-700">C</span>lean<span class="text-green-700">Z</span>a</a>
+      </div>
+      <ul class="lg:w-[55%] xl:w-[55%] flex items-center gap-10 font-semibold">
+        <li class="relative group"><a href="/" class=" relative bg-transparent text-zinc-100 text-sm">
+          <span class="relative">Home
+            <span class="absolute left-0 -bottom-[0.5px] h-[2px] w-0 bg-emerald-500 transition-all duration-300 group-hover:w-[110%]"></span>
+          </span>
+        </a></li>
+        <li class="relative group"><a href="/services" class="bg-transparent text-zinc-100 text-sm">
+           <span class="relative">Services
+            <span class="absolute left-0 -bottom-[0.5px] h-[2px] w-0 bg-emerald-500 transition-all duration-300 group-hover:w-[110%]"></span>
+          </span>
+        </a></li>
+        <li class="relative group"><a href="/pricing" class="bg-transparent text-zinc-100 text-sm">
+           <span class="relative">Pricing
+            <span class="absolute left-0 -bottom-[0.5px] h-[2px] w-0 bg-emerald-500 transition-all duration-300 group-hover:w-[110%]"></span>
+          </span>
+        </a></li>
+        <li class="relative group"><a href="/blog" class="bg-transparent text-zinc-100 text-sm">
+           <span class="relative">Blogs
+            <span class="absolute left-0 -bottom-[0.5px] h-[2px] w-0 bg-emerald-500 transition-all duration-300 group-hover:w-[110%]"></span>
+          </span>
+        </a></li>
+        <li class="relative group"><a href="/project" class="bg-transparent text-zinc-100 text-sm">
+           <span class="relative">Projects
+            <span class="absolute left-0 -bottom-[0.5px] h-[2px] w-0 bg-emerald-500 transition-all duration-300 group-hover:w-[110%]"></span>
+          </span>
+        </a></li>
+        <li class="relative group"><a href="/contact" class="bg-transparent text-zinc-100 text-sm">
+           <span class="relative">Contact Us
+            <span class="absolute left-0 -bottom-[0.5px] h-[2px] w-0 bg-emerald-500 transition-all duration-300 group-hover:w-[110%]"></span>
+          </span>
+        </a></li>
+      </ul>
+      <div class=" relative lg:w-[25%] xl:w-[30%] flex justify-end gap-3">
+        <a href='{% url "search" %}' class="w-[40px] h-[40px] bg-green-700 p-2 px-3 flex justify-center items-center text-white rounded-full border-none outline-none hover:bg-green-800"><i class="fa-solid fa-magnifying-glass"></i></a>
+        <button class="w-50 rounded font-semibold text-white items-center text-sm 2xl:text-md hidden xl:flex "><a href="tel:+1234567890" class="px-2 hover:text-gray-200" ><i class="fa-solid fa-phone text-xl xl:text-2xl text-emerald-700"></i>+91-95xxxxxxx5</a></button>
+        {% if currentUser %}
+        <button class="CurrentCustomer flex items-center gap-2 h-full px-2 bg-zinc-100 outline-none border border-zinc-400/40 hover:border-zinc-200/60 text-zinc-900 rounded-full transition-colors">
+          <i class="fa-solid fa-user text-zinc-900 text-md"></i>
+          <span class="font-medium text-sm">{{currentUser}}</span>
+          <i class="fa-solid fa-caret-down text-zinc-700 text-lg"></i>
+
+          <div class="bg-zinc-600 bg-opacity-90 rounded p-2 absolute w-[150px] z-20 right-0 top-[2.8rem] hidden userMenu">
+            <ul class="list-none text-left text-sm flex flex-col">
+              <li class="w-full"><a class="w-full block text-zinc-100 hover:bg-zinc-800 p-2" href="{% url "myAccount" %}">My Account</a></li>
+              <li class="w-full"><a class="w-full block text-zinc-100 hover:bg-zinc-800 p-2" href="{% url 'dashboard' %}">My Dashboard</a></li>
+              <li class="w-full"><a class="w-full block text-zinc-100 hover:bg-zinc-800 p-2" href="{% url 'mySetting' %}">Setting</a></li>
+              <li class="w-full"><a class="w-full block text-zinc-100 hover:bg-zinc-800 p-2" onclick="ShowHelpSection(event)">Help</a></li>
+              {% comment %} <li class="w-full"><a class="w-full block text-zinc-100 hover:bg-zinc-800 p-2" href="">Switch Account</a></li> {% endcomment %}
+              <li class="w-full"><a class="w-full block text-zinc-100 hover:bg-zinc-800 p-2" href="{% url "logout" %}">Log Out</a></li>
+            </ul>
+          </div>
+        </button>
+        {% else %}
+        <button class=" w-50 bg-green-700 p-2 px-3 rounded-full font-semibold text-white outline-none border-none hover:bg-green-800 loginBtn">Login</button>
+        {% endif %}
+
+      </div>
+      </div>
+    </nav>
+
+    <!--FOR SMALL SCREEN-->
+   <nav class="block lg:hidden fixed top-0 flex items-center justify-between p-4 px-6 w-full z-30 mainNavbar">
+    <div class="w-full md:w-1/2">
+      <h1 class="text-2xl md:text-3xl font-bold text-white"><span class="text-green-700">C</span>lean<span class="text-green-700">Z</span>a
+      </h1>
+    </div>
+
+    <div class=" relative w-full md:w-1/2 flex justify-end items-center gap-3">
+        <a href='{% url "search" %}' class="bg-green-700 p-1 w-[40px] h-[40px] flex justify-center items-center text-sm text-white rounded-full border-none outline-none hover:bg-green-800"><i class="fa-solid fa-magnifying-glass"></i></a>
+        {% if currentUser %}
+        <button class="CurrentCustomer flex items-center gap-2 h-full px-2 p-1 bg-zinc-100 outline-none border border-zinc-400/40 hover:border-zinc-200/60 text-zinc-100 rounded-full transition-colors hidden">
+          <i class="fa-solid fa-user text-zinc-900 text-sm"></i>
+          <span class="font-medium text-xs text-black hidden min-[435px]:inline-block">{{currentUser}}</span>
+          <i class="fa-solid fa-caret-down text-zinc-900 text-lg"></i>
+
+          <div class="bg-zinc-600 bg-opacity-90 rounded p-2 absolute w-[150px] z-20 right-0 top-[2.8rem] hidden userMenu">
+            <ul class="list-none text-left text-sm flex flex-col gap-1">
+              <li class="text-zinc-100 p-2 hover:bg-zinc-800"><a href="{% url "myAccount" %}">My Account</a></li>
+              <li class="text-zinc-100 p-2 hover:bg-zinc-800"><a href="{% url 'dashboard' %}">My Dashboard</a></li>
+              <li class="text-zinc-100 p-2 hover:bg-zinc-800"><a href="{% url 'mySetting' %}">Setting</a></li>
+              <li class="text-zinc-100 p-2 hover:bg-zinc-800"><a onclick="ShowHelpSection(event)">Help</a></li>
+              {% comment %} <li class="text-zinc-100 p-2 hover:bg-zinc-800"><a href="">Switch Account</a></li> {% endcomment %}
+              <li class="text-zinc-100 p-2 hover:bg-zinc-800"><a href="{% url "logout" %}">Log Out</a></li>
+            </ul>
+          </div>
+        </button>
+        {% else %}
+        <button class=" w-50 bg-green-700 p-2 px-3 text-sm font-semibold rounded-full text-white outline-none border-none  hover:bg-green-800 loginBtn">Login</button>
+        {% endif %}
+        <i class="fa-solid fa-bars text-zinc-100 text-xl md:text-3xl cursor-pointer hover:text-zinc-400" onclick="showSideNavbar(event)"></i>
+      </div>
+
+      {% comment %} SIDE NAVBAR {% endcomment %}
+      <div class="bg-zinc-300 absolute top-0 z-[100%] w-full sm:w-[50%] p-4 right-[-100%] transition-right duration-200" id="sideNavbar">
+        <div class="flex justify-between items-center">
+          <h3 class="text-xl font-normal uppercase">Main Menu</h3>
+          <div><i class="fa-solid fa-xmark font-semibold text-lg cursor-pointer" onclick="hideSideNavbar()"></i></div>
+        </div>
+        <ul class="flex-col items-center gap-10 font-semibold mt-3">
+          <li class="flex flex-col gap-2 p-2"><a href="/" class="bg-transparent text-zinc-800 font-normal text-md uppercase hover:text-zinc-600">Home</a> <hr class="border-zinc-400"></li>
+          <li class="flex flex-col gap-2 p-2"><a href="/services" class="bg-transparent text-zinc-800 font-normal text-md uppercase hover:text-zinc-600">Services</a> <hr class="border-zinc-400"></li>
+          <li class="flex flex-col gap-2 p-2"><a href="/pricing" class="bg-transparent text-zinc-800 font-normal text-md uppercase hover:text-zinc-600">Pricing</a> <hr class="border-zinc-400"></li>
+          <li class="flex flex-col gap-2 p-2"><a href="/blog" class="bg-transparent text-zinc-800 font-normal text-md uppercase hover:text-zinc-600">Blogs</a> <hr class="border-zinc-400"></li>
+          <li class="flex flex-col gap-2 p-2"><a href="/project" class="bg-transparent text-zinc-800 font-normal text-md uppercase hover:text-zinc-600">Projects</a> <hr class="border-zinc-400"></li>
+          <li class="flex flex-col gap-2 p-2"><a href="/contact" class="bg-transparent text-zinc-800 font-normal text-md uppercase hover:text-zinc-600">Contact Us</a> <hr class="border-zinc-400"></li>
+        </ul>
+      </div>
+  </nav>
+
+
+
+  <div id="loginForm" class="fixed top-[50%] left-[50%] translate-x-[-50%] hidden z-30">{% include "login.html" %}</div>
+    <div class="w-full h-auto">
+      {% block body %}
+      
+      {% endblock body %}
+    </div>
+  {% comment %}Footer{% endcomment %}
+  <div class="relative bg-[url('{% static 'footerBodyImage.jpg' %}')] w-full mt-10 bg-no-repeat bg-cover">
+    <div class="h-full w-full top-0 bg-black bg-opacity-20 backdrop-blur-[3px]">
+      <div class="flex flex-col justify-center py-10">
+        <h3 class="text-xl sm:text-3xl md:text-4xl text-white font-bold text-center">Join <span class="text-green-600">Our Clean</span> Community</h3>
+        <p class="text-sm sm:text-md text-white text-center">Subscribe for cleaning tips, offers, and updates on email.</p>
+        <form action="" class="flex flex-col justify-center items-center sm:flex-row justify-center py-5 gap-3">
+          <input id="CommunityEmail" name="CommunityEmail" type="email" placeholder="enter email.." class="text-sm md:text-md rounded-full p-3 w-[90%] sm:w-[50%] md:w-[40%] lg:w-[30%] outline-none border-none" />
+          <button type="button" id="joinCommunityBtn" class="p-4 outline-none bg-green-700 text-xs sm:text-sm font-semibold text-white rounded-full hover:bg-green-600">Join Community</button>
+        </form>
+      </div>
+      <hr class="border-gray-500" />
+
+      <div class="flex flex-col md:flex-row p-4 gap-4 justify-center">
+        <div class="xl:w-[25%] px-5 flex flex-col gap-1">
+          <h3 class="text-2xl md:text-3xl font-bold text-white"><span class="text-green-600">C</span>lean<span class="text-green-600">Z</span>a</h3>
+          <p class="text-sm text-white py-2">Making spaces sparkle — one clean at a time. Professional, reliable, and eco-friendly cleaning solutions for homes and businesses.</p>
+        </div>
+        <div class="xl:w-[15%] px-5 flex flex-col gap-1">
+          <h3 class="text-lg md:text-xl font-semibold text-green-600">Site Map</h3>
+          <ul class="list-none text-sm sm:text-md flex flex-col gap-1">
+            <li>
+              <a href="{% url 'home' %}" class="text-white hover:text-zinc-300">Home</a>
+            </li>
+            <li>
+              <a href="{% url 'home' %}#aboutSection" class="text-white hover:text-zinc-300"><button>About</button></a>
+            </li>
+            <li>
+              <a href="{% url 'services' %}" class="text-white hover:text-zinc-300">Services</a>
+            </li>
+            <li>
+              <a href="{% url 'pricing' %}" class="text-white hover:text-zinc-300">Pricing</a>
+            </li>
+            <li>
+              <a href="{% url 'blog' %}" class="text-white hover:text-zinc-300">Blogs</a>
+            </li>
+            <li>
+              <a href="{% url "project" %}" class="text-white hover:text-zinc-300">Projects</a>
+            </li>
+            <li>
+              <a href="{% url "contact" %}" class="text-white hover:text-zinc-300">Contact Us</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="xl:w-[25%] px-5 flex flex-col gap-1">
+          <h3 class="text-lg sm:text-xl font-semibold text-green-600">Our Working Time</h3>
+          <p class="text-white text-sm sm:text-md">Mon-Fri: 7:00 am to 10:00 pm</p>
+          <p class="text-white text-sm sm:text-md">Saturday: 10:00 am to 5:00 pm</p>
+          <p class="text-white text-sm sm:text-md">Sunday Opened (only for premium partner)</p>
+        </div>
+
+        <div class="xl:w-[35%] px-5 flex flex-col gap-1">
+          <h3 class="text-lg md:text-xl font-semibold text-green-600">Connect With Us</h3>
+          <div>
+            <button class="rounded text-white text-sm sm:text-md"><a href="tel:+91123456789" class="hover:text-gray-200"><i class="fa-solid fa-phone"></i> +91123456789</a></button>
+          </div>
+          <div>
+            <button class="rounded text-white flex flex-nowrap text-sm sm:text-md"><a href="mailto:example@gmail.com" class="hover:text-gray-200"><i class="fa-solid fa-envelope"></i> cleanza@gmail.com</a></button>
+          </div>
+          <div>
+            <button class="rounded text-left text-white text-sm sm:text-md hover:text-gray-200"><i class="fa-solid fa-location-dot"></i>Borivali 741852, Mumbai, Maharashtra, India</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="bg-zinc-100 w-full p-3 text-center text-xs md:text-sm">
+    <i class="fa-regular fa-copyright"></i> Copyright 2025 Cleanza, All Right Reserved
+  </footer>
+
+  {% comment %} Message box {% endcomment %}
+    <div id="ConfirmationDeletionMessage" class="w-[50%] fixed text-white shadow-xl inset-x-0 -top-20  left-1/2 -translate-x-1/2 rounded bg-green-500 z-30 flex justify-between items-center transition-all duration-500 p-5">
+      
+      <div class="flex gap-2 items-center"><i class="fa-solid fa-circle-check scale-[1.5]"></i> <span id="mymessage"></span></div>
+      <button id="MessageDeleteBtn" class="transition-all duration-400 hover:text-zinc-800"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
+<script>
+
+  //Handling form 
+  const loginBtn=Array.from(document.getElementsByClassName('loginBtn'))
+  const CurrentCustomer=Array.from(document.getElementsByClassName('CurrentCustomer'))
+  const freezeBackground=document.getElementById('freezeBackground')
+  const loginForm=document.getElementById('loginForm')
+  const userMenu=Array.from(document.getElementsByClassName('userMenu'))
+  {% comment %} let currentUser="{{currentUser}}"
+  
+
+  if(!currentUser){ //if current not exists
+    loginBtn.forEach(item=>item.style.display="block")
+    CurrentCustomer.forEach(customer=>customer.style.display="none")
+  }
+  else{ // if current use exists
+    console.log("Current user: ",currentUser)
+    loginBtn.forEach(item=>item.style.display="none")
+    CurrentCustomer.forEach(customer=>customer.style.display="block")
+  } {% endcomment %}
+
+  CurrentCustomer.forEach((customer)=>{
+    customer.addEventListener('click',(e)=>{
+    e.stopPropagation();
+    userMenu.forEach(item=>item.classList.toggle("hidden"))
+  })
+
+  document.getElementById('body').addEventListener('click',()=>{
+      userMenu.forEach(item=>item.classList.add("hidden"))
+  })
+  })
+
+
+//loginBtn button when user click on it
+  loginBtn.forEach((item)=>{
+    item.addEventListener('click', ()=>{
+    console.log("Button clicked")
+    freezeBackground.classList.toggle('hidden')
+    loginForm.classList.toggle('hidden')
+  })
+  })
+
+  freezeBackground.addEventListener('click', ()=>{
+    freezeBackground.classList.add('hidden')
+    loginForm.classList.add('hidden')
+  })
+
+  {% if open_login %}
+    loginForm.classList.remove('hidden')
+    freezeBackground.classList.remove('hidden')
+  {% endif %}
+
+
+  //NAVBAR BACKGROUND SHOWING
+  let mainNavbar=Array.from(document.getElementsByClassName('mainNavbar'))
+  window.addEventListener('scroll',()=>{
+    if(window.scrollY>0){
+      mainNavbar.forEach((item)=>{
+        item.style.backgroundColor='rgba(0, 0, 0, 0.4)'
+      item.classList.add('backdrop-blur-md')
+      })
+    }
+    else{
+      mainNavbar.forEach((item)=>{
+        item.style.backgroundColor='rgba(0, 0, 0, 0.0)'
+      item.classList.remove('backdrop-blur-md')
+      })
+    }
+  })
+
+  //SIDE mainNavbar
+  const showSideNavbar=(e)=>{
+    e.stopPropagation()
+    console.log("Side bar is showed")
+    document.getElementById('sideNavbar').style.right='0'
+    if(loginForm.classList.add('hidden') || freezeBackground.classList.add('hidden')){
+      loginForm.classList.remove('hidden')
+      freezeBackground.classList.remove('hidden')
+    }
+
+    if(userMenu.forEach(item=>item.classList.add("hidden"))){
+      userMenu.forEach(item=>item.classList.add("hidden"))
+    }
+  }
+  
+  const hideSideNavbar=()=>{
+    document.getElementById('sideNavbar').style.right='-100%'
+  }
+
+  document.body.addEventListener('click',(e)=>{
+    document.getElementById('sideNavbar').style.right='-100%'
+  })
+
+
+  
+
+
+  //Message Box 
+    const ConfirmationDeletionMessage=document.getElementById('ConfirmationDeletionMessage')
+    const MessageDeleteBtn=document.getElementById('MessageDeleteBtn')
+
+    /*ConfirmationDeletionMessage.classList.remove('-top-20')
+    ConfirmationDeletionMessage.classList.add('top-0', 'bg-red-500')
+    ConfirmationDeletionMessage.querySelector('#mymessage').textContent="Please Enter Valid Date"
+    MessageDeleteBtn.addEventListener('click', ()=>{
+      ConfirmationDeletionMessage.classList.add('-top-20')
+    })
+
+    setTimeout(()=>{
+      ConfirmationDeletionMessage.classList.add('-top-20')
+    },2000)*/
+
+    //Community support
+  const CommunityEmail=document.getElementById('CommunityEmail')
+  const joinCommunityBtn=document.getElementById('joinCommunityBtn')
+
+  joinCommunityBtn.addEventListener('click', ()=>{
+
+    //email validation using regex
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    let isEmailValid=regex.test(CommunityEmail.value)
+    if(!isEmailValid){
+      ConfirmationDeletionMessage.classList.remove('-top-20')
+      ConfirmationDeletionMessage.classList.add('top-0', 'bg-red-500')
+      ConfirmationDeletionMessage.querySelector('#mymessage').textContent="Please enter valid email"
+      MessageDeleteBtn.addEventListener('click', ()=>{
+        ConfirmationDeletionMessage.classList.add('-top-30')
+        ConfirmationDeletionMessage.classList.remove('top-0')
+
+      })
+
+      setTimeout(()=>{
+        ConfirmationDeletionMessage.classList.add('-top-30')
+        ConfirmationDeletionMessage.classList.remove('top-0')
+      },2000)
+    }
+    else{
+      let communityConnectData={
+        CommunityEmail:CommunityEmail.value
+      }
+      
+      //sending data to the views using ajax 
+      $.ajax({
+        url:'{% url "community_support" %}',
+        type:"POST",
+        contentType:'application/json',
+        data:JSON.stringify(communityConnectData),
+        headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+        success:()=>{
+          ConfirmationDeletionMessage.classList.remove('-top-20')
+          ConfirmationDeletionMessage.classList.add('top-0', 'bg-white', 'text-zinc-800', 'font-semibold', 'py-8')
+          ConfirmationDeletionMessage.querySelector('#mymessage').textContent="Welcome to Our Cleaning Community. Check Email for Daily Updates"
+          MessageDeleteBtn.addEventListener('click', ()=>{
+            ConfirmationDeletionMessage.classList.add('-top-20')
+          })
+      
+          setTimeout(()=>{
+            ConfirmationDeletionMessage.classList.add('-top-20')
+          },10000)
+        },
+        error:(error)=>{
+          ConfirmationDeletionMessage.classList.remove('-top-20')
+          ConfirmationDeletionMessage.classList.add('top-0', 'bg-red-500')
+          ConfirmationDeletionMessage.querySelector('#mymessage').textContent="Please enter another email"
+          MessageDeleteBtn.addEventListener('click', ()=>{
+            ConfirmationDeletionMessage.classList.add('-top-20')
+          })
+      
+          setTimeout(()=>{
+            ConfirmationDeletionMessage.classList.add('-top-20')
+          },2000)
+
+          console.log(error)
+        }
+      })
+    }
+  })
+
+
+  //HELP SECTION
+  function ShowHelpSection(e){
+    e.preventDefault()
+
+    Swal.fire({
+      title:'Help & Support',
+      html: `
+      <p class="mb-3 text-gray-700">Need assistance? Check these resources:</p>
+      <ul class="space-y-2 text-left">
+        <li><a href="{% url 'faqSupport' %}" class="text-blue-600 hover:underline" target="_blank">FAQ</a></li>
+        <li><a href="{% url 'contact' %}" class="text-blue-600 hover:underline" target="_blank">Contact Support</a></li>
+        <li><a href="{% url 'myAccount' %}" class="text-blue-600 hover:underline" target="_blank">My Account</a></li>
+        <li><a href="mailto:example@gmail.com" class="text-blue-600 hover:underline" target="_blank">Email Cleanza</a></li>
+      </ul>
+    `,
+    showCloseButton:true,
+    focusConfirm:true,
+    confirmButtonText:'Close',
+    confirmButtonColor:'#007313'
+    })
+  }
+</script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

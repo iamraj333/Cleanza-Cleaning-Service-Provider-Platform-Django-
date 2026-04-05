@@ -1,0 +1,541 @@
+{% extends "NavbarModel.html" %}
+
+{% load static %}
+
+{% block title %}My Account - Access your account | CleanZa{% endblock  %}
+
+{% block body %}
+<div class="w-full h-20 bg-zinc-900/100 flex items-center justify-center"></div>
+
+{% comment %} Showing message box for email verifiecation {% endcomment %}
+{% if currentCustomer.isEmailVerified == 'Pending' %}
+    <div class="max-w-[95%] sm:max-w-[80%] m-4 mx-auto flex flex-col sm:flex-row items-center justify-between bg-red-50 border border-red-900/50 rounded-lg p-4 mt-2">
+        <div class="flex items-center gap-3">
+        <span id="verifyIcon" class="text-red-500 text-lg">❌</span>
+        <div>
+            <p class="font-medium">Email Verification</p>
+            <p id="verifyStatus" class="text-sm text-gray-500">Your email is not verified</p>
+        </div>
+        </div>
+        <a href="{% url "email_verification" %}" id="verifyBtn" class=" w-full sm:w-auto mt-3 sm:mt-0 text-center bg-indigo-600 text-white block px-4 py-2 rounded-lg hover:bg-indigo-700 text-sm">Verify Email</a>
+      </div>
+{% endif %}
+
+{% comment %} Main section {% endcomment %}
+<div class="max-w-[95%] md:max-w-[80%] min-h-90 mx-auto mt-6 grid grid-cols-[0.5fr_1.5fr] gap-2">
+    {% comment %} User Menu Section {% endcomment %}
+    <div class=" p-2 border outline-none bg-green-700/60 flex flex-col items-center rounded-lg p-4 shadow">
+        <div class=" flex flex-col justify-center items-center overflow-hidden">
+            <img src="{% static 'userImage.JPG' %}" alt="userIcon" class="w-[60px] md:w-[100px] h-[60px] md:h-[100px] rounded-full border">
+            <h2 class="text-zinc-900 text-lg font-semibold pt-2">{{currentCustomer.name}}</h2>
+            <h3 class="text-zinc-100/70 text-sm">{{currentCustomer.email}}</h3>
+        </div>
+        <ul class="list-none mt-6 flex flex-col justify-start gap-2 text-zinc-900/90 w-full">
+            <li class="w-full transition-all duration-[0.4s] hover:bg-green-700/80 hover:text-zinc-100 hover:rounded"><button onclick="showBtn('UserProfileSection')" class="outline-none p-1 px-2">Profile Info</button></li>
+            <li class="w-full transition-all duration-[0.4s] hover:bg-green-700/80 hover:text-zinc-100 hover:rounded"><button onclick="showBtn('ContactDetailsSection')" class="outline-none p-1 px-2">Contact Details</button></li>
+            <li class="w-full transition-all duration-[0.4s] hover:bg-green-700/80 hover:text-zinc-100 hover:rounded"><button onclick="showBtn('AddressDetailsSection')" class="outline-none p-1 px-2">Address Details</button></li>
+            <li class="w-full transition-all duration-[0.4s] hover:bg-green-700/80 hover:text-zinc-100 hover:rounded"><button onclick="showBtn('ChangePasswordSection')" class="outline-none p-1 px-2">Change Password</button></li>
+            <li class="w-full transition-all duration-[0.4s] hover:bg-green-700/80 hover:text-zinc-100 hover:rounded"><a class="p-1 px-2 outline-none" href="{% url "logout" %}">Logout</a></li>
+        </ul>
+    </div>
+
+    {% comment %} Information & updation section {% endcomment %}
+    <div class="shadow rounded-lg bg-white overflow-hidden">
+        {% comment %} User profile info {% endcomment %}
+        <div id="UserProfileSection" class="UserAccountSection transition-opacity duration-[0.4s] p-4 ">
+            <h2 class="text-xl font-bold text-zinc-900/80">Profile Information</h2>
+            
+            <form action="" method="post" class="mt-5 px-2 sm:px-4 md:px-6 text-zinc-900/80 space-y-6">
+            {% csrf_token %}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="flex flex-col justify-start gap-1">
+                        <label for="UserId" class="font-semibold text-sm">User ID:</label>
+                        <input disabled readonly type="text" id="UserId" class="border border-zinc-900/20 bg-transparent p-2 px-4 rounded-lg outline-none overflow-x-auto" value="{{currentCustomer.id}}">
+                    </div>
+                    <div class="flex flex-col justify-start gap-1">
+                        <label for="UserName" class="font-semibold text-sm">Username:</label>
+                        <input type="text" id="UserName" class="border border-zinc-900/20 bg-transparent p-2 px-4 rounded-lg outline-none overflow-x-auto" value="{{currentCustomer.username}}">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="flex flex-col justify-start gap-1">
+                        <label for="UserFullName" class="font-semibold text-sm">Full Name:</label>
+                        <input type="text" id="UserFullName" class="border border-zinc-900/20 bg-transparent p-2 px-4 rounded-lg outline-none overflow-x-auto" value="{{currentCustomer.name}}">
+                    </div>
+                    <div class="flex flex-col justify-start gap-1">
+                        <label for="UserGender" class="font-semibold text-sm">Gender:</label>
+                        <input type="text" id="UserGender" class="border border-zinc-900/20 bg-transparent p-2 px-4 rounded-lg outline-none overflow-x-auto" value="{{currentCustomer.gender}}">
+                    </div>
+                </div>
+                <div class="grid gap-6">
+                    <div class="flex flex-col justify-start gap-1">
+                        <label for="UserBio" class="font-semibold text-sm">Bio:</label>
+                        <textarea name="" id="UserBio" rows="4" class="resize-none border border-zinc-900/20 bg-transparent p-2 px-4 rounded-lg outline-none text-sm" placeholder="I am ...">{{currentCustomer.bio}}</textarea>
+                    </div>
+                </div>
+                
+                <div class="">
+                    <button onclick="EditProfile(event)" class="p-2 m-2 px-4 outline-none bg-green-700/90 text-zinc-100 rounded">Edit Profile</button>
+                </div>
+            </form>
+        </div>
+
+        {% comment %} Contact Details {% endcomment %}
+        <div id="ContactDetailsSection" class="UserAccountSection p-4 transition-opacity duration-[0.4s] opacity-0 hidden">
+            <h2 class="text-xl font-bold text-zinc-900/80">Contact Information</h2>
+            
+            <form action="" method="post" class="mt-5 px-2 sm:px-4 md:px-6 text-zinc-900/80 space-y-6">
+            {% csrf_token %}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="flex flex-col justify-start gap-1">
+                        <label for="UserEmail" class="font-semibold text-sm">Email:</label>
+                        <input disabled readonly type="text" id="UserEmail" class="border border-zinc-900/20 bg-transparent p-2 px-4 rounded-lg outline-none" value="{{currentCustomer.email}}">
+                    </div>
+                    <div class="flex flex-col justify-start gap-1">
+                        <label for="UserPhone" class="font-semibold text-sm">Phone:</label>
+                        <input type="text" id="UserPhone" class="border border-zinc-900/20 bg-transparent p-2 px-4 rounded-lg outline-none" value="{{currentCustomer.phone}}">
+                    </div>
+                    <div class="flex flex-col justify-start gap-1">
+                        <label for="UserPhone" class="font-semibold text-sm">Email Verification Status:</label>
+                        <input disabled readonly type="text" id="UserPhone" class="border border-zinc-900/20 bg-transparent p-2 px-4 rounded-lg outline-none" value="{{currentCustomer.isEmailVerified}}">
+                    </div>
+                </div>
+
+                {% comment %} Return a Message for email verification if email is not verified {% endcomment %}
+                {% if currentCustomer.isEmailVerified == 'Pending' %}
+                    <div class="max-w-[95%] sm:max-w-[80%] m-4 mx-auto flex flex-col sm:flex-row items-center justify-between bg-red-50 border border-red-900/50 rounded-lg p-4 mt-2">
+                        <div class="flex items-center gap-3">
+                        <span id="verifyIcon" class="text-red-500 text-lg">❌</span>
+                        <div>
+                            <p class="font-medium">Email Verification</p>
+                            <p id="verifyStatus" class="text-sm text-gray-500">Your email is not verified</p>
+                        </div>
+                        </div>
+                        <a href="{% url "email_verification" %}" id="verifyBtn" class=" w-full sm:w-auto mt-3 sm:mt-0 text-center bg-indigo-600 text-white block px-4 py-2 rounded-lg hover:bg-indigo-700 text-sm">Verify Email</a>
+                    </div>
+                {% endif %}
+
+                <div class="">
+                    <button onclick="EditContact(event)" class="p-2 m-2 px-4 outline-none bg-green-700/90 text-zinc-100 rounded">Edit Details</button>
+                </div>
+            </form>
+        </div>
+
+         {% comment %} Address Details {% endcomment %}
+        <div id="AddressDetailsSection" class="UserAccountSection p-4 transition-opacity duration-[0.4s] opacity-0 hidden">
+            <h2 class="text-xl font-bold text-zinc-900/80">Address Information</h2>
+            
+            <form action="" method="post" class="mt-5 px-2 sm:px-4 md:px-6 text-zinc-900/80 space-y-6">
+            {% csrf_token %}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="flex flex-col justify-start gap-1">
+                        <label for="UserAddress" class="font-semibold text-sm">Address:</label>
+                        <input type="text" id="UserAddress" class="border border-zinc-900/20 bg-transparent p-2 px-4 rounded-lg outline-none" value="{{currentCustomer.address}}">
+                    </div>
+                    <div class="flex flex-col justify-start gap-1">
+                        <label for="UserCity" class="font-semibold text-sm">City:</label>
+                        <input type="text" id="UserCity" class="border border-zinc-900/20 bg-transparent p-2 px-4 rounded-lg outline-none" value="{{currentCustomer.city}}">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="flex flex-col justify-start gap-1">
+                        <label for="UserState" class="font-semibold text-sm">State:</label>
+                        <input type="text" id="UserState" class="border border-zinc-900/20 bg-transparent p-2 px-4 rounded-lg outline-none" value="{{currentCustomer.state}}">
+                    </div>
+                    <div class="flex flex-col justify-start gap-1">
+                        <label for="UserAreaCode" class="font-semibold text-sm">Area Code:</label>
+                        <input type="text" id="UserAreaCode" class="border border-zinc-900/20 bg-transparent p-2 px-4 rounded-lg outline-none" value="{{currentCustomer.areaCode}}">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="flex flex-col justify-start gap-1">
+                        <label for="UserCountry" class="font-semibold text-sm">Country:</label>
+                        <input name="" id="UserCountry" class="resize-none border border-zinc-900/20 bg-transparent p-2 px-4 rounded-lg outline-none text-sm" value="{{currentCustomer.country}}">
+                    </div>
+                </div>
+                
+                <div class="">
+                    <button onclick="EditAddress(event)" class="p-2 m-2 px-4 outline-none bg-green-700/90 text-zinc-100 rounded">Edit Details</button>
+                </div>
+            </form>
+        </div>
+
+         {% comment %} Change Password {% endcomment %}
+        <div id="ChangePasswordSection" class="UserAccountSection p-4 transition-opacity duration-[0.4s] opacity-0 hidden">
+            <h2 class="text-xl font-bold text-zinc-900/80">Change Password</h2>
+            
+            <form action="" method="post" class="mt-5 px-2 sm:px-4 md:px-6 text-zinc-900/80 space-y-6">
+            {% csrf_token %}
+                <div class="grid grid-cols-1 gap-6">
+                    <div class="flex flex-col justify-start gap-1">
+                        <label for="UserCurrentPassword" class="font-semibold text-sm">Current Password:</label>
+                        <input type="password" id="UserCurrentPassword" class="border border-zinc-900/20 bg-transparent p-2 px-4 rounded-lg outline-none">
+                    </div>
+                    <div class="flex flex-col justify-start gap-1">
+                        <label for="UserNewPassword" class="font-semibold text-sm">New Password:</label>
+                        <input type="password" id="UserNewPassword" class="border border-zinc-900/20 bg-transparent p-2 px-4 rounded-lg outline-none">
+                        <p class=" block text-xs text-zinc-900/50">Password must be strong.</p>
+                    </div>
+                    <div class="flex flex-col justify-start gap-1">
+                        <label for="UserConfirmPassword" class="font-semibold text-sm">Confirm Password:</label>
+                        <input type="password" id="UserConfirmPassword" class="border border-zinc-900/20 bg-transparent p-2 px-4 rounded-lg outline-none">
+                    </div>
+                </div>
+                
+                <div class="">
+                    <button onclick="updatePassword(event)" class="p-2 m-2 px-4 outline-none bg-green-700/90 text-zinc-100 rounded">Update Password</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock  %}
+{% block scripts %}
+<script>
+    
+
+    //All sections
+    const UserProfileSection=document.getElementById('UserProfileSection')
+    const ContactDetailsSection=document.getElementById('ContactDetailsSection')
+    const AddressDetailsSection=document.getElementById('AddressDetailsSection')
+    const ChangePasswordSection=document.getElementById('ChangePasswordSection')
+    const UserAccountSection=document.querySelectorAll('.UserAccountSection')
+    
+    //perforing events
+    function showBtn(sectionId){
+        UserAccountSection.forEach(section=>{
+            section.classList.add('hidden')
+            section.classList.add('opacity-0')
+        })
+        document.getElementById(sectionId).classList.remove('hidden')
+        document.getElementById(sectionId).classList.remove('opacity-0')
+    }
+
+
+    //updating profile
+    function EditProfile(e){
+        e.preventDefault()
+        const UserName=document.getElementById('UserName')
+        const UserFullName=document.getElementById('UserFullName')
+        const UserGender=document.getElementById('UserGender')
+        const UserBio=document.getElementById('UserBio')
+
+        if(UserName.value=="" || UserFullName.value=="" || UserGender.value=="" || UserBio.value.length<=5){
+            let showErroAlert=()=>{
+                Swal.fire({
+                    title:"Profile Update Failed",
+                    text:'Please fill valid input to the input box', //Something went wrong, Please try again.
+                    icon:'error',
+                    showClass:{
+                      popup:'animate__animated animate__fadeInDown animate__faster'
+                    },
+                    hideClass:{
+                      popup:'animate__animated animate__fadeOutUp animate__faster'
+                    },
+                })
+            }
+            showErroAlert()
+            
+        }
+        else{
+            myProfileData={
+                UserName:UserName.value,
+                UserFullName:UserFullName.value,
+                UserGender:UserGender.value,
+                UserBio:UserBio.value
+            }
+
+            $.ajax({
+            url:'{% url "update_profile" %}',
+            method:"POST",
+            contentType:'application/json',
+            data:JSON.stringify(myProfileData),
+            headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+            success:(e)=>{
+                Swal.fire({
+                    toast:true,
+                    position:'top',
+                    title:'Profile updated successfully',
+                    background:'#008e3b',
+                    color:'#fff',
+                    icon:'success',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true
+                })
+
+                setTimeout(()=>{
+                    window.location.href='{% url "myAccount" %}'
+                },3000)
+            },
+            error:(e)=>{
+                Swal.fire({
+                    title:"Profile Update Failed",
+                    text:'Something went wrong, Please try again', //Something went wrong, Please try again.
+                    icon:'error',
+                    showClass:{
+                      popup:'animate__animated animate__fadeInDown animate__faster'
+                    },
+                    hideClass:{
+                      popup:'animate__animated animate__fadeOutUp animate__faster'
+                    },
+                })
+
+            }
+            })
+        }
+    }
+
+    //edit Contact
+    function EditContact(e){
+        e.preventDefault()
+        const UserPhone=document.getElementById('UserPhone')
+
+        if(UserPhone.value.length<10){
+            let showErroAlert=()=>{
+                Swal.fire({
+                    title:"Profile Update Failed",
+                    text:'Please enter valid phone number', //Something went wrong, Please try again.
+                    icon:'error',
+                    showClass:{
+                      popup:'animate__animated animate__fadeInDown animate__faster'
+                    },
+                    hideClass:{
+                      popup:'animate__animated animate__fadeOutUp animate__faster'
+                    },
+                })
+            }
+            showErroAlert()
+        }
+        else{
+            myContactData={
+                UserPhone:UserPhone.value
+            }
+
+            $.ajax({
+            url:'{% url "update_contact" %}',
+            method:"POST",
+            contentType:'application/json',
+            data:JSON.stringify(myContactData),
+            headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+            success:(e)=>{
+                Swal.fire({
+                    toast:true,
+                    position:'top',
+                    title:'Contact updated successfully',
+                    background:'#008e3b',
+                    color:'#fff',
+                    icon:'success',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true
+                })
+
+                setTimeout(()=>{
+                    window.location.href='{% url "myAccount" %}'
+                },3000)
+            },
+            error:(e)=>{
+                Swal.fire({
+                    title:"Profile Update Failed",
+                    text:'Something went wrong, Please try again', //Something went wrong, Please try again.
+                    icon:'error',
+                    showClass:{
+                      popup:'animate__animated animate__fadeInDown animate__faster'
+                    },
+                    hideClass:{
+                      popup:'animate__animated animate__fadeOutUp animate__faster'
+                    },
+                })
+
+            }
+            })
+        }
+    }
+
+    //editing Address
+    function EditAddress(e){
+        e.preventDefault()
+
+        const UserAddress=document.getElementById('UserAddress')
+        const UserCity=document.getElementById('UserCity')
+        const UserState=document.getElementById('UserState')
+        const UserAreaCode=document.getElementById('UserAreaCode')
+        const UserCountry=document.getElementById('UserCountry')
+
+        if(UserAddress.value=="" || UserCity.value=="" || UserState.value=="" || UserAreaCode.value==""||UserCountry.value==""){
+            let showErroAlert=()=>{
+                Swal.fire({
+                    title:"Profile Update Failed",
+                    text:'Please fill valid input to the input box', //Something went wrong, Please try again.
+                    icon:'error',
+                    showClass:{
+                      popup:'animate__animated animate__fadeInDown animate__faster'
+                    },
+                    hideClass:{
+                      popup:'animate__animated animate__fadeOutUp animate__faster'
+                    },
+                })
+            }
+            showErroAlert()
+            
+        }
+        else{
+            myAddressData={
+               UserAddress:UserAddress.value,
+               UserState:UserState.value,
+               UserCity:UserCity.value,
+               UserAreaCode:UserAreaCode.value,
+               UserCountry:UserCountry.value,
+            }
+
+            $.ajax({
+            url:'{% url "update_address" %}',
+            method:"POST",
+            contentType:'application/json',
+            data:JSON.stringify(myAddressData),
+            headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+            success:(e)=>{
+                Swal.fire({
+                    toast:true,
+                    position:'top',
+                    title:'Address updated successfully',
+                    background:'#008e3b',
+                    color:'#fff',
+                    icon:'success',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true
+                })
+
+                setTimeout(()=>{
+                    window.location.href='{% url "myAccount" %}'
+                },3000)
+            },
+            error:(e)=>{
+                Swal.fire({
+                    title:"Profile Update Failed",
+                    text:'Something went wrong, Please try again', //Something went wrong, Please try again.
+                    icon:'error',
+                    showClass:{
+                      popup:'animate__animated animate__fadeInDown animate__faster'
+                    },
+                    hideClass:{
+                      popup:'animate__animated animate__fadeOutUp animate__faster'
+                    },
+                })
+
+            }
+            })
+        }
+    }
+
+    //updating password
+    function updatePassword(e){
+        e.preventDefault()
+
+        const UserCurrentPassword=document.getElementById('UserCurrentPassword')
+        const UserNewPassword=document.getElementById('UserNewPassword')
+        const UserConfirmPassword=document.getElementById('UserConfirmPassword')
+
+        if(UserCurrentPassword.value=="" || UserNewPassword.value=="" || UserConfirmPassword.value==""){
+            let showErroAlert=()=>{
+                Swal.fire({
+                    title:"Password Update Failed!",
+                    text:'Please fill valid input to the input box', //Something went wrong, Please try again.
+                    icon:'error',
+                    showClass:{
+                      popup:'animate__animated animate__fadeInDown animate__faster'
+                    },
+                    hideClass:{
+                      popup:'animate__animated animate__fadeOutUp animate__faster'
+                    },
+                })
+            }
+            showErroAlert()
+            
+        }
+        else if(UserNewPassword.value.trim()!=UserConfirmPassword.value.trim()){
+            let showErroAlert=()=>{
+                Swal.fire({
+                    title:"Password Update Failed!",
+                    text:'Confirm password mismatch, please try again', //Something went wrong, Please try again.
+                    icon:'error',
+                    showClass:{
+                      popup:'animate__animated animate__fadeInDown animate__faster'
+                    },
+                    hideClass:{
+                      popup:'animate__animated animate__fadeOutUp animate__faster'
+                    },
+                })
+            }
+            showErroAlert()
+        }
+        else{
+            myPasswordData={
+                UserCurrentPassword:UserCurrentPassword.value,
+                UserNewPassword:UserNewPassword.value,
+                UserConfirmPassword:UserConfirmPassword.value,
+            }
+
+            $.ajax({
+                url:'{% url "update_password" %}',
+                method:"POST",
+                contentType:'application/json',
+                data:JSON.stringify(myPasswordData),
+                headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+                success:(e)=>{
+                    Swal.fire({
+                        toast:true,
+                        position:'top',
+                        title:'Password updated successfully',
+                        background:'#008e3b',
+                        color:'#fff',
+                        icon:'success',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true
+                    })
+
+                    setTimeout(()=>{
+                        window.location.href='{% url "myAccount" %}'
+                    },3000)
+                },
+                error:(e)=>{
+                    Swal.fire({
+                        title:"Password Update Failed",
+                        text:'Please Enter Valid Password', //Something went wrong, Please try again.
+                        icon:'error',
+                        showClass:{
+                          popup:'animate__animated animate__fadeInDown animate__faster'
+                        },
+                        hideClass:{
+                          popup:'animate__animated animate__fadeOutUp animate__faster'
+                        },
+                    })
+
+                }
+            })
+        }
+    }
+
+    {% if messages %}
+    {% for message in messages %}
+        let showErroAlert=()=>{
+                Swal.fire({
+                    title:"Email is already verified!",
+                    text:'{{message}}', //Something went wrong, Please try again.
+                    icon:'info',
+                    showClass:{
+                      popup:'animate__animated animate__fadeInDown animate__faster'
+                    },
+                    hideClass:{
+                      popup:'animate__animated animate__fadeOutUp animate__faster'
+                    },
+                })
+            }
+            showErroAlert()
+    {% endfor %}
+    {% endif %}
+</script>
+{% endblock  %}

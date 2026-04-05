@@ -1,0 +1,79 @@
+{% extends "NavbarModel.html" %}
+{% block title %}Email Verification - Access New Area{% endblock %}
+
+{% block body %}
+<div class="w-full h-20 bg-zinc-900/100 flex items-center justify-center"></div>
+
+<div class="max-w-[35%] mx-auto bg-white rounded-lg shadow mt-8 overflow-hidden border">
+    <div class="p-4 bg-green-700/80 text-zinc-100 space-y-2">
+        <h1 class="text-3xl font-bold">Verify Your Email</h1>
+        <p class="text-sm text-zinc-100/80">We sent a verification code to <strong class="text-zinc-100">{{currentCustomer.email}}</strong></p>
+    </div>
+
+    <form action="" method="post" class="p-6 space-y-2">
+    {% csrf_token %}
+        <input type="text" id="OtpInputBox" class="p-4 text-lg block border border-zinc-900/20 outline-none rounded-lg w-full font-medium text-zinc-900/90">
+        <p id="errorMessageBox" class="text-red-600/80 hidden text-sm">Please enter valid code</p>
+        <button  onclick="verifyEmailBtn(event)" type="button" class="mt-4 p-3 block px-4 bg-green-700 outline-none text-zinc-100 rounded-lg">Verify Email</button>
+        <p class="text-sm text-zinc-900/60">Didn't receive the code? <a href="" class="text-blue-800 hover:underline">Resend</a></p>
+    </form>
+</div>
+{% endblock  %}
+{% block scripts %}
+<script>
+    function verifyEmailBtn(e){
+        e.preventDefault()
+        const errorMessageBox=document.getElementById('errorMessageBox')
+        const OtpInputBox=document.getElementById('OtpInputBox')
+        if(OtpInputBox.value==""){
+            errorMessageBox.classList.remove('hidden')
+        }
+        else{
+            const myEmailVerificationData={
+                inputCode:OtpInputBox.value
+            }
+
+            //sending email data to the server using ajax with jquery
+            $.ajax({
+                url:'{% url "emailVerifiedCodeCheck" %}',
+                method:"POST",
+                contentType:'application/json',
+                data:JSON.stringify(myEmailVerificationData),
+                headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+                success:(e)=>{
+                    Swal.fire({
+                        toast:true,
+                        position:'top',
+                        title:'Email verification is done',
+                        background:'#008e3b',
+                        color:'#fff',
+                        icon:'success',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true
+                    })
+
+                   setTimeout(()=>{
+                        window.location.href='{% url "dashboard" %}'
+                    },3000)
+                },
+                error:(e)=>{
+                    Swal.fire({
+                        title:"Email verification Failed",
+                        text:'Something went wrong', //Something went wrong, Please try again.
+                        icon:'error',
+                        showClass:{
+                          popup:'animate__animated animate__fadeInDown animate__faster'
+                        },
+                        hideClass:{
+                          popup:'animate__animated animate__fadeOutUp animate__faster'
+                        },
+                    })
+
+                }
+            })
+            
+        }
+    }
+</script>
+{% endblock  %}

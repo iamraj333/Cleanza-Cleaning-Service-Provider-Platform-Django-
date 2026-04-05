@@ -1,0 +1,255 @@
+{% extends 'NavbarModel.html' %}
+
+{% block title %}
+  Book Service
+{% endblock %}
+
+{% block body %}
+  <style>
+    .hoverServiceBox{
+        width: 100%;
+        height: auto;
+        transition: all 3s;
+    }
+
+    .hoverServiceBox:hover{
+        height: 300px;
+    }
+  </style>
+
+  <div class="w-full h-[80vh] bg-[url({{ userService.imageUrl }})] bg-norepeat bg-cover">
+    <div class="w-full h-full bg-zinc-900 bg-opacity-60 backdrop-blur-sm">
+      <div class="absolute top-[50%] translate-y-[-50%] sm:left-[1%] space-y-5 p-4 md:p-10">
+        <h3 class="text-zinc-100 font-semibold text-xs sm:text-sm">Services &#8594; {{userService.title}}</h3>
+        <h1 class="text-[1.5rem] sm:text-[2rem] text-zinc-100 font-bold">{{ userService.title }}</h1>
+        <p class="text-sm sm:text-md md:text-lg lg:text-xl text-zinc-100">{{ userService.description }}</p>
+        <div class="flex flex-wrap gap-4 items-center">
+          <h2 class="text-zinc-100 font-semibold text-sm md:text-md lg:text-lg">Starting at {{userService.startingPrice}}</h2>
+          <a id="ScheduleServiceBtn" class=" p-4 px-6 md:px-12 bg-green-700 text-sm md:text-md font-semibold text-white rounded-[10px] hover:bg-green-800" href="{% url "ScheduleService" userService.id %}">{{userService.buttonText}}</a>
+        </div>
+        <p class="text-zinc-100 text-sm md:text-md font-bold">Required Time: <span class="text-xl">{{userService.timeRequired}}</span> (Time may vary by room type and size)</p>
+      </div>
+    </div>
+  </div>
+
+  {% comment %} ABOUT SERVICE {% endcomment %}
+  <div class="flex flex-col xl:flex-row gap-8 w-[90%] m-auto relative mt-10 text-zinc-700">
+
+    {% comment %} SERVICES OFFERS {% endcomment %}
+    <div class="xl:w-[35%] flex flex-col md:flex-row xl:flex-col gap-4 xl:h-[100vh] relative xl:sticky xl:top-[-10rem]">
+      <div class="md:w-[50%] xl:w-auto border-[2px] border-zinc-400 p-4 py-5 rounded-[10px] space-y-5">
+        <h3 class="text-sm min-[335px]:text-lg md:text-xl font-semibold flex gap-1 flex-nowrap"><i class="fa-solid fa-broom text-green-700 text-2xl"></i>Service Offered/Includes</h3>
+        <ul class="list-none space-y-3 ">
+          {% for includes in userService.servicesIncluded %}
+            <li class="text-xs min-[335px]:text-sm sm:text-lg md:text-md"> <span>&#10022;</span> {{includes}}</li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div class="md:w-[50%] xl:w-auto bg-[url('https://images.unsplash.com/photo-1634976276568-9ea10353a8cd?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Z3JlZW4lMjBiYWNrZ3JvdW5kfGVufDB8fDB8fHww')] p-4 rounded-[10px] flex flex-col justify-center items-center text-zinc-100 px-12 text-center space-y-8">
+        <h3 class="font-bold text-2xl sm:text-3xl md:text-4xl uppercase">Special <span class="text-green-300">offer</span></h3>
+        <h5 class="text-lg md:text-xl font-semibold">Book your first home cleaning and get <strong class="text-red-500 text-4xl sm:text-5xl md:text-6xl">20% off!</strong></h5>
+        <div class="flex flex-wrap justify-center justify-center gap-3">
+          <a href='{% url "ScheduleService" 1 %}' class="text-xs sm:text-sm md:text-md p-3 px-6 bg-zinc-100 text-zinc-800 font-semibold rounded hover:bg-zinc-200">Book Now</a>
+          <a href="tel:+91 8605653089" class="text-xs sm:text-sm md:text-md p-3 px-6 bg-green-700 text-zinc-100 font-semibold rounded hover:bg-green-800">Call Now</a>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="xl:w-[65%] relative ">
+      {% comment %} ABOUT SERVICES {% endcomment %}
+      <div class="md:p-4 space-y-2">
+        <h3 class="text-2xl sm:text-3xl md:text-4xl font-bold uppercase">About {{userService.title}}</h3>
+        <p class="text-sm sm:text-md">{{userService.about}}</p>
+      </div>
+
+      {% comment %} SERVICE Tasks {% endcomment %}
+      <div class="mt-4 p-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
+          {% for feature in userService.checklist %}
+          <div class="p-4 text-black border-[1px] border-zinc-400 rounded-lg">
+            <h3 class="font-semibold text-lg md:text-xl"><i class="fa-solid fa-hand-sparkles"></i> {{feature.task}}</h3>
+            <p class="text-xs sm:text-sm">{{feature.details}}</p>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      
+      <div class="p-4 space-y-2">
+        <h3 class="text-2xl sm:text-3xl font-semibold py-2">Why Choose Us?</h3>
+        <ul class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm min-[445px]:text-lg md:text-lg">
+          <li>
+            <i class="fa-solid fa-circle-check scale-[1.4] px-2"></i>Experienced, professional cleaners
+          </li>
+          <li>
+            <i class="fa-solid fa-circle-check scale-[1.4] px-2"></i>Eco-friendly cleaning products
+          </li>
+          <li>
+            <i class="fa-solid fa-circle-check scale-[1.4] px-2"></i>Satisfaction guarantee
+          </li>
+          <li>
+            <i class="fa-solid fa-circle-check scale-[1.4] px-2"></i>Flexible scheduling
+          </li>
+          <li>
+            <i class="fa-solid fa-circle-check scale-[1.4] px-2"></i>Insured & background-checked staff
+          </li>
+        </ul>
+      </div>
+
+      {% comment %} <div class="p-4 space-y-2 h-auto">
+        <h3 class="text-3xl font-semibold py-2">Specialized Home Cleaning Services</h3>
+        <div class="flex flex-wrap justify-between gap-2 extraServiceComponent">
+          <div class="w-full flex-shrink-0 bg-[url('https://www.aquuamarine.com/image/Home-deep-cleaning/platinum-package.jpg')] bg-norepeat bg-cover rounded hoverServiceBox overflow-hidden cursor-pointer">
+            <a href="">
+              <div class="w-full h-[100%] bg-zinc-900 bg-opacity-40 p-5 extraServiceDetails transition-all duration-1000 space-y-3 ServiceTransiton">
+                <h1 class="text-zinc-100 text-xl font-semibold">Home Deep Cleaning</h1>
+                <div class="ServicePara space-y-3 max-h-0 opacity-0 transition-all duration-500">
+                  <p class="text-[0.8rem] text-zinc-100">Our deep cleaning service reaches areas not covered in standard cleaning—perfect for seasonal cleanups or preparing your space for guests.</p>
+                  <div class="text-zinc-100">
+                    <h3 class="text-sm font-semibold">Includes:</h3>
+                    <li class="text-[0.8rem] list-none">- Cleaning behind appliances</li>
+                    <li class="text-[0.8rem] list-none">- Scrubbing tiles & grout</li>
+                    <li class="text-[0.8rem] list-none">- Interior cabinet wiping</li>
+                    <li class="text-[0.8rem] list-none">- Deep bathroom sanitization</li>
+                    <li class="text-[0.8rem] list-none">- Detailed kitchen cleaning</li>
+                    <li class="text-[0.8rem] list-none">- High-touch and hard-to-reach areas</li>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+          <div class="w-full flex-shrink-0 bg-[url('https://www.aquuamarine.com/image/Home-deep-cleaning/platinum-package.jpg')] bg-norepeat bg-cover rounded hoverServiceBox overflow-hidden cursor-pointer">
+            <a href="">
+              <div class="w-full h-[100%] bg-zinc-900 bg-opacity-40 p-5 extraServiceDetails transition-all duration-1000 space-y-3 ServiceTransiton">
+                <h1 class="text-zinc-100 text-xl font-semibold">Move-In / Move-Out Cleaning</h1>
+                <div class="ServicePara space-y-3 max-h-0 opacity-0 transition-all duration-500">
+                  <p class="text-[0.8rem] text-zinc-100">Ideal for tenants, landlords, and homeowners, this service ensures every room is cleaned, disinfected, and ready for its next chapter.</p>
+                  <div class="text-zinc-100">
+                    <h3 class="text-sm font-semibold">Includes:</h3>
+                    <li class="text-[0.8rem] list-none">- Full home deep cleaning</li>
+                    <li class="text-[0.8rem] list-none">- Inside cabinets, drawers & closets</li>
+                    <li class="text-[0.8rem] list-none">- Appliance interior cleaning (oven, fridge, etc.)</li>
+                    <li class="text-[0.8rem] list-none">- Wall spot cleaning</li>
+                    <li class="text-[0.8rem] list-none">- Floor polishing and stain removal</li>
+                    <li class="text-[0.8rem] list-none">- Complete sanitization of bathrooms & kitchen</li>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+          <div class="w-full flex-shrink-0 bg-[url('https://www.aquuamarine.com/image/Home-deep-cleaning/platinum-package.jpg')] bg-norepeat bg-cover rounded hoverServiceBox overflow-hidden cursor-pointer">
+            <a href="">
+              <div class="w-full h-[100%] bg-zinc-900 bg-opacity-40 p-5 extraServiceDetails transition-all duration-1000 space-y-3 ServiceTransiton">
+                <h1 class="text-zinc-100 text-xl font-semibold">Kitchen Deep Cleaning</h1>
+                <div class="ServicePara space-y-3 max-h-0 opacity-0 transition-all duration-500">
+                  <p class="text-[0.8rem] text-zinc-100">A healthier, fresher kitchen for your family. We focus on grease removal, sanitization, and restoring shine.</p>
+                  <div class="text-zinc-100">
+                    <h3 class="text-sm font-semibold">Includes:</h3>
+                    <li class="text-[0.8rem] list-none">- Degreasing stovetops, ovens & hoods</li>
+                    <li class="text-[0.8rem] list-none">- Cabinet interior & exterior cleaning</li>
+                    <li class="text-[0.8rem] list-none">- Sink and faucet descaling</li>
+                    <li class="text-[0.8rem] list-none">- Appliance exterior polishing</li>
+                    <li class="text-[0.8rem] list-none">- Countertop and backsplash sanitization</li>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+          <div class="w-full flex-shrink-0 bg-[url('https://www.aquuamarine.com/image/Home-deep-cleaning/platinum-package.jpg')] bg-norepeat bg-cover rounded hoverServiceBox overflow-hidden cursor-pointer">
+            <a href="">
+              <div class="w-full h-[100%] bg-zinc-900 bg-opacity-40 p-5 extraServiceDetails transition-all duration-1000 space-y-3 ServiceTransiton">
+                <h1 class="text-zinc-100 text-xl font-semibold">Custom Cleaning Packages</h1>
+                <div class="ServicePara space-y-3 max-h-0 opacity-0 transition-all duration-500">
+                  <p class="text-[0.8rem] text-zinc-100">Every home is unique—so are its cleaning needs. Create your own package by combining services like:</p>
+                  <div class="text-zinc-100">
+                    <h3 class="text-sm font-semibold">Includes:</h3>
+                    <li class="text-[0.8rem] list-none">- Balcony cleaning</li>
+                    <li class="text-[0.8rem] list-none">- Window cleaning</li>
+                    <li class="text-[0.8rem] list-none">- Upholstery & mattress cleaning</li>
+                    <li class="text-[0.8rem] list-none">- Pet-friendly cleaning</li>
+                    <li class="text-[0.8rem] list-none">- Eco-friendly chemical-free cleaning</li>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div> {% endcomment %}
+
+      <div class="mt-5 p-4 space-y-3">
+        <h3 class="text-2xl sm:text-3xl font-semibold">Related Services</h3>
+        <p class="text-xs sm:text-sm ">Discover extra services that maintain cleanliness and hygiene effortlessly.</p>
+        <div class="flex flex-wrap justify-center md:justify-start items-center gap-2">
+          {% for related in userService.relatedServices %}
+          {% for key, value in CleaningServices.items %}
+            {% for service in value %}
+              {% if related == service.id %}
+                <div class="rounded-xl relative overflow-hidden w-[380px] sm:w-[250px] md:w-[320px] xl:w-[340px] 2xl:w-[380px] border-[2px] border-zinc-300 p-2 cursor-pointer serviceCard">
+                  <div class="rounded-lg overflow-hidden">
+                    <img src={{service.imageUrl}} alt="" class="w-full h-[200px] object-cover object-top opacity-90 serviceImage" />
+                  </div>
+                  <div class="p-2">
+                    <h1 class="text-md font-semibold text-zinc-800">{{service.title}}</h1>
+                    <p class="text-sm">{{service.description}}</p>
+                    <ul class="text-sm py-2">
+                      {% for features in service.features %}
+                      <li class="py-1"><i class="fa-solid fa-star text-xs"></i>{{features}}</li>
+                      {% endfor %}
+                    </ul>
+                    <div class="flex justify-between items-center py-2">
+                      <h3 class="text-zinc-500 text-sm sm:text-md font-semibold">Starting at {{service.startingPrice}}</h3>
+                      <button class="serviceBookBtn w-[50%] p-2 py-3 sm:py-2 bg-green-700 text-xs sm:text-sm md:text-md font-semibold text-white rounded-full hover:bg-green-800" data-services={{service.id}}>Book Now</button>
+                    </div>
+                  </div>
+                </div>
+              {% endif %}
+            {% endfor %}
+          {% endfor %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    /*let extraServiceDetails = Array.from(document.getElementsByClassName('extraServiceDetails'))
+    console.log("CurrentUser: "+currentUser)
+    
+    extraServiceDetails.forEach((box) => {
+      const closetBox = box.closest('.hoverServiceBox')
+      closetBox.addEventListener('mouseenter', () => {
+        box.classList.add('bg-opacity-80')
+        box.style.transition='all 1s ease'
+        closetBox.querySelector('.ServicePara').classList.add('opacity-100', 'max-h-[300px]')
+        //closetBox.querySelector('.ServicePara').classList.remove('opacity-0', 'max-h-0')
+      })
+    
+      closetBox.addEventListener('mouseleave', () => {
+        box.classList.remove('bg-opacity-80')
+        box.style.transition='all 1s ease'
+        closetBox.querySelector('.ServicePara').classList.remove('opacity-100', 'max-h-[300px]')
+       // closetBox.querySelector('.ServicePara').classList.add('opacity-0', 'max-h-0')
+      })
+    })*/
+
+    const serviceBookBtn=Array.from(document.querySelectorAll('.serviceBookBtn'));
+    serviceBookBtn.forEach((btn)=>{
+      const closestBtn=btn.closest('.serviceCard');
+      const serviceId=btn.dataset.services
+
+      closestBtn.addEventListener('click',()=>{
+        window.location.href=`/services/bookService/${serviceId}`
+      })
+    })
+
+    /*const ScheduleServiceBtn=document.getElementById('ScheduleServiceBtn')
+    ScheduleServiceBtn.addEventListener('click',()=>{
+      window.location.href=`ScheduleService/`
+    })*/
+  </script>
+{% endblock %}

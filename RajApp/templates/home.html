@@ -1,0 +1,641 @@
+{% extends 'NavbarModel.html' %}
+
+{% load static %}
+
+{% block title %}
+  CleanZa-Your Cleaning Company
+{% endblock %}
+
+{% block body %}
+  {% comment %}ADDING CSS{% endcomment %}
+  <style>
+    .scroll_animate {
+      animation: scroll 20s linear infinite;
+      display: inline-flex;
+    }
+    
+    @keyframes scroll {
+      0% {
+        transform: translateX(0%);
+      }
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+    
+    .imageSwiper1,
+    .imageSwiper3 {
+      animation: imageScroll 300s linear infinite;
+      display: block;
+    }
+    
+    @keyframes imageScroll {
+      0% {
+        transform: translateY(0%);
+      }
+      100% {
+        transform: translateY(-50%);
+      }
+    }
+    
+    .imageSwiper2,
+    .imageSwiper4 {
+      animation: imageScroll2 300s linear infinite;
+      display: block;
+    }
+    
+    @keyframes imageScroll2 {
+      0% {
+        transform: translateY(-50%);
+      }
+      100% {
+        transform: translateY(0%);
+      }
+    }
+  </style>
+
+  {% comment %} Hero Section {% endcomment %}
+  <div class="h-auto w-full overflow-hidden bg-[url('{% static 'heroImg.jpg' %}')] relative top-0 bg-cover bg-no-repeat bg-center">
+    <div class=" absolute left-0 h-full w-full top-0 bg-black bg-opacity-60 backdrop-blur-[3px]"></div>
+      <div class="my-[120px] mt-[180px] relative top-[30%] sm:top-[35%] px-4 min-[400px]:px-10 w-full sm:w-[80%] md:w-[70%] xl:w-[80%]">
+        <h1 class="text-[2rem] sm:[2.5rem] md:text-[3rem] xl:text-[5rem] text-white font-extrabold leading-[1.2] text-shadow-lg text-shadow-zinc-500">
+          A Spotless <span class="text-green-700">Home</span>,
+          From <span class="text-green-700">Ceiling</span> to <span class="text-green-700">Floor</span>
+        </h1>
+        <p class="text-md xl:text-xl text-white py-8">CleanZa delivers meticulous home and commercial cleaning tailored to your lifestyle or business needs — where excellence meets care.</p>
+        <a href="#myservices" class="p-4 bg-green-700 text-sm sm:text-md md:text-md lg:text-lg lg:text-xl font-semibold text-white rounded-full hover:bg-green-800">Book Service <i class="fa-solid fa-chevron-right"></i></a>
+      </div>
+  </div>
+
+  {% comment %} ABOUT {% endcomment %}
+  <div class="p-4 py-8 mt-10 flex justify-around w-full overflow-hidden scroll-mt-20" id="aboutSection">
+    <div class="min-[400px]:px-8 gap-8 flex flex-col w-full lg:w-[60%]">
+      <h1 class="text-md md:text-xl text-left font-semibold">Cleanza - <span class="text-green-700">The Cleaning Company</span></h1>
+      <h2 class="text-3xl font-bold">From <span class="text-green-700">Homes to Offices</span>, We Bring <span class="text-green-700">Sparkle</span>, Comfort, and <span class="text-green-700">Peace</span> of Mind</h2>
+      <p class="text-sm  lg:text-lg">At Cleanza, we don’t just clean — we create spaces where people feel comfortable, productive, and inspired. Whether it’s your cozy home or your busy office, our professional team uses safe, eco-friendly products and proven techniques to ensure every corner shines. We handle the hard work so you can focus on what truly matters. With flexible scheduling, customized cleaning plans, and a commitment to excellence, CleanZa is your trusted partner in maintaining a spotless, healthy environment.</p>
+      <a href="{% url "contact" %}#contactSection" class="outline-none border-none"><button class="w-full sm:w-[60%] md:w-full lg:w-[60%] xl:w-[50%] text-sm sm:text-md p-4 bg-green-700 font-semibold text-white rounded-full hover:bg-green-800">Get Your Free Cleaning Quote Today</button></a>
+    </div>
+    <div class="w-[35%] lg:w-[35%] h-auto relative hidden md:block">
+      <div class="w-[300px] lg:w-[400px] h-[300px] lg:h-[405px] rounded-full bg-green-700 absolute z-[-2]">
+        <img src="{% static 'aboutUsImage.PNG' %}" alt="" class="z-10 absolute top-[45px] lg:top-[40px] right-[5px]" />
+      </div>
+    </div>
+  </div>
+
+  {% comment %}Services{% endcomment %}
+  <div id="myservices" class="p-4 mt-10">
+    <div class="min-[400px]:px-8 text-center min-[400px]:text-left">
+      <h3 class="text-3xl md:text-4xl font-bold">Our <span class="text-green-700">Services</span></h3>
+      <p class="text-sm">Our professional cleaning team uses eco-friendly products, modern equipment, and proven methods to make your environment shine.</p>
+    </div>
+
+    <div class="flex flex-wrap min-[400px]:px-5 pt-8 w-full justify-center items-center relative">
+       {% for key, value in cleaningService.items %}  <!-- items() function python mein dictionary ke key aur value ko access karne mein madad karti hai-->
+       {% if forloop.counter <= 1 %}
+      {% for clean in value %}
+          <div class="w-full min-[400px]:w-[80%] sm:w-[270px] md:w-[290px] m-2 my-10 relative shadow-zinc-600 shadow-4xl p-8 rounded-xl py-12 bg-white serviceCard">
+        <div class="absolute top-[-15%] translate-x-[-50%] left-[50%] rounded-full overflow-hidden p-3 border-8 bg-green-300 border-[#edf0ed]">
+          <img src="https://static.thenounproject.com/png/2631956-200.png" alt="" class="w-[50px] h-[50px]" />
+        </div>
+        <div class="mt-4 text-center">
+          <h4 class="text-xl sm:text-2xl font-semibold">{{clean.title}}</h4>
+          <h3 class="text-emerald-800 text-md sm:text-xl py-3">{{clean.startingPrice}}</h3>
+          <p class="text-sm mt-3">{{clean.description}}</p>
+        </div>
+        <div class="absolute bottom-[-9%] left-[50%] translate-x-[-50%] border-8 border-[#edf0ed] w-[60%] rounded-xl bg-green-300 hover:bg-green-600">
+          <button class="w-full p-4 text-xs font-semibold text-black rounded-xl visitService" data-services={{clean.id}}>Book Now</button>
+        </div>
+      </div>
+      {% endfor %}
+      {% endif %}
+      {% endfor %}
+      <a href="{% url 'services' %}" class="w-full min-[400px]:w-[80%] sm:w-[270px] md:w-[290px] relative m-2 h-auto rounded-xl border-dashed border-[3px] border-green-700 flex flex-col justify-center items-center text-left text-white font-semibold shadow-zinc-600 shadow-4xl bg-[#15803d36] p-6 transition-all duration-300 hover:bg-[#15803d47]">
+        <h4 class="text-xl sm:text-2xl text-green-800">View All Services</h4>
+        <h3 class="text-emerald-600 text-sm sm:text-md py-3">Explore More <span class="font-bold text-2xl">→</span></h3>
+      </a>
+      </div>
+    </div>
+  </div>
+
+  {% comment %}Why choose Us{% endcomment %}
+  <div class="p-4 md:px-8 mt-20">
+    <div class="bg-[linear-gradient(rgba(0,0,0,0.6),rgba(0,63,0,0.6)),url('{% static 'MainChooseImage.jpg' %}')] bg-no-repeat bg-cover rounded-xl px-6 py-10 flex flex-col lg:flex-row">
+      <div class="flex flex-col gap-4 xl:w-[45%]">
+        <div class="flex gap-2 items-center">
+          <img class="w-6 h-6" src="https://www.iconsdb.com/icons/preview/white/idea-xxl.png" alt="" />
+          <h3 class="text-sm sm:text-md text-white font-semibold">Why Choose Clenza?</h3>
+        </div>
+        <h4 class="text-white text-2xl sm:text-3xl font-bold">Where <span class="text-green-500">Precision</span> Meets <span class="text-green-500">Passion for Impeccable</span> Cleaning Standards</h4>
+        <p class="text-white text-sm">At CleanZa, we go beyond simple cleaning — we create refined, welcoming, and hygienic environments designed to elevate the way you live and work.</p>
+         <div class="block md:hidden relative w-[95%] py-6">
+          <img src="https://img.freepik.com/free-photo/full-shot-people-cleaning-office_23-2150454485.jpg?ga=GA1.1.68984922.1761301155&semt=ais_hybrid&w=740&q=80" class="w-full h-full rounded-xl shadow-sm shadow-zinc-800 mx-auto" alt="" />
+        </div>
+        <div class="hidden md:block relative w-[95%] h-[500px] p-2">
+          <div class="h-[350px] lg:h-[250px] xl:h-[350px] w-[350px] lg:w-[250px] xl:w-[350px] absolute left-[15%] lg:left-[0%] xl:left-[0%] top-[0%] shadow-2xl shadow-black bg-green-700 rounded-full overflow-hidden p-3">
+            <img src="{% static 'choose1.jpg' %}" class="h-full w-full rounded-full object-cover" alt="" />
+          </div>
+          <div class="h-[350px] lg:h-[250px] xl:h-[350px] w-[350px] lg:w-[250px] xl:w-[350px] absolute left-[45%] lg:left-[40%] xl:left-[45%] top-[0] xl:top-[5%] shadow-2xl shadow-black bg-green-700 rounded-full   overflow-hidden p-3">
+            <img src="{% static 'choose2.jpg' %}" class="h-full w-full rounded-full object-cover" alt="" />
+          </div>
+          <div class="h-[250px] lg:h-[200px] w-[250px] xl:h-[250px] lg:w-[200px] xl:w-[250px] absolute left-[40%] lg:left-[25%] xl:left-[40%] top-[45%] lg:top-[35%] xl:top-[50%] shadow-2xl shadow-black bg-green-700 rounded-full overflow-hidden p-3">
+            <img src="{% static 'choose3.jpg' %}" class="h-full w-full rounded-full object-cover" alt="" />
+          </div>
+        </div>
+      </div>
+      <div class="xl:w-[55%] sm:p-4">
+        <div class="flex flex-col w-full h-full items-center xl: justify-center xl:px-16 gap-5">
+          {% comment %}quality{% endcomment %}
+          <div class="flex items-center">
+            <div class="p-4 m-2 w-30 h-30 bg-green-700 rounded-full">
+              <i class="fa-solid fa-ranking-star text-white text-2xl"></i>
+            </div>
+            <div>
+              <h4 class="font-semibold text-md md:text-lg text-white">Uncompromising Quality</h4>
+              <p class="text-xs md:text-sm text-white">Every project is delivered to the most exacting standards. Our trained cleaning specialists follow proven processes and quality controls to ensure consistent, flawless results.</p>
+            </div>
+          </div>
+          {% comment %}Certificate{% endcomment %}
+          <div class="flex items-center">
+            <div class="p-4 m-2 w-30 h-30 bg-green-700 rounded-full">
+              <i class="fa-solid fa-shield-halved text-white text-2xl"></i>
+            </div>
+            <div>
+              <h4 class="font-semibold text-md md:text-lg text-white">Certified and Trusted Professionals</h4>
+              <p class="text-xs md:text-sm text-white">Our team consists of rigorously vetted, fully insured professionals who uphold integrity, discretion, and respect in every interaction.</p>
+            </div>
+          </div>
+          {% comment %}Technology{% endcomment %}
+          <div class="flex items-center">
+            <div class="p-4 m-2 w-30 h-30 bg-green-700 rounded-full">
+              <i class="fa-solid fa-wrench text-white text-2xl"></i>
+            </div>
+            <div>
+              <h4 class="font-semibold text-md md:text-lg text-white">Advanced Technology and Equipment</h4>
+              <p class="text-xs md:text-sm text-white">By integrating modern cleaning technologies, high-efficiency systems, and industry best practices, we deliver measurable results with exceptional efficiency.</p>
+            </div>
+          </div>
+          {% comment %}Eco friendly{% endcomment %}
+          <div class="flex items-center">
+            <div class="p-4 m-2 w-30 h-30 bg-green-700 rounded-full">
+              <i class="fa-brands fa-pagelines text-white text-2xl"></i>
+            </div>
+            <div>
+              <h4 class="font-semibold text-md md:text-lg text-white">Eco-Friendly Products</h4>
+              <p class="text-xs md:text-sm text-white">We use non-toxic, environmentally safe products that protect your family, employees, and the planet — without compromising on cleanliness.</p>
+            </div>
+          </div>
+          {% comment %}Eco friendly{% endcomment %}
+          <div class="flex items-center">
+            <div class="p-4 m-2 w-30 h-30 bg-green-700 rounded-full">
+              <i class="fa-solid fa-face-smile text-white text-2xl"></i>
+            </div>
+            <div>
+              <h4 class="font-semibold text-lg text-white">100% Satisfaction Guarantee</h4>
+              <p class="text-sm text-white">Your satisfaction is our priority. If you’re not happy, we’ll make it right — that’s the Cleanza promise.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% comment %}Service Area{% endcomment %}
+  <div class="w-full overflow-hidden relative p-4 mt-12">
+    <!-- Single marquee container -->
+    <div class="scroll_animate flex">
+      <!-- Original content -->
+      <div class="flex space-x-6 items-center opacity-15 flex-shrink-0">
+        <h3 class="uppercase font-bold text-2xl md:text-4xl xl:text-5xl">Mumbai</h3>
+        <img src="https://cdn-icons-png.flaticon.com/512/291/291395.png" class="w-8 sm:w-10 flex-shrink-0" />
+        <h3 class="uppercase font-bold text-2xl md:text-4xl xl:text-5xl">Delhi</h3>
+        <img src="https://cdn-icons-png.flaticon.com/512/291/291395.png" class="w-8 sm:w-10 flex-shrink-0" />
+        <h3 class="uppercase font-bold text-2xl md:text-4xl xl:text-5xl">Lucknow</h3>
+        <img src="https://cdn-icons-png.flaticon.com/512/291/291395.png" class="w-8 sm:w-10 flex-shrink-0" />
+        <h3 class="uppercase font-bold text-2xl md:text-4xl xl:text-5xl">Gurugram</h3>
+        <img src="https://cdn-icons-png.flaticon.com/512/291/291395.png" class="w-8 sm:w-10 flex-shrink-0" />
+        <h3 class="uppercase font-bold text-2xl md:text-4xl xl:text-5xl">Indore</h3>
+        <img src="https://cdn-icons-png.flaticon.com/512/291/291395.png" class="w-8 sm:w-10 flex-shrink-0" />
+        <h3 class="uppercase font-bold text-2xl md:text-4xl xl:text-5xl">Banglore</h3>
+        <img src="https://cdn-icons-png.flaticon.com/512/291/291395.png" class="w-8 sm:w-10 flex-shrink-0" />
+        <h3 class="uppercase font-bold text-2xl md:text-4xl xl:text-5xl">Hyderabaad</h3>
+        <img src="https://cdn-icons-png.flaticon.com/512/291/291395.png" class="w-8 sm:w-10 flex-shrink-0" />
+        <h3 class="uppercase font-bold text-2xl md:text-4xl xl:text-5xl">Surat</h3>
+        <img src="https://cdn-icons-png.flaticon.com/512/291/291395.png" class="w-8 sm:w-10 flex-shrink-0" />
+        <h3 class="uppercase font-bold text-2xl md:text-4xl xl:text-5xl">Jaipur</h3>
+        <img src="https://cdn-icons-png.flaticon.com/512/291/291395.png" class="w-8 sm:w-10 flex-shrink-0" />
+      </div>
+
+      <!-- Duplicate content for seamless scroll -->
+      <div class="flex space-x-6 items-center opacity-15 flex-shrink-0">
+        <h3 class="uppercase font-bold text-2xl md:text-4xl xl:text-5xl">Mumbai</h3>
+        <img src="https://cdn-icons-png.flaticon.com/512/291/291395.png" class="w-8 sm:w-10 flex-shrink-0" />
+        <h3 class="uppercase font-bold text-2xl md:text-4xl xl:text-5xl">Delhi</h3>
+        <img src="https://cdn-icons-png.flaticon.com/512/291/291395.png" class="w-8 sm:w-10 flex-shrink-0" />
+        <h3 class="uppercase font-bold text-2xl md:text-4xl xl:text-5xl">Lucknow</h3>
+        <img src="https://cdn-icons-png.flaticon.com/512/291/291395.png" class="w-8 sm:w-10 flex-shrink-0" />
+        <h3 class="uppercase font-bold text-2xl md:text-4xl xl:text-5xl">Gurugram</h3>
+        <img src="https://cdn-icons-png.flaticon.com/512/291/291395.png" class="w-8 sm:w-10 flex-shrink-0" />
+        <h3 class="uppercase font-bold text-2xl md:text-4xl xl:text-5xl">Indore</h3>
+        <img src="https://cdn-icons-png.flaticon.com/512/291/291395.png" class="w-8 sm:w-10 flex-shrink-0" />
+        <h3 class="uppercase font-bold text-2xl md:text-4xl xl:text-5xl">Banglore</h3>
+        <img src="https://cdn-icons-png.flaticon.com/512/291/291395.png" class="w-8 sm:w-10 flex-shrink-0" />
+        <h3 class="uppercase font-bold text-2xl md:text-4xl xl:text-5xl">Hyderabaad</h3>
+        <img src="https://cdn-icons-png.flaticon.com/512/291/291395.png" class="w-8 sm:w-10 flex-shrink-0" />
+        <h3 class="uppercase font-bold text-2xl md:text-4xl xl:text-5xl">Surat</h3>
+        <img src="https://cdn-icons-png.flaticon.com/512/291/291395.png" class="w-8 sm:w-10 flex-shrink-0" />
+        <h3 class="uppercase font-bold text-2xl md:text-4xl xl:text-5xl">Jaipur</h3>
+        <img src="https://cdn-icons-png.flaticon.com/512/291/291395.png" class="w-8 sm:w-10 flex-shrink-0" />
+      </div>
+    </div>
+  </div>
+
+  {% comment %}Customer review{% endcomment %}
+  <div class=" w-full relative p-4 mt-20 px-8 space-y-3 flex flex-col justify-center items-center">
+    <h3 class="text-black text-lg sm:text-xl font-semibold text-center">Customer <span class="text-green-700">Testimonials</span></h3>
+    <p class="text-black text-2xl md:text-3xl lg:text-4xl font-bold text-center xl:px-[20rem]">
+      Our <span class="text-green-700">customers</span> share their <span class="text-green-700">stories</span> of <span class="text-green-700">trust</span> and success.
+    </p>
+
+    <div class="w-[90%] min-[460px]:w-[70%] sm:w-full md:max-w-[70%] overflow-hidden swiper">
+      <div class="py-10 swiper-wrapper">
+        {% comment %}card{% endcomment %}
+        <div class="swiper-slide shrink-0 space-y-3 h-[400px] relative bg-white flex flex-col shadow-2xl shadow-zinc-200 rounded-xl">
+          <div class="relative w-full h-[75%] bottom-[-25%] rounded-tr-[20px] rounded-tl-[20px] bg-green-600 flex flex-col justify-center items-center">
+            <div class="w-[90px] h-[90px] flex justify-center items-center border-8 border-white bg-black rounded-full absolute top-[-15%] left-[50%] translate-x-[-50%] p-2">
+              <i class="fa-solid fa-user text-white text-3xl"></i>
+            </div>
+            <div class="text-md flex flex-col justify-center items-center text-justify px-3">
+              <p class="text-white text-sm">
+                <i class="fa-solid fa-quote-left text-white text-3xl"></i>Our office has never looked this spotless! The team is always punctual, professional, and detail-oriented. It’s clear they take pride in their work.<i class="fa-solid fa-quote-right text-white text-3xl"></i>
+              </p>
+              <div class="absolute bottom-3 space-y-1 text-center">
+                <h5 class="text-white text-md font-semibold">Sarah Mitchell</h5>
+                <h6 class="text-zinc-200 text-sm font-semibold">(Office Manager, BrightTech Solutions)</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="swiper-slide shrink-0 space-y-3 h-[400px] relative bg-white flex flex-col shadow-2xl shadow-zinc-200 rounded-xl overflow-hidden">
+          <div class="relative w-full h-[75%] bottom-[-25%] rounded-tr-[20px] rounded-tl-[20px] bg-green-600 flex flex-col justify-center items-center">
+            <div class="w-[90px] h-[90px] flex justify-center items-center border-8 border-white bg-black rounded-full absolute top-[-15%] left-[50%] translate-x-[-50%] p-2">
+              <i class="fa-solid fa-user text-white text-3xl"></i>
+            </div>
+            <div class="text-md flex flex-col justify-center items-center text-justify px-3">
+              <p class="text-white text-sm">
+                <i class="fa-solid fa-quote-left text-white text-3xl"></i>I’ve tried several cleaning services before, but none compare to this one. They’re consistent, reliable, and my home always smells amazing afterward.<i class="fa-solid fa-quote-right text-white text-3xl"></i>
+              </p>
+              <div class="absolute bottom-3 space-y-1 text-center">
+                <h5 class="text-white text-md font-semibold">Daniel Roberts</h5>
+                <h6 class="text-zinc-200 text-sm font-semibold">(Homeowner)</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="swiper-slide shrink-0 space-y-3 h-[400px] relative bg-white flex flex-col shadow-2xl shadow-zinc-200 rounded-xl overflow-hidden">
+          <div class="relative w-full h-[75%] bottom-[-25%] rounded-tr-[20px] rounded-tl-[20px] bg-green-600 flex flex-col justify-center items-center">
+            <div class="w-[90px] h-[90px] flex justify-center items-center border-8 border-white bg-black rounded-full absolute top-[-15%] left-[50%] translate-x-[-50%] p-2">
+              <i class="fa-solid fa-user text-white text-3xl"></i>
+            </div>
+            <div class="text-md flex flex-col justify-center items-center text-justify px-3">
+              <p class="text-white text-sm">
+                <i class="fa-solid fa-quote-left text-white text-3xl"></i>We’ve been using their services for over a year now. Their staff is friendly, respectful, and always goes the extra mile to ensure everything’s perfect.<i class="fa-solid fa-quote-right text-white text-3xl"></i>
+              </p>
+              <div class="absolute bottom-3 space-y-1 text-center">
+                <h5 class="text-white text-md font-semibold">Emma Lopez</h5>
+                <h6 class="text-zinc-200 text-sm font-semibold">(Manager, GreenLeaf Apartments)</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="swiper-slide shrink-0 space-y-3 h-[400px] relative bg-white flex flex-col shadow-2xl shadow-zinc-200 rounded-xl overflow-hidden">
+          <div class="relative w-full h-[75%] bottom-[-25%] rounded-tr-[20px] rounded-tl-[20px] bg-green-600 flex flex-col justify-center items-center">
+            <div class="w-[90px] h-[90px] flex justify-center items-center border-8 border-white bg-black rounded-full absolute top-[-15%] left-[50%] translate-x-[-50%] p-2">
+              <i class="fa-solid fa-user text-white text-3xl"></i>
+            </div>
+            <div class="text-md flex flex-col justify-center items-center text-justify px-3">
+              <p class="text-white text-sm">
+                <i class="fa-solid fa-quote-left text-white text-3xl"></i>They handled our post-renovation cleanup flawlessly. Every corner was spotless, and they finished ahead of schedule. Highly recommended!<i class="fa-solid fa-quote-right text-white text-3xl"></i>
+              </p>
+              <div class="absolute bottom-3 space-y-1 text-center">
+                <h5 class="text-white text-md font-semibold">Michael Tran</h5>
+                <h6 class="text-zinc-200 text-sm font-semibold">(Business Owner)</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="swiper-slide shrink-0 space-y-3 h-[400px] relative bg-white flex flex-col shadow-2xl shadow-zinc-200 rounded-xl overflow-hidden">
+          <div class="relative w-full h-[75%] bottom-[-25%] rounded-tr-[20px] rounded-tl-[20px] bg-green-600 flex flex-col justify-center items-center">
+            <div class="w-[90px] h-[90px] flex justify-center items-center border-8 border-white bg-black rounded-full absolute top-[-15%] left-[50%] translate-x-[-50%] p-2">
+              <i class="fa-solid fa-user text-white text-3xl"></i>
+            </div>
+            <div class="text-md flex flex-col justify-center items-center text-justify px-3">
+              <p class="text-white text-sm">
+                <i class="fa-solid fa-quote-left text-white text-3xl"></i>Professional, trustworthy, and incredibly thorough. I love coming home to a perfectly clean space — it’s such a relief after a long day.<i class="fa-solid fa-quote-right text-white text-3xl"></i>
+              </p>
+              <div class="absolute bottom-3 space-y-1 text-center">
+                <h5 class="text-white text-xl font-semibold">Jessica Patel</h5>
+                <h6 class="text-zinc-200 text-sm font-semibold">(Homeowner)</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="swiper-pagination"></div>
+      <!-- If we need navigation buttons -->
+      <div class="swiper-button-prev bg-white text-green-700 p-3 rounded-full shadow-2xl shadow-zinc-600"></div>
+      <div class="swiper-button-next bg-white text-green-700 p-3 rounded-full shadow-2xl shadow-zinc-600"></div>
+    </div>
+  </div>
+
+  {% comment %}Frquently ask question{% endcomment %}
+  <div class="w-full h-auto relative p-4 mt-20 px-8 space-y-3 flex flex-col overflow-hidden bg-[url('https://img.freepik.com/premium-photo/full-frame-shot-white-background_1048944-19680964.jpg?semt=ais_hybrid&w=740&q=80')] bg-cover bg-no-repeat bg-opacity-10">
+    <h3 class="text-black text-sm sm:text-md font-semibold">Frequently <span class="text-green-700">Asked Questions</span> (FAQ)</h3>
+    <p class="text-black text-xl sm:text-2xl md:text-3xl font-bold">
+      Find answers to <span class="text-green-700">common questions</span> about our <span class="text-green-700">products and services.</span>
+    </p>
+    <div class="flex flex-col md:flex-row !mt-10">
+      <div class="md:w-[40%] xl:w-[50%]">
+        <img src="{% static 'faqImage.jpg' %}" alt="faqImage" class="w-full sm:w-[80%] md:w-[800px] lg:h-[100%] md:hidden lg:block rounded-xl mx-auto" />
+        <img src="{% static 'faqImage2.jpg' %}" alt="" class="hidden md:block lg:hidden rounded-xl">
+      </div>
+
+      <div class="md:w-[60%] xl:w-[50%] text-xs sm:text-sm md:text-md flex flex-col !mt-[7px] md:pl-10 gap-1">
+        {% comment %}QUESTIONS{% endcomment %}
+        <div class="w-full border-2 border-green-700 rounded-xl overflow-hidden faqBox active">
+          <button class="w-full showBtn">
+            <div class="w-full flex justify-between p-4 py-3">
+              <h4 class="font-semibold text-left">1. Who is Cleanza?</h4>
+              <i class="fa-solid fa-plus font-semibold plusIcon"></i>
+              <i class="fa-solid fa-minus font-semibold minusIcon hidden"></i>
+            </div>
+          </button>
+          <p class="p-2 px-4 faqAnswer text-left active">CleanZa is a professional cleaning company dedicated to delivering reliable, high-quality cleaning solutions for homes and businesses. Our mission is simple — to create cleaner, healthier, and more comfortable spaces for our clients.</p>
+        </div>
+        <div class="w-full border-2 border-green-700 rounded-xl overflow-hidden faqBox">
+          <button class="w-full showBtn">
+            <div class="w-full flex justify-between p-4 py-3">
+              <h4 class="font-semibold text-left">2. Are your cleaning products and tools safe for my family, pets, and the environment?</h4>
+              <i class="fa-solid fa-plus font-semibold plusIcon"></i>
+              <i class="fa-solid fa-minus font-semibold minusIcon hidden"></i>
+            </div>
+          </button>
+          <p class="p-2 px-4 faqAnswer text-left hidden">Yes. We use eco-friendly, non-toxic products and modern cleaning equipment to ensure safety for children, pets, and the environment, without compromising on cleaning quality.</p>
+        </div>
+        <div class="w-full border-2 border-green-700 rounded-xl overflow-hidden faqBox">
+          <button class="w-full showBtn">
+            <div class="w-full flex justify-between p-4 py-3">
+              <h4 class="font-semibold text-left">3.How can I book a service and make payments?</h4>
+              <i class="fa-solid fa-plus font-semibold plusIcon"></i>
+              <i class="fa-solid fa-minus font-semibold minusIcon hidden"></i>
+            </div>
+          </button>
+          <p class="p-2 px-4 faqAnswer text-left hidden">Booking is simple through our website or by contacting our team directly. We offer secure payment options including credit/debit cards, digital wallets, and online transfers for a hassle-free experience.</p>
+        </div>
+        <div class="w-full border-2 border-green-700 rounded-xl overflow-hidden faqBox">
+          <button class="w-full showBtn">
+            <div class="w-full flex justify-between p-4 py-3">
+              <h4 class="font-semibold text-left">4. Can I customize my cleaning service or request a preferred cleaner?</h4>
+              <i class="fa-solid fa-plus font-semibold plusIcon"></i>
+              <i class="fa-solid fa-minus font-semibold minusIcon hidden"></i>
+            </div>
+          </button>
+          <p class="p-2 px-4 faqAnswer text-left hidden">Yes. You can choose from tailored cleaning plans and specify preferences, including recurring schedules or your preferred cleaning professional, so the service fits your needs perfectly.</p>
+        </div>
+        <div class="w-full border-2 border-green-700 rounded-xl overflow-hidden faqBox">
+          <button class="w-full showBtn">
+            <div class="w-full flex justify-between p-4 py-3">
+              <h4 class="font-semibold text-left">5. What areas do you serve, and do you offer emergency or same-day services?</h4>
+              <i class="fa-solid fa-plus font-semibold plusIcon"></i>
+              <i class="fa-solid fa-minus font-semibold minusIcon hidden"></i>
+            </div>
+          </button>
+          <p class="p-2 px-4 faqAnswer text-left hidden">CleanZa serves multiple locations and strives to accommodate urgent requests whenever possible. Contact us to check availability in your area or to schedule an expedited service.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% comment %}Our Projects{% endcomment %}
+  <div class="w-full mt-20 px-8 space-y-3 relative" id="projectSection">
+    <h3 class="text-black text-sm sm:text-md font-semibold">Our <span class="text-green-700">Projects</span></h3>
+    <p class="text-black text-xl sm:text-xl md:text-3xl font-bold pb-4">
+      See how Cleanza transforms <span class="text-green-700">homes and businesses</span> — <br class="hidden lg:block">one spotless<span class="text-green-700">space</span> at a time.
+    </p>
+    <div class="relative grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 w-[90%] m-auto h-[85vh] overflow-hidden">
+      <div class="absolute bg-zinc-700 bg-opacity-10 z-10 inset-0"></div>
+      <div class="w-[100%] imageSwiper1">
+        <div class="flex flex-col gap-1 w-full">
+          <img class="img1 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img2 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img3 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img4 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img5 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img6 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img7 !w-[100%] !h-auto block object-fit ease-linear" />
+        </div>
+        <div class="flex flex-col gap-1 w-full">
+          <img class="img1 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img2 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img3 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img4 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img5 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img6 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img7 !w-[100%] !h-auto block object-fit ease-linear" />
+        </div>
+      </div>
+      <div class="w-[100%] imageSwiper2">
+        <div class="flex flex-col gap-1 imageBox2">
+          <img class="img11 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img12 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img13 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img14 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img15 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img16 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img17 !w-[100%] !h-auto block object-fit ease-linear" />
+        </div>
+        <div class="flex flex-col gap-1 imageBox2">
+          <img class="img11 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img12 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img13 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img14 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img15 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img16 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img17 !w-[100%] !h-auto block object-fit ease-linear" />
+        </div>
+      </div>
+      <div class="w-[100%] imageSwiper3">
+        <div class="flex flex-col gap-1 imageBox3">
+          <img class="img21 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img22 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img23 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img24 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img25 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img26 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img27 !w-[100%] !h-auto block object-fit ease-linear" />
+        </div>
+        <div class="flex flex-col gap-1 imageBox3">
+          <img class="img21 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img22 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img23 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img24 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img25 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img26 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img27 !w-[100%] !h-auto block object-fit ease-linear" />
+        </div>
+      </div>
+      <div class="w-[100%] imageSwiper4">
+        <div class="flex flex-col gap-1 imageBox4">
+          <img class="img31 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img32 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img33 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img34 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img35 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img36 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img37 !w-[100%] !h-auto block object-fit ease-linear" />
+        </div>
+        <div class="flex flex-col gap-1 imageBox4">
+          <img class="img31 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img32 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img33 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img34 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img35 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img36 !w-[100%] !h-auto block object-fit ease-linear" />
+          <img class="img37 !w-[100%] !h-auto block object-fit ease-linear" />
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% comment %}JS SCRIPT{% endcomment %}
+{% block scripts %}
+  <script>
+    const swiper = new Swiper('.swiper', {
+      // Optional parameters
+      loop: true,
+      grabCursor: true,
+      spaceBetween: 20,
+      loopAdditionalSlides: 1,
+    
+      // If we need pagination
+      pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
+        dynamicBullets: true
+      },
+    
+      // Navigation arrows
+      navigation: {nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev'},
+    
+      breakpoints: {
+        0: {slidesPerView: 1},
+        640: {slidesPerView: 2},
+        1024: { slidesPerView: 3}
+      }
+    })
+
+    //FAQ
+    const showBtn=document.querySelectorAll('.showBtn')
+
+    showBtn.forEach(button=>{
+      button.addEventListener('click', ()=>{
+
+        {% comment %} Hide data when i open another one {% endcomment %}
+        document.querySelectorAll('.faqAnswer').forEach(data=>{
+          data.classList.add('hidden')
+        })
+        document.querySelectorAll('.minusIcon').forEach(icon=>{
+          icon.classList.add('hidden')
+        })
+        document.querySelectorAll('.plusIcon').forEach(icon=>{
+          icon.classList.remove('hidden')
+        })
+        document.querySelectorAll('.faqBox').forEach(active=>{
+          active.classList.remove('active')
+        })
+        
+
+        let nearestBox=button.closest('.faqBox')
+        let minusBtn=nearestBox.querySelector('.minusIcon')
+        let plusIcon=nearestBox.querySelector('.plusIcon')
+        let faqAnswer=nearestBox.querySelector('.faqAnswer')
+        minusBtn.classList.toggle('hidden')
+        plusIcon.classList.toggle('hidden')
+        faqAnswer.classList.toggle('hidden')
+        nearestBox.classList.add('active')
+        console.log("show data")
+        
+      })
+    })
+
+    //Using Unsplash API for random images
+    const accessKey='_tVMZXevT-xgL_nBGaRNEOfSMaKlaGl0cfHdAnA7sqU'
+    const imgClass=["img1","img2","img3","img4","img5","img6","img7","img11","img12","img13","img14","img15","img16","img17","img21","img22","img23","img24","img25","img26","img27","img31","img32","img33","img34","img35","img36","img37"]
+    const query='cleaning service'
+    const APIUrl=`https://api.unsplash.com/photos/random?query=${query}&count=${imgClass.length}&client_id=${accessKey}`
+    
+    //function to fetch API
+    async function fetchImage(){
+      try{
+        const response=await fetch(APIUrl);
+        const photos=await response.json();
+
+        photos.forEach((photo, index)=>{
+         const classNum= document.getElementsByClassName(imgClass[index])
+         //classNum.src=photo.urls.small
+         for(let i of classNum){
+          i.src=photo.urls.small
+         }
+        });
+        
+      }
+      catch(e){
+        console.log("Something went wrong")
+        console.log(e)
+      }
+
+
+    }
+
+    fetchImage();
+    
+
+    //VISIT SERVICES
+    const visitService=Array.from(document.getElementsByClassName('visitService'));
+    currentUser='{{currentUser}}'
+    let cleaningService='{{cleaningService}}'
+    {% comment %} console.log(typeof(cleaningService)) {% endcomment %}
+    /*visitService.forEach((btn)=>{
+      const closestBtn=btn.closest('.serviceCard')
+      const serviceId=btn.dataset.services
+      closestBtn.addEventListener('click',()=>{
+        if(currentUser){
+        window.location.href=`services/bookService/${serviceId}/`
+        }
+        else{
+          document.getElementById('freezeBackground').classList.remove('hidden')
+          document.getElementById('loginForm').classList.remove('hidden')
+
+          document.getElementById('freezeBackground').addEventListener('click',()=>{
+            document.getElementById('freezeBackground').classList.add('hidden')
+            document.getElementById('loginForm').classList.add('hidden')
+          })
+        }
+         console.log("Button clicked")
+      })
+    })*/
+
+    visitService.forEach((btn)=>{
+      const closestBtn=btn.closest('.serviceCard')
+      const currentServiceId=btn.dataset.services
+      closestBtn.addEventListener('click',()=>{
+        window.location.href=`services/bookService/${currentServiceId}/`
+      })
+    })
+  </script>
+{% endblock %}

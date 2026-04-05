@@ -1,0 +1,138 @@
+{% extends "NavbarModel.html" %}
+{% block title %}FAQ - Helps & Support | CleanZa{% endblock %}
+
+{% block body %}
+<div class="w-full h-20 bg-zinc-900/100 flex items-center justify-center"></div>
+
+{% comment %} Main section {% endcomment %}
+<div class="max-w-[70%] mt-6 mx-auto">
+    <h1 class="text-3xl font-bold text-zinc-900/80">Frequently Asked Questions (FAQ)</h1>
+
+    <div id="FaqContainer" class="space-y-4 mt-4">
+        <!-- FAQ 1 -->
+        <div class="bg-white shadow rounded-lg">
+          <button class="faq-question w-full text-left px-6 py-4 focus:outline-none flex justify-between items-center">
+            <span>How do I reset my password?</span>
+            <span class="faq-icon text-xl font-bold transition-transform duration-300">+</span>
+          </button>
+          <div class="faq-answer px-6 py-4 hidden text-gray-700 border-t border-gray-200">
+            If you forget your password or want to secure your account with a new one, start by visiting the login page and clicking the <strong>“Forgot Password”</strong> link. You will be prompted to enter the email address associated with your account. Shortly after, you will receive an email containing a secure link to reset your password. Make sure to choose a strong, unique password that combines letters, numbers, and symbols. Avoid using easily guessable information like birthdays or common words to ensure your account remains safe.
+          </div>
+        </div>
+    
+        <!-- FAQ 2 -->
+        <div class="bg-white shadow rounded-lg">
+          <button class="faq-question w-full text-left px-6 py-4 focus:outline-none flex justify-between items-center">
+            <span>How can I contact support?</span>
+            <span class="faq-icon text-xl font-bold transition-transform duration-300">+</span>
+          </button>
+          <div class="faq-answer px-6 py-4 hidden text-gray-700 border-t border-gray-200">
+            Our support team is dedicated to helping you with any issues or questions you may have. You can reach us through our <a href="{% url "contact" %}" class="text-blue-600 hover:underline" target="_blank">Contact Support</a> page, where you can submit a detailed request describing your problem. We recommend including screenshots or detailed steps to help us respond more efficiently. Our average response time is within 24 hours, though more complex inquiries may take slightly longer. Support is available for account issues, billing questions, technical troubleshooting, and guidance on features.
+          </div>
+        </div>
+    
+        <!-- FAQ 3 -->
+        <div class="bg-white shadow rounded-lg">
+          <button class="faq-question w-full text-left px-6 py-4 focus:outline-none flex justify-between items-center">
+            <span>Where can I find the documentation?</span>
+            <span class="faq-icon text-xl font-bold transition-transform duration-300">+</span>
+          </button>
+          <div class="faq-answer px-6 py-4 hidden text-gray-700 border-t border-gray-200">
+            Our complete documentation is available on the <a href="/docs.html" class="text-blue-600 hover:underline">Documentation</a> page. It includes step-by-step guides, video tutorials, FAQs, and troubleshooting tips for all features. We recommend reviewing the relevant sections for your use case, whether you are a new user setting up your account or an advanced user exploring advanced functionality. Keeping the documentation bookmarked is helpful for quick reference.
+          </div>
+        </div>
+    
+        <!-- FAQ 4 -->
+        <div class="bg-white shadow rounded-lg">
+          <button class="faq-question w-full text-left px-6 py-4 focus:outline-none flex justify-between items-center">
+            <span>What payment methods do you accept?</span>
+            <span class="faq-icon text-xl font-bold transition-transform duration-300">+</span>
+          </button>
+          <div class="faq-answer px-6 py-4 hidden text-gray-700 border-t border-gray-200">
+            We accept major credit cards, including Visa, MasterCard, and American Express, as well as PayPal. All payments are processed securely with encryption to ensure your billing information is safe. For subscription plans, payments are automatically billed at the start of each billing cycle. If your card expires or a payment fails, you will receive notifications to update your information to avoid service interruptions. Keep your payment method up to date to maintain uninterrupted access.
+          </div>
+        </div>
+    
+        <!-- FAQ 5 -->
+        <div class="bg-white shadow rounded-lg">
+          <button class="faq-question w-full text-left px-6 py-4 focus:outline-none flex justify-between items-center">
+            <span>How do I update my account information?</span>
+            <span class="faq-icon text-xl font-bold transition-transform duration-300">+</span>
+          </button>
+          <div class="faq-answer px-6 py-4 hidden text-gray-700 border-t border-gray-200">
+            To update personal information such as your name, email address, or password, log in to your account and navigate to the <strong>Profile Settings</strong> section. From there, you can edit your details securely. After making changes, ensure you save your updates and, if necessary, verify your email address. Updating your account information promptly helps keep your profile accurate and ensures you receive notifications and billing information correctly.
+          </div>
+        </div>
+    
+        <!-- FAQ 6 -->
+        <div class="bg-white shadow rounded-lg">
+          <button class="faq-question w-full text-left px-6 py-4 focus:outline-none flex justify-between items-center">
+            <span>Is my data secure?</span>
+            <span class="faq-icon text-xl font-bold transition-transform duration-300">+</span>
+          </button>
+          <div class="faq-answer px-6 py-4 hidden text-gray-700 border-t border-gray-200">
+            Yes, your data security is our top priority. We employ industry-standard encryption protocols for data transmission and storage, including SSL for all communications. Access to sensitive information is strictly controlled, and we perform regular audits and security updates to prevent unauthorized access. We also recommend enabling two-factor authentication (2FA) for additional protection. With these measures, your personal and financial data remains secure while using our platform.
+          </div>
+        </div>
+    
+        <!-- FAQ 7 -->
+        <div class="bg-white shadow rounded-lg">
+          <button class="faq-question w-full text-left px-6 py-4 focus:outline-none flex justify-between items-center">
+            <span>Can I cancel my subscription anytime?</span>
+            <span class="faq-icon text-xl font-bold transition-transform duration-300">+</span>
+          </button>
+          <div class="faq-answer px-6 py-4 hidden text-gray-700 border-t border-gray-200">
+            Absolutely. You have full control over your subscription. You can cancel your plan at any time through the account dashboard. Upon cancellation, your subscription will remain active until the end of your current billing period. There are no hidden fees, early termination charges, or penalties. We recommend reviewing your billing cycle and cancellation policies in your dashboard to ensure a smooth transition if you decide to cancel or pause your subscription.
+          </div>
+        </div>
+    
+        <!-- FAQ 8 -->
+        <div class="bg-white shadow rounded-lg">
+          <button class="faq-question w-full text-left px-6 py-4 focus:outline-none flex justify-between items-center">
+            <span>Do you offer customer support 24/7?</span>
+            <span class="faq-icon text-xl font-bold transition-transform duration-300">+</span>
+          </button>
+          <div class="faq-answer px-6 py-4 hidden text-gray-700 border-t border-gray-200">
+            Yes, our customer support team is available 24/7 via email and chat. While response times can vary depending on the volume of requests, we strive to provide timely assistance for all technical issues, account questions, and feature guidance. For urgent problems, submitting a detailed support request with screenshots or error messages can help us resolve your issue faster. Our goal is to ensure every user receives professional, helpful, and timely support.
+          </div>
+        </div>
+    
+        <!-- FAQ 9 -->
+        <div class="bg-white shadow rounded-lg">
+          <button class="faq-question w-full text-left px-6 py-4 focus:outline-none flex justify-between items-center">
+            <span>How do I upgrade my plan?</span>
+            <span class="faq-icon text-xl font-bold transition-transform duration-300">+</span>
+          </button>
+          <div class="faq-answer px-6 py-4 hidden text-gray-700 border-t border-gray-200">
+            Upgrading your subscription is easy. Log in to your account and navigate to the <strong>Subscription</strong> section of your dashboard. Select the desired plan that fits your needs and follow the on-screen instructions to confirm the upgrade. Any changes to billing, features, or storage limits will take effect immediately or at the start of the next billing cycle. Make sure to review the plan details, pricing, and benefits before confirming your upgrade.
+          </div>
+        </div>
+    
+        <!-- FAQ 10 -->
+        <div class="bg-white shadow rounded-lg">
+          <button class="faq-question w-full text-left px-6 py-4 focus:outline-none flex justify-between items-center">
+            <span>Do you offer a trial period?</span>
+            <span class="faq-icon text-xl font-bold transition-transform duration-300">+</span>
+          </button>
+          <div class="faq-answer px-6 py-4 hidden text-gray-700 border-t border-gray-200">
+            Yes! We offer a 7-day free trial for all new users, giving you full access to explore the platform and its features without restrictions. During the trial, you can test premium functionality, configure settings, and evaluate whether our platform meets your needs. No credit card is required upfront, and you can cancel anytime before the trial ends without any charges. We encourage users to explore documentation and FAQs during the trial to maximize the value of your experience.
+          </div>
+        </div>
+
+    </div>
+</div>
+{% endblock  %}
+{% block scripts %}
+<script>
+    const faqQuestion=document.querySelectorAll('.faq-question')
+    faqQuestion.forEach((question)=>{
+        question.addEventListener('click',()=>{
+            const faqAnswer=question.nextElementSibling
+            const faqIcon=question.querySelector('.faq-icon')
+
+            faqAnswer.classList.toggle('hidden')
+        })
+    })
+
+</script>
+{% endblock  %}

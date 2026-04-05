@@ -1,0 +1,302 @@
+{% extends "NavbarModel.html" %}
+{% block title %}Write Blog | CleanZa{% endblock %}
+
+{% block body %}
+<style>
+
+    .ql-font-roboto { font-family: 'Roboto', sans-serif; }
+    .ql-font-open-sans { font-family: 'Open Sans', sans-serif; }
+    .ql-font-lato { font-family: 'Lato', sans-serif; }
+    .ql-font-merriweather { font-family: 'Merriweather', serif; }
+    .ql-font-georgia { font-family: Georgia, serif; }
+    .ql-font-poppins { font-family: 'Poppins', sans-serif; }
+    .ql-font-inter { font-family: 'Inter', sans-serif; }
+    .ql-font-montserrat { font-family: 'Montserrat', sans-serif; }
+    .ql-font-nunito { font-family: 'Nunito', sans-serif; }
+    .ql-font-playfair { font-family: 'Playfair Display', serif; }
+
+   .ql-editor.ql-blank::before {
+      color: #999;
+      font-style: normal;
+    }
+
+    .ql-editor img{
+        max-width: 100%;
+    }
+
+    #editorBox{
+        scrollbar-width: none;
+    }
+
+    #toolbar_Container{
+        position: sticky;
+        top: 71px;
+        z-index: 20;
+        background: white;
+        padding: 8px;
+        border-bottom: 1px solid #ddd;
+    }
+     
+</style>
+<div class="w-full h-20 bg-zinc-900/100 flex items-center justify-center"></div>
+
+<div class="md:max-w-[90%] lg:max-w-[60%] mx-auto mt-6 p-4">
+    <h1 class="mt-2 text-2xl font-bold text-zinc-900/80">Create a New Post</h1>
+    <p class="text-sm text-zinc-900/50 mb-2">Write freely, express your ideas, and publish your thoughts in your own style. Your voice matters.</p>
+    <input id="blogTitle" class="w-full p-3 rounded bg-white/50 border border-zinc-900/30 outline-none my-2" type="text" name="blogTitle" id="blogTitle" placeholder="Blog title...">
+    <div class="flex gap-2 my-2 items-center">
+        <label class="text-zinc-900/80 text-sm" for="blogCatgory">Choose a Category - </label>
+        <select class="p-2 text-sm px-3 border border-zinc-900/20 outline-none rounded bg-transparent" name="blogCatgory" id="blogCatgory">
+            <option value="">Select</option>
+            <option value="tips and tricks">tips and tricks</option>
+            <option value="ideas and tools">ideas</option>
+            <option value="cleaning hacks">cleaning hacks</option>
+            <option value="cleaning technique">cleaning technique</option>
+            <option value="how-to guide">how-to guide</option>
+            <option value="product review">product review</option>
+            <option value="hygience and health">hygience and health</option>
+            <option value="expert advice">expert advice</option>
+            <option value="innovations">innovations</option>
+            <option value="problem-solving">problem-solving</option>
+        </select>
+    </div>
+
+    {% comment %} Formatting quills {% endcomment %}
+    <div id="toolbar_Container">
+        <span class="ql-formats">
+            <select class="ql-font">
+                <option value="roboto">Roboto</option>
+                <option value="open-sans">Open Sans</option>
+                <option value="lato">Lato</option>
+                <option value="merriweather">Merriweather</option>
+                <option value="georgia">Georgia</option>
+                <option value="poppins">Poppins</option>
+                <option value="inter">Inter</option>
+                <option value="montserrat">Montserrat</option>
+                <option value="nunito">Nunito</option>
+                <option value="playfair">Playfair</option>
+            </select>
+            <select class="ql-size"></select>
+        </span>
+        <span class="ql-formats">
+            <button class="ql-bold"></button>
+            <button class="ql-italic"></button>
+            <button class="ql-underline"></button>
+            <button class="ql-strike"></button>
+        </span>
+        <span class="ql-formats">
+            <button class="ql-code-block"></button>
+            <button class="ql-list" value="ordered"></button>
+            <button class="ql-list" value="bullet"></button>
+            <select class="ql-align"></select>
+        </span>
+        <span class="ql-formats">
+            <button class="ql-link"></button>
+            <button class="ql-image"></button>
+            <button class="ql-video"></button>
+            <button class="ql-formula"></button>
+        </span>
+    </div>
+    <div id="editorBox" class="min-h-64  overflow-y-auto bg-white/50"></div>
+    <div class="flex justify-end gap-2 mt-2">
+        <a href="{% url "blog" %}" class=" block p-2 px-4 outline-none bg-zinc-400/90 border border-zinc-900/20 rounded-md text-zinc-900 transition-all duration-[0.3s] hover:bg-zinc-500 hover:text-zinc-100">Cancel</a>
+        <button onclick="publishBlog(event)" class="p-2 px-4 outline-none bg-green-800/90 rounded-md text-zinc-100 transition-all duration-[0.3s] hover:bg-green-900">Publish</button>
+    </div>
+</div>
+
+<div id="content"></div>
+{% endblock  %}
+{% block scripts %}
+<script>
+
+    //Adding new fonts options in quill JS
+    const myfont=Quill.import('formats/font');
+    myfont.whitelist=['roboto','open-sans','lato','merriweather','georgia','poppins','inter','montserrat','nunito','playfair'];4
+    Quill.register(myfont, true)
+
+    //Quills JS Editor
+    const textEditorBox=new Quill('#editorBox',{
+        theme:'snow',
+        modules:{
+            toolbar:'#toolbar_Container',
+        },
+        placeholder:'write content here...',
+
+    });
+
+    function publishBlog(e){
+        e.preventDefault();
+        {% comment %} console.log(String(textEditorBox.root.querySelectorAll('img')[0].outerHTML)); {% endcomment %}
+        const mycontent=textEditorBox.getContents();
+        console.log(textEditorBox.getLength())
+
+        //data verification
+        const blogTitle=document.getElementById('blogTitle')
+        const blogCatgory=document.getElementById('blogCatgory')
+        console.log(blogTitle.value.length)
+        let BlogContentAlert=(icon,title, message)=>{
+            Swal.fire({
+                title:title,
+                text:message, //Something went wrong, Please try again.
+                icon:icon,
+                showClass:{
+                  popup:'animate__animated animate__fadeInDown animate__faster'
+                },
+                hideClass:{
+                  popup:'animate__animated animate__fadeOutUp animate__faster'
+                },
+            })
+        }
+
+        if('{{currentCustomer.isEmailVerified}}' =="Pending"){
+            BlogContentAlert("error","Email Verification Pending", "ou must verify your email before publishing any blog posts.")
+        }
+        else if(!blogTitle.value.length){
+            BlogContentAlert("warning","Blog title is required", "Please provide a blog title before continuing.")
+        }
+        else if(blogTitle.value.length<10){
+            BlogContentAlert("warning","Title is too short", "Add more detail to your title.")
+        }
+        else if(textEditorBox.getLength()<=1){
+            BlogContentAlert("error","Blog content is required", "our blog post cannot be empty.")
+        }
+        else if(textEditorBox.getLength()<=100){
+            BlogContentAlert("error", "Content is too short", "Please add more details. The content must be at least 100 words long.")
+        }
+        else if(blogCatgory.value==""){
+            BlogContentAlert("warning","Blog category required", "Please select blog category.")
+        }
+        else{
+            /*function firstImageAsThumbnail(){
+                for(let op of mycontent.ops){
+                    if(op.insert && op.insert.image){
+                        return op.insert.image
+                        break;
+                    }
+                }
+            }*/
+
+            const firstImageOfEditor=textEditorBox.root.querySelectorAll('img')[0].outerHTML;
+            if(firstImageOfEditor){
+                function blogReadTime(size){
+                    if(size<1000){
+                       return 1; 
+                    }
+                    else if(size>=1000 && size<3000){
+                        return 2;
+                    }
+                    else if(size>=3000 && size<4000){
+                        return 3
+                    }
+                    else if(size>=4000 && size<5000){
+                        return 4
+                    }
+                    else if(size>=5000 && size<7000){
+                        return 5
+                    }
+                    else if(size>=7000 && size<9000){
+                        return 6
+                    }
+                    else if(size>=9000 && size<15000){
+                        return 10
+                    }
+                    else{
+                        return 12
+                    }
+                }
+
+                /*function base64ToUrl(base64) {
+              // Convert base64 to raw binary data
+              const byteString = atob(base64.split(',')[1]); // remove data:image/...;base64,
+              const mimeString = base64.split(',')[0].split(':')[1].split(';')[0];
+
+              const ab = new ArrayBuffer(byteString.length);
+              const ia = new Uint8Array(ab);
+              for (let i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i);
+              }
+          
+              const blob = new Blob([ab], { type: mimeString });
+          
+              // Create a temporary URL for the blob
+              const url = URL.createObjectURL(blob);
+              return url;
+                }*/
+
+           
+
+            
+                const myBlogData={
+                blogTitle:blogTitle.value,
+                //blogThumbnail:base64ToUrl(firstImageAsThumbnail(mycontent)),
+                blogThumbnail:`${firstImageOfEditor}`,
+                content:textEditorBox.root.innerHTML,
+                blogCatgory:blogCatgory.value,
+                readTime:blogReadTime(textEditorBox.getLength()),
+                
+                }
+                console.log(myBlogData)
+                console.log(myBlogData.blogThumbnail)
+
+                {% comment %} const content=document.getElementById('content');
+                content.innerHTML=`<img src='${firstImageOfEditor}'></img>` {% endcomment %}
+
+
+                //sending data to the view using ajax
+
+                $.ajax({
+                    url:'{% url "blog_submission" %}',
+                    type:"POST",
+                    contentType:"application/json",
+                    data:JSON.stringify(myBlogData),
+                    headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+                    success:(e)=>{
+                        function successAlert(){
+                            Swal.fire({
+                                toast:true,
+                                position:'top',
+                                title:'Your blog has been successfully published.',
+                                background:'#008e3b',
+                                color:'#fff',
+                                icon:'success',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true
+                            })
+                        }
+
+                        successAlert()
+
+                        setTimeout(()=>{
+                            window.location.href='{% url "blog" %}'
+                        },3001)
+                    },
+                    error:(e)=>{
+                        Swal.fire({
+                            title:"Failed to publish blog.",
+                            text:'Submission failed. The blog might already be published, or something went wrong. Please try again.', //Something went wrong, Please try again.
+                            icon:'error',
+                            showClass:{
+                              popup:'animate__animated animate__fadeInDown animate__faster'
+                            },
+                            hideClass:{
+                              popup:'animate__animated animate__fadeOutUp animate__faster'
+                            },
+                        })
+                    }
+                })
+            }
+            else{
+                BlogContentAlert('error',"Image is required", "An image must be added in blog to publish")
+            }
+            
+
+        }
+
+    }
+
+    
+</script>
+
+
+{% endblock  %}

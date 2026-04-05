@@ -1,0 +1,230 @@
+{% extends 'NavbarModel.html' %}
+
+{% load static %}
+
+{% block title %}
+  Project - See Our Works
+{% endblock %}
+
+{% block body %}
+  <style>
+    .projectBoxContent {
+      background: linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 100%);
+    }
+  </style>
+
+  <div class="relative">
+    {% comment %}Header{% endcomment %}
+    <div class="h-[50vh] sm:h-[60vh] md:h-[60vh] lg:h-[60vh] w-full overflow-hidden bg-[url('{% static 'projectImage.jpg' %}')] relative top-0 bg-cover bg-no-repeat bg-center">
+      <div class="h-full w-full top-0 bg-black bg-opacity-60 backdrop-blur-[3px] flex flex-col justify-center items-center">
+        <div class="relative top-[7%] min-[400px]:top-[3%] md:top-[-5%] px-10 w-full">
+          <h1 class="text-[2rem] sm:[2.7rem] md:text-[3rem] xl:text-[4rem] text-center text-white font-extrabold leading-[1.2] text-shadow-lg text-shadow-zinc-500">Our <span class="text-green-700">Cleaning</span> Projects</h1>
+          <p class="text-sm sm:text-md md:text-lg xl:text-lg text-center text-white py-4 font-semibold">Discover how CleanZa elevates spaces through expert cleaning solutions.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% comment %}Special Projects{% endcomment %}
+  <div class="w-full xl:w-[90%] mx-auto flex flex-col justify-start gap-4 mt-10 text-zinc-800 p-4 lg:px-10">
+    <div class="space-y-4">
+      <div class="text-left space-y-2 mb-10">
+        <h1 class="text-sm sm:text-base uppercase font-semibold text-green-700">Our Projects</h1>
+        <h2 class="text-2xl sm:text-3xl md:text-4xl leading-tight font-extrabold">Where <span class="text-green-700">every project tells a story</span><br class="hidden sm:block" /> of excellence.</h2>
+      </div>
+
+      <div class="w-full grid grid-cols-1 sm:grid-cols-4 lg:grid-cols-3 gap-4 h-[150vh] lg:h-[120vh] xl:h-[90vh]" id="projectContainer">
+        <div class="col-span-2 lg:col-span-1 lg:row-span-3 w-full bg-[url('{% static 'poolImage.jpg' %}')] bg-no-repeat bg-cover p-4 text-2xl text-white text-center relative projectBox">
+          <div class="absolute w-full space-y-2 sm:space-y-4 bottom-0 left-[50%] translate-x-[-50%] p-4 text-left opacity-0 transition-opacity duration-500 projectBoxContent">
+            <button class="p-1 border-none outline-none px-4 rounded-full bg-green-600 text-xs md:text-sm font-bold">4.8</button>
+            <h1 class="text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-extrabold">50+</h1>
+            <h2 class="text-sm lg:text-xl font-semibold">Swimming Pool Cleaning</h2>
+          </div>
+        </div>
+
+        <div class="w-full col-span-2 lg:col-span-1 lg:row-span-2 bg-[url('{% static 'project3.jpg' %}')] bg-no-repeat bg-cover p-4 bg-green-600 text-2xl text-white text-center relative projectBox">
+          <div class="absolute w-full space-y-2 sm:space-y-4 bottom-0 left-[50%] translate-x-[-50%] p-4 text-left opacity-0 transition-opacity duration-500 projectBoxContent">
+            <button class="p-1 border-none outline-none px-4 rounded-full bg-green-600 text-xs md:text-sm font-bold">4.4</button>
+            <h1 class="text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-extrabold">1000+</h1>
+            <h2 class="text-sm lg:text-xl font-semibold">Commercial Cleaning</h2>
+          </div>
+        </div>
+        <div class="w-full col-span-2 lg:col-span-1 lg:row-span-2 bg-[url('{% static 'project4.jpg' %}')] bg-no-repeat bg-cover p-4 bg-green-600 text-2xl text-white text-center relative projectBox">
+          <div class="absolute w-full space-y-2 sm:space-y-4 bottom-0 left-[50%] translate-x-[-50%] p-4 text-left opacity-0 transition-opacity duration-500 projectBoxContent">
+            <button class="p-1 border-none outline-none px-4 rounded-full bg-green-600 text-xs md:text-sm font-bold">4.6</button>
+            <h1 class="text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-extrabold">80+</h1>
+            <h2 class="text-sm lg:text-xl font-semibold">Garden & Lawn Cleaning</h2>
+          </div>
+        </div>
+        <div class="w-full col-span-2 lg:row-span-2 bg-[url('{% static 'project1.jpg' %}')] bg-no-repeat bg-cover p-4 bg-green-600 text-2xl text-white text-center relative projectBox">
+          <div class="absolute w-full space-y-2 sm:space-y-4 bottom-0 left-[50%] translate-x-[-50%] p-4 text-left opacity-0 transition-opacity duration-500 projectBoxContent">
+            <button class="p-1 border-none outline-none px-4 rounded-full bg-green-600 text-xs md:text-sm font-bold">4.8</button>
+            <h1 class="text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-extrabold">95+</h1>
+            <h2 class="text-sm lg:text-xl font-semibold">UV Light Sanitization</h2>
+          </div>
+        </div>
+        <div class="w-full col-span-2 lg:col-span-1 lg:row-span-3 bg-[url('{% static 'project5.jpg' %}')] bg-no-repeat bg-cover p-4 bg-green-600 text-2xl text-white text-center relative projectBox">
+          <div class="absolute w-full space-y-2 sm:space-y-4 bottom-0 left-[50%] translate-x-[-50%] p-4 text-left opacity-0 transition-opacity duration-500 projectBoxContent">
+            <button class="p-1 border-none outline-none px-4 rounded-full bg-green-600 text-xs md:text-sm font-bold">4.9</button>
+            <h1 class="text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-extrabold">500+</h1>
+            <h2 class="text-sm lg:text-xl font-semibold">Solar Cleaning</h2>
+          </div>
+        </div>
+        <div class="w-full col-span-2 lg:col-span-2 lg:row-span-2 bg-[url('{% static 'project2.jpg' %}')] bg-no-repeat bg-cover p-4 bg-green-600 text-2xl text-white text-center relative projectBox">
+          <div class="absolute w-full space-y-2 sm:space-y-4 bottom-0 left-[50%] translate-x-[-50%] p-4 text-left opacity-0 transition-opacity duration-500 projectBoxContent">
+            <button class="p-1 border-none outline-none px-4 rounded-full bg-green-600 text-xs md:text-sm font-bold">4.6</button>
+            <h1 class="text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-extrabold">1500+</h1>
+            <h2 class="text-sm lg:text-xl font-semibold">Public Places Cleaning</h2>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% comment %}Trusted partners{% endcomment %}
+  <div class="lg:w-[95%] mx-auto rounded-xl mt-6 bg-[url('{% static 'projectSuccess.jpg' %}')] bg-cover bg-no-repeat text-zinc-200">
+    <div class="text-left space-y-2 p-6 text-center lg:text-left">
+      <h1 class="text-xs sm:text-sm md:text-base uppercase font-semibold text-zinc-200">Our Trusted & Satisfied Partners </h1>
+      <h2 class="text-2xl sm:text-3xl md:text-4xl leading-tight font-extrabold">Where Clean Work <span class="text-green-600">Earns Real Trust Through </span><br class="hidden lg:block" />Results.</h2>
+      <p class="text-xs md:text-lg text-green-100">Each space we clean represents a promise kept. Our clients stay with us
+          because we deliver reliable results, not empty claims.</p>
+    </div>
+
+    {% load static %}
+    <div class="flex relative">
+      <div class="hidden xl:block xl:w-[40%] relative">
+        <img class="w-full absolute bottom-0 brightness-70 contrast-100  hue-rotate-[10deg]" src="{% static 'aboutUsImage.PNG' %}" alt="">
+      </div>
+
+      <div class="hidden lg:block xl:hidden h-[550px] absolute bottom-0 ">
+        <img class="" src="{% static 'aboutUsImage.PNG' %}" alt="">
+      </div>
+
+      <div class="w-full xl:w-[60%] mx-auto grid grid-cols-1 min-[480px]:grid-cols-2 lg:grid-cols-3 xl:grid-cols-2 gap-4 p-4 xl:py-8">
+        <div class="w-full h-[200px] p-2 text-zinc-200 text-center flex flex-col justify-center items-center gap-2 rounded-xl border-[1px] border-green-800 bg-green-800 bg-opacity-10 backdrop-blur-[2px]">
+          <h1 class="text-2xl min-[400px]:text-4xl sm:text-5xl font-extrabold" id="successProject">7000+</h1>
+          <h2 class="text-xl min-[480px]:text-sm sm:text-2xl font-semibold">Sucessful Project</h2>
+          <p class="text-xs md:text-sm">Completed for homes, offices, and commercial spaces.</p>
+        </div>
+        <div class="w-full h-[200px] p-2 text-zinc-200 text-center flex flex-col justify-center items-center gap-2 rounded-xl border-[1px] border-green-800 bg-green-800 bg-opacity-10 backdrop-blur-[2px]">
+          <h1 class="text-2xl min-[400px]:text-4xl sm:text-5xl font-extrabold" id="skilledEmp">50+</h1>
+          <h2 class="text-xl min-[480px]:text-sm sm:text-2xl font-semibold">Skilled Professionals</h2>
+          <p class="text-xs md:text-sm">Completed for homes, offices, and commercial spaces.</p>
+        </div>
+        <div class="w-full h-[200px] p-2 text-zinc-200 text-center flex flex-col justify-center items-center gap-2 rounded-xl border-[1px] border-green-800 bg-green-800 bg-opacity-10 backdrop-blur-[2px]">
+          <h1 class="text-2xl min-[400px]:text-4xl sm:text-5xl font-extrabold" id="customerRating">4.8</h1>
+          <h2 class="text-xl min-[480px]:text-sm sm:text-2xl font-semibold">Customer Rating</h2>
+          <p class="text-xs md:text-sm">Completed for homes, offices, and commercial spaces.</p>
+        </div>
+        <div class="w-full h-[200px] p-2 text-zinc-200 text-center flex flex-col justify-center items-center gap-2 rounded-xl border-[1px] border-green-800 bg-green-800 bg-opacity-10 backdrop-blur-[2px]">
+          <h1 class="text-2xl min-[400px]:text-4xl sm:text-5xl font-extrabold" id="techTool">5+</h1>
+          <h2 class="text-xl min-[480px]:text-sm sm:text-2xl font-semibold">Total High-tech Tool</h2>
+          <p class="text-xs md:text-sm">Completed for homes, offices, and commercial spaces.</p>
+        </div>
+        <div class="w-full h-[200px] p-2 text-zinc-200 text-center flex flex-col justify-center items-center gap-2 rounded-xl border-[1px] border-green-800 bg-green-800 bg-opacity-10 backdrop-blur-[2px]">
+          <h1 class="text-2xl min-[400px]:text-4xl sm:text-5xl font-extrabold" id="advanceProject">600+</h1>
+          <h2 class="text-xl min-[480px]:text-sm sm:text-2xl font-semibold">Advance Project</h2>
+          <p class="text-xs md:text-sm">Completed for homes, offices, and commercial spaces.</p>
+        </div>
+        <div class="w-full h-[200px] p-2 text-zinc-200 text-center flex flex-col justify-center items-center gap-2 rounded-xl border-[1px] border-green-800 bg-green-800 bg-opacity-10 backdrop-blur-[2px]">
+          <h1 class="text-2xl min-[400px]:text-4xl sm:text-5xl font-extrabold" id="yearExp">10+</h1>
+          <h2 class="text-xl min-[480px]:text-sm sm:text-2xl font-semibold">Years Experience</h2>
+          <p class="text-xs md:text-sm">Completed for homes, offices, and commercial spaces.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    const projectBoxes = Array.from(document.getElementsByClassName('projectBox'))
+    
+    //run the function when the screen resize
+    function applyProjectBoxBehavior() {
+      const isDesktop = window.matchMedia('(min-width: 1024px)').matches
+    
+      projectBoxes.forEach((box) => {
+        const content = box.querySelector('.projectBoxContent')
+        if (!content) return
+    
+        // Reset classes
+        content.classList.remove('opacity-0', 'opacity-100')
+    
+        if (isDesktop) {
+          content.classList.add('opacity-0')
+    
+          box.onmouseenter = () => {
+            content.classList.remove('opacity-0')
+            content.classList.add('opacity-100')
+          }
+    
+          box.onmouseleave = () => {
+            content.classList.remove('opacity-100')
+            content.classList.add('opacity-0')
+          }
+        } else {
+          content.classList.add('opacity-100')
+          box.onmouseenter = null
+          box.onmouseleave = null
+        }
+      })
+    }
+   //calling function 
+    applyProjectBoxBehavior()
+    
+    // calling function on every resize event
+    window.addEventListener('resize', applyProjectBoxBehavior)
+
+    /*Trusted and Satisfied Customer*/
+    const successProject=document.getElementById('successProject')
+    const skilledEmp=document.getElementById('skilledEmp')
+    const customerRating=document.getElementById('customerRating')
+    const techTool=document.getElementById('techTool')
+    const advanceProject=document.getElementById('advanceProject')
+    const yearExp=document.getElementById('yearExp')
+
+    let counterSucessProject=0;
+    let updateSuccessProject=setInterval(()=>{
+      counterSucessProject+=280
+      successProject.innerText=counterSucessProject+"+"
+      if(counterSucessProject>=7000){clearInterval(updateSuccessProject)}
+    },50)
+
+    counterSkilledEmp=0
+    let updateSkilledEmp=setInterval(()=>{
+      counterSkilledEmp+=5
+      skilledEmp.innerText=counterSkilledEmp+"+"
+      if(counterSkilledEmp>=50){clearInterval(updateSkilledEmp)}
+    },150)
+    
+    counterRating=0
+    let updateCustomerRating=setInterval(()=>{
+      counterRating+=0.4
+      customerRating.innerText=counterRating.toFixed(1)
+      if(counterRating>=4.8){clearInterval(updateCustomerRating)}
+    },100)
+
+    counterTool=0
+    let updateTechTool=setInterval(()=>{
+      counterTool+=1
+      techTool.innerText=counterTool+"+"
+      if(counterTool>=5){clearInterval(updateTechTool)}
+    },200)
+
+    counterProject=0
+    let updateAdvanceProject=setInterval(()=>{
+      counterProject+=120
+      advanceProject.innerText=counterProject+"+"
+      if(counterProject>=600){clearInterval(updateAdvanceProject)}
+    },200)
+
+    counterYear=0
+    let updateYearExp=setInterval(()=>{
+      counterYear+=2
+      yearExp.innerText=counterYear+"+"
+      if(counterYear>=10){clearInterval(updateYearExp)}
+    },200)
+
+  </script>
+{% endblock %}

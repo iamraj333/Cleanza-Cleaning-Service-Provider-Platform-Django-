@@ -1,0 +1,196 @@
+{% extends "NavbarModel.html" %}
+{% block title %}Write Booking Review | CleanZa{% endblock %}
+
+{% block body %}
+    <div class="w-full h-20 bg-zinc-900/100 flex items-center justify-center"></div>
+    
+    {% comment %} Review {% endcomment %}
+    <div class="w-full h-full flex justify-center items-center mt-4">
+        <div class="w-full max-w-2xl rounded-xl shadow-xl overflow-hidden">
+            {% comment %} Heading {% endcomment %}
+            <div class="bg-green-700 p-4 text-white space-y-1">
+                <h1 class="text-xl font-bold">Write a Review</h1>
+                <p class="text-sm ">Share your experience with this booking to help others make better decisions.</p>
+            </div>
+
+            {% comment %} Booking details {% endcomment %}
+            <div class="mx-6 mt-6 mb-2 bg-zinc-200 rounded-lg">
+                <div class="flex justify-center gap-2 mt-3">
+                    <div class="w-full rounded-lg p-4 bg-transparent">
+                        <h1 class="text-sm text-zinc-900/50">Service</h1>
+                        <h2 class="font-semibold text-zinc-800">{{bookedService.Service_name}}</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mx-6 mt-3 p-2">
+                <h2 class="font-semibold text-zinc-800">Rate our service</h2>
+                <div class="flex gap-2 text-4xl items-center">
+                    <span class="star cursor-pointer text-zinc-300 transition-all duration-[0.4s] hover:[-webkit-text-stroke:1px_#009966]" data-value="1">★</span>
+                    <span class="star cursor-pointer text-zinc-300 transition-all duration-[0.4s] hover:[-webkit-text-stroke:1px_#009966]" data-value="2">★</span>
+                    <span class="star cursor-pointer text-zinc-300 transition-all duration-[0.4s] hover:[-webkit-text-stroke:1px_#009966]" data-value="3">★</span>
+                    <span class="star cursor-pointer text-zinc-300 transition-all duration-[0.4s] hover:[-webkit-text-stroke:1px_#009966]" data-value="4">★</span>
+                    <span class="star cursor-pointer text-zinc-300 transition-all duration-[0.4s] hover:[-webkit-text-stroke:1px_#009966]" data-value="5">★</span>
+                </div>
+                <div class="items-center text-sm text-zinc-900/50 mt-2 hidden" id="ratingBox"><span class="font-semibold mr-2 text-md">Rating:</span> <span id="starCount">3</span>/5</div>
+            </div>
+
+            {% comment %} Form for updating time and date {% endcomment %}
+            <form action="" class="p-6 flex flex-col gap-4">
+                <label for="ReviewBox" class="text-zinc-800 font-semibold">Write your review:</label>
+                <textarea name="ReviewBox" id="ReviewBox" rows="5" class="p-2 rounded-lg outline-none border border-zinc-900/20 bg-transparent resize-none" placeholder="Share your experience..."></textarea>
+
+                <div class="flex mt-2 justify-end gap-2">
+                    <a href="{% url "dashboard" %}" id="RescheduleCancel" class="rounded-lg cursor-pointer outline-none border border-zinc-900/30 bg-transparent p-3 px-6 text-sm text-center transition-all duration-[0.4s] hover:bg-zinc-200">Cancel</a>
+                    <button id="ReviewSubmit" class="rounded-lg outline-none text-white border border-zinc-900/30 bg-green-800 p-3 px-6 text-sm text-center transition-all duration-[0.4s] hover:bg-green-700">Submit Review</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% comment %} Message box {% endcomment %}
+    <div id="ConfirmationDeletionMessage" class="w-[50%] fixed text-white shadow-xl inset-x-0 -top-20  left-1/2 -translate-x-1/2 rounded bg-green-500 z-30 flex justify-between items-center transition-all duration-500 p-5">
+      
+      <div class="flex gap-2 items-center"><i class="fa-solid fa-circle-check scale-[1.5]"></i> <span id="mymessage"></span></div>
+      <button id="MessageDeleteBtn" class="transition-all duration-400 hover:text-zinc-800"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+{% endblock  %}
+
+{% block scripts %}
+<script>
+
+    //Rating stars
+    const stars=document.querySelectorAll('.star');
+    const ratingBox=document.getElementById('ratingBox')
+    const starCount=document.getElementById('starCount')
+    let mystar=0
+    stars.forEach((star)=>{
+        star.addEventListener('click', ()=>{
+            
+            mystar=star.dataset.value
+            starCount.textContent=mystar
+            ratingBox.classList.add('flex')
+            ratingBox.classList.remove('hidden')
+
+
+            stars.forEach((s)=>{
+                if(s.dataset.value <= mystar){
+                    s.classList.add('text-emerald-600')
+                }
+                else{
+                    s.classList.remove('text-emerald-600')
+                }
+            })
+        })
+
+    })
+
+    //Message Box 
+    {% comment %} const ConfirmationDeletionMessage=document.getElementById('ConfirmationDeletionMessage')
+    const MessageDeleteBtn=document.getElementById('MessageDeleteBtn') {% endcomment %}
+
+
+    //Form review writing and submission
+    const ReviewBox=document.getElementById('ReviewBox')
+    const ReviewSubmit=document.getElementById('ReviewSubmit')
+
+    ReviewSubmit.addEventListener('click', (e)=>{
+        e.preventDefault()
+        let reviewText=ReviewBox.value
+        if(mystar<=0){
+            ConfirmationDeletionMessage.classList.remove('-top-20')
+            ConfirmationDeletionMessage.classList.add('top-0', 'bg-red-500')
+            ConfirmationDeletionMessage.querySelector('#mymessage').textContent="A rating is required before submitting your review."
+            MessageDeleteBtn.addEventListener('click', ()=>{
+              ConfirmationDeletionMessage.classList.add('-top-20')
+            })
+        
+            setTimeout(()=>{
+              ConfirmationDeletionMessage.classList.add('-top-20')
+            },2000)
+        }
+        else if(reviewText.length == 0){
+          ConfirmationDeletionMessage.classList.remove('-top-20')
+            ConfirmationDeletionMessage.classList.add('top-0', 'bg-red-500')
+            ConfirmationDeletionMessage.querySelector('#mymessage').textContent="Review is required"
+            MessageDeleteBtn.addEventListener('click', ()=>{
+              ConfirmationDeletionMessage.classList.add('-top-20')
+            })
+        
+            setTimeout(()=>{
+              ConfirmationDeletionMessage.classList.add('-top-20')
+            },2000)  
+        }
+        else if(reviewText.length <= 5){
+            ConfirmationDeletionMessage.classList.remove('-top-20')
+            ConfirmationDeletionMessage.classList.add('top-0', 'bg-red-500')
+            ConfirmationDeletionMessage.querySelector('#mymessage').textContent="Review text is too short"
+            MessageDeleteBtn.addEventListener('click', ()=>{
+              ConfirmationDeletionMessage.classList.add('-top-20')
+            })
+        
+            setTimeout(()=>{
+              ConfirmationDeletionMessage.classList.add('-top-20')
+            },2000)
+        }
+        else if(reviewText.length>300){
+            ConfirmationDeletionMessage.classList.remove('-top-20')
+            ConfirmationDeletionMessage.classList.add('top-0', 'bg-red-500')
+            ConfirmationDeletionMessage.querySelector('#mymessage').textContent="Review text is too long"
+            MessageDeleteBtn.addEventListener('click', ()=>{
+              ConfirmationDeletionMessage.classList.add('-top-20')
+            })
+        
+            setTimeout(()=>{
+              ConfirmationDeletionMessage.classList.add('-top-20')
+            },2000)
+        }
+        else{
+            const myReviewData={
+                ReviewServiceId:'{{bookedService.id}}',
+                ReviewRating:mystar,
+                ReviewText:ReviewBox.value
+            }
+
+            $.ajax({
+                url:'{% url "booking_Review_Submission" %}',
+                type:"POST",
+                contentType:"application/json",
+                data:JSON.stringify(myReviewData),
+                headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+                success:()=>{
+                    ConfirmationDeletionMessage.classList.remove('-top-20')
+                    ConfirmationDeletionMessage.classList.add('top-0', 'bg-green-500')
+                    ConfirmationDeletionMessage.querySelector('#mymessage').textContent="Review submitted successfully"
+                    MessageDeleteBtn.addEventListener('click', ()=>{
+                      ConfirmationDeletionMessage.classList.add('-top-20')
+                    })
+                
+                    setTimeout(()=>{
+                      ConfirmationDeletionMessage.classList.add('-top-20')
+                    },2000)
+
+                    setTimeout(()=>{
+                        window.location.href='/dashboard'
+                    },2001)
+                },
+                error:(e)=>{
+                    ConfirmationDeletionMessage.classList.remove('-top-20')
+                    ConfirmationDeletionMessage.classList.add('top-0', 'bg-red-500')
+                    ConfirmationDeletionMessage.querySelector('#mymessage').textContent="You'd already reviewed"
+                    MessageDeleteBtn.addEventListener('click', ()=>{
+                      ConfirmationDeletionMessage.classList.add('-top-20')
+                    })
+                
+                    setTimeout(()=>{
+                      ConfirmationDeletionMessage.classList.add('-top-20')
+                    },2000)
+
+                    console.log(e)
+                }
+            })
+        }
+    })
+
+</script>
+{% endblock  %}

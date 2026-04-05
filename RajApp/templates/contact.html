@@ -1,0 +1,139 @@
+{% extends 'NavbarModel.html' %}
+
+{% load static %}
+
+{% block title %}
+  Contact - Get In Touch
+{% endblock %}
+
+{% block body %}
+  <div class="relative">
+    {% comment %}Header{% endcomment %}
+    <div class="h-[50vh] sm:h-[60vh] md:h-[90vh] lg:h-[80vh] w-full overflow-hidden bg-[url('{% static 'contactImage.jpg' %}')] relative top-0 bg-cover bg-no-repeat bg-center">
+      <div class="h-full w-full top-0 bg-black bg-opacity-60 backdrop-blur-[3px] flex flex-col justify-center items-center">
+        <div class="relative top-[-5%] px-10 w-full">
+          <h1 class="text-[2rem] sm:[2.7rem] md:text-[3rem] xl:text-[5rem] text-center text-white font-bold leading-[1.2] text-shadow-lg text-shadow-zinc-500">Contact <span class="text-green-600">Cleanza</span></h1>
+          <p class="text-sm sm:text-md md:text-lg xl:text-xl text-center text-white py-4">We’re here to help. Get a free quote or ask us anything.</p>
+        </div>
+      </div>
+    </div>
+
+    {% comment %}Form and Data{% endcomment %}
+    <div class="w-[90%] md:w-[80%] lg:w-[90%] xl:w-[80%] lg:h-[90vh] bg-[url('{% static 'globalMap.jpg' %}')] bg-cover bg-no-repeat rounded-xl relative mt-[-15%] min-[560px]:mt-[-12%] lg:mt-[-10%] left-[50%] translate-x-[-50%] overflow-hidden outline-none border-none shadow-sm shadow-zinc-500">
+      <div id="contactSection" class="h-full w-full flex flex-col lg:flex-row top-0 bg-zinc-100 bg-opacity-90 outline-none border-none">
+        <div class="p-6 lg:w-[55%] flex flex-col justify-start gap-4">
+          <div class="space-y-1">
+            <h2 class="text-lg xl:text-2xl font-bold text-zinc-700">Contact <span class="text-green-700">Our Cleaning</span> Experts</h2>
+            <p class="text-xs sm:text-sm md:text-md">Send us a message and we’ll respond within 24 hours.</p>
+          </div>
+          <form  action="" method="POST" class="text-sm md:text-md space-y-6" novalidate>
+          {% csrf_token %}
+            <div class="flex flex-col min-[560px]:flex-row items-center gap-4 w-full">
+              <input type="text" name="ContactName" class="w-full p-3 px-4 block outline-none border-[2px] border-zinc-500 bg-transparent rounded-full" placeholder="Enter name*" value="{{currentCustomer.name}}"/>
+              <input type="text" name="ContactEmail" class="w-full p-3 px-4 block outline-none border-[2px] border-zinc-500 bg-transparent rounded-full" placeholder="Enter email*" value="{{currentCustomer.email}}"/>
+            </div>
+            <div class="flex flex-col min-[560px]:flex-row items-center gap-4 w-full">
+              <input type="text" name="ContactPhone" class="w-full p-3 px-4 block outline-none border-[2px] border-zinc-500 bg-transparent rounded-full" placeholder="Enter phone" value="{{currentCustomer.phone}}"/>
+              <input type="text" name="ContactService" class="w-full p-3 px-4 block outline-none border-[2px] border-zinc-500 bg-transparent rounded-full" placeholder="Ask for specific topic?" />
+            </div>
+            <textarea name="ContactMessage" rows="4" class="resize-none w-full p-3 px-4 block outline-none border-[2px] border-zinc-500 bg-transparent rounded-[20px]" placeholder="Enter message here..."></textarea>
+            <button type="submit" class="text-xs min-[560px]:text-sm md:text-md p-3 px-6 block outline-none border-none bg-green-700 text-zinc-100 font-semibold rounded-full transition-backgroundColor duration-300 hover:bg-green-800">Send A Message</button>
+          </form>
+        </div>
+        <div class="lg:w-[45%] p-6 md:px-12 space-y-6">
+          <div>
+            <h2 class="text-lg xl:text-2xl font-bold text-zinc-700">Contact <span class="text-green-700">With Us</span></h2>
+            <p class="text-xs sm:text-sm md:text-md">Contact us through phone, email, or visit us — we’re always happy to help.</p>
+          </div>
+          <div class="flex gap-4 text-sm sm:text-md text-zinc-700">
+            <div class="w-[50px] h-[50px] shrink-0 flex justify-center items-center p-4 rounded-full bg-green-600 text-zinc-100 text-xl">
+              <i class="fa-solid fa-phone-volume"></i>
+            </div>
+            <div>
+              <h1 class="text-md sm:text-lg md:text-xl font-bold">Contact Number</h1>
+              <h2>Phone: +919876543210</h2>
+              <h2>Telephone: (+123) 123456789</h2>
+            </div>
+          </div>
+          <div class="flex gap-4 text-sm sm:text-md text-zinc-700">
+            <div class="w-[50px] h-[50px] shrink-0 flex justify-center items-center p-4 rounded-full bg-green-600 text-zinc-100 text-xl">
+              <i class="fa-solid fa-envelope-circle-check"></i>
+            </div>
+            <div>
+              <h1 class="text-md sm:text-lg md:text-xl font-bold">Email Support</h1>
+              <h2>cleanza@gmail.com</h2>
+              <h2>cleanza@support.com</h2>
+            </div>
+          </div>
+          <div class="flex gap-4 text-sm sm:text-md text-zinc-700">
+            <div class="w-[50px] h-[50px] shrink-0 flex justify-center items-center p-4 rounded-full bg-green-600 text-zinc-100 text-xl">
+              <i class="fa-solid fa-location-dot"></i>
+            </div>
+            <div>
+              <h1 class="text-md sm:text-lg md:text-xl font-bold">Office Location</h1>
+              <h2>Borivali 741852, Mumbai, Maharashtra, India</h2>
+            </div>
+          </div>
+          <div class="flex gap-4 text-sm sm:text-md text-zinc-700">
+            <div class="w-[50px] h-[50px] shrink-0 flex justify-center items-center p-4 rounded-full bg-green-600 text-zinc-100 text-xl">
+              <i class="fa-solid fa-user-clock"></i>
+            </div>
+            <div>
+              <h3 class="text-md sm:text-lg md:text-xl font-bold text-zinc-700">Our Working Time</h3>
+              <p class="text-sm sm:text-md">Mon-Fri: 7:00 am to 10:00 pm</p>
+              <p class="text-sm sm:text-md">Saturday: 10:00 am to 5:00 pm</p>
+              <p class="text-sm sm:text-md">Sunday Opened (only for premium partner)</p>
+            </div>
+          </div>
+          <div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% comment %} MAP {% endcomment %}
+  <div class="w-full mt-20">
+    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3773.419623343608!2d72.7989051!3d18.957066599999997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7cde10fe97ac3%3A0x19f9e3894e2b8919!2sPriyadarshini%20Park!5e0!3m2!1sen!2sin!4v1769930509318!5m2!1sen!2sin" class="w-full h-[70vh]" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+  </div>
+
+{% endblock %}
+{% block scripts %}
+<script>
+  {% if messages %}
+    {% for message in messages %}
+      {% if message.tags == 'success' %}
+        function showSweetAlert(){
+          Swal.fire({
+            title:"Message Sent Sucessfully",
+            text:'{{message}}', //Thank you for contact us, We approach you as soon as possible.
+            icon:'success',
+            showClass:{
+              popup:'animate__fadeInDown'
+            },
+            hideClass:{
+              popup:'animate__fadeOutUp'
+            },
+          })
+        }
+      {% else %}
+        function showSweetAlert(){
+          Swal.fire({
+            title:"Failed to Send Message",
+            text:'{{message}}', //Something went wrong, Please try again.
+            icon:'error',
+            showClass:{
+              popup:'animate__animated animate__fadeInDown animate__faster'
+            },
+            hideClass:{
+              popup:'animate__animated animate__fadeOutUp animate__faster'
+            },
+          })
+        }
+      {% endif %}
+    {% endfor %}
+    showSweetAlert()
+  {% endif %}
+
+  
+</script>
+{% endblock  %}

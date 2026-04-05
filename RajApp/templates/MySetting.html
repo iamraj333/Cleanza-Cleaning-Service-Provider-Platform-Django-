@@ -1,0 +1,230 @@
+{% extends "NavbarModel.html" %}
+
+{% block title %}Setting - Select your Preferences | CleanZa{% endblock %}
+
+{% block body %}
+<div class="w-full h-20 bg-zinc-900/100 flex items-center justify-center"></div>
+
+{% comment %} Showing message box for email verifiecation {% endcomment %}
+{% if currentCustomer.isEmailVerified == 'Pending' %}
+    <div class="max-w-[95%] sm:max-w-[80%] m-4 mx-auto flex flex-col sm:flex-row items-center justify-between bg-red-50 border border-red-900/50 rounded-lg p-4 mt-2">
+        <div class="flex items-center gap-3">
+        <span id="verifyIcon" class="text-red-500 text-lg">❌</span>
+        <div>
+            <p class="font-medium">Email Verification</p>
+            <p id="verifyStatus" class="text-sm text-gray-500">Your email is not verified</p>
+        </div>
+        </div>
+        <a href="{% url "email_verification" %}" id="verifyBtn" class=" w-full sm:w-auto mt-3 sm:mt-0 text-center bg-indigo-600 text-white block px-4 py-2 rounded-lg hover:bg-indigo-700 text-sm">Verify Email</a>
+      </div>
+{% endif %}
+
+
+{% comment %} Main content {% endcomment %}
+<div class="max-w-[90%] lg:max-w-[70%] mx-auto grid grid-cols-1 sm:grid-cols-[0.4fr_1.6fr] gap-2 mt-4">
+    {% comment %} Menu Section {% endcomment %}
+    <div class="bg-zinc-900/80 p-4 rounded-lg max-h-96 md:sticky md:top-[5rem]">
+        <h1 class="class text-zinc-100 font-bold px-2 text-lg">Settings</h1>
+        <ul class="w-full mt-2">
+            <li class="text-zinc-100 text-sm rounded-lg transition-all duration-[0.3s] hover:bg-zinc-100 hover:text-zinc-900"><a href="#AppearanceSection" class="p-2 block">Appearance</a></li>
+            <li class="text-zinc-100 text-sm rounded-lg transition-all duration-[0.3s] hover:bg-zinc-100 hover:text-zinc-900"><a href="#NotificationSection" class="p-2 block">Notification</a></li>
+            <li class="text-zinc-100 text-sm rounded-lg transition-all duration-[0.3s] hover:bg-zinc-100 hover:text-zinc-900"><a href="#LanguageSection" class="p-2 block">Language</a></li>
+            <li class="text-zinc-100 text-sm rounded-lg transition-all duration-[0.3s] hover:bg-zinc-100 hover:text-zinc-900"><a href="#DataStorageSection" class="p-2 block">Data & Storage</a></li>
+        </ul>
+    </div>
+
+    {% comment %} Content and setting section {% endcomment %}
+    <div class="rounded-lg p-4 px-2 sm:px-4 border">
+        <h2 class="text-xl font-bold text-zinc-900/80 uppercase">User Settings</h2>
+        
+        {% comment %} Appearance {% endcomment %}
+        <div id="AppearanceSection" class="border p-4 mt-4 rounded-lg bg-white transition-all duration-[0.3s] hover:shadow scroll-mt-20">
+            <h2 class="text-md font-semibold text-zinc-900/90">Appearance</h2>
+            <form action="" method="post" class="mt-5 px-6 text-zinc-900/80 space-y-6">
+            {% csrf_token %}
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div class="flex flex-col justify-start gap-1">
+                        <label for="UserTheme" class="font-semibold text-sm">Theme:</label>
+                        <select name="" id="UserTheme" class="border border-zinc-900/20 bg-transparent p-2 px-4 rounded outline-none transition-all duration-[0.3s] hover:border-zinc-900">
+                            <option value="Light">Light</option>
+                            <option value="Dark">Dark</option>
+                            <option value="System">System</option>
+                            {% if userSetting %}
+                            <option value="{{userSetting.WebTheme}}" selected>{{userSetting.WebTheme}}</option>
+                            {% endif %}
+                        </select>
+                    </div>
+                    <div class="flex flex-col justify-start gap-1 pb-2">
+                        <label for="UserFontSize" class="font-semibold text-sm">Font Size:</label>
+                        <select name="" id="UserFontSize" class="border border-zinc-900/20 bg-transparent p-2 px-4 rounded outline-none transition-all duration-[0.3s] hover:border-zinc-900">
+                            <option value="Small">Small</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Large">Large</option>
+                            {% if userSetting %}
+                            <option value="{{userSetting.WebFontSize}}" selected>{{userSetting.WebFontSize}}</option>
+                            {% endif %}
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        {% comment %} Notifications {% endcomment %}
+        <div id="NotificationSection" class="border p-4 mt-4 rounded-lg bg-white transition-all duration-[0.3s] hover:shadow scroll-mt-20">
+            <h2 class="text-md font-semibold text-zinc-900/90">Notifications</h2>
+            <form action="" method="post" class="mt-5 px-6 text-zinc-900/80 space-y-6">
+            {% csrf_token %}
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div class="flex flex-col justify-start gap-1">
+                        <label for="UserEmailNotification" class="font-semibold text-sm">Is Email Notification:</label>
+                        <select name="" id="UserEmailNotification" class="border border-zinc-900/20 bg-transparent p-2 px-4 rounded outline-none transition-all duration-[0.3s] hover:border-zinc-900">
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                            {% if userSetting %}
+                            <option value="{{userSetting.IsEmailNotification}}" selected>{{userSetting.IsEmailNotification}}</option>
+                            {% endif %}
+                        </select>
+                    </div>
+                    <div class="flex flex-col justify-start gap-1 pb-2">
+                        <label for="UserWebNotification" class="font-semibold text-sm">Is Web Notification:</label>
+                        <select name="" id="UserWebNotification" class="border border-zinc-900/20 bg-transparent p-2 px-4 rounded outline-none transition-all duration-[0.3s] hover:border-zinc-900">
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                            {% if userSetting %}
+                            <option value="{{userSetting.IsWebNotification}}" selected>{{userSetting.IsWebNotification}}</option>
+                            {% endif %}
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        {% comment %} Languages {% endcomment %}
+        <div id="LanguageSection" class="border p-4 mt-4 rounded-lg bg-white transition-all duration-[0.3s] hover:shadow scroll-mt-20">
+            <h2 class="text-md font-semibold text-zinc-900/90">Language & Regions</h2>
+            <form action="" method="post" class="mt-5 px-6 text-zinc-900/80 space-y-6">
+            {% csrf_token %}
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div class="flex flex-col justify-start gap-1">
+                        <label for="UserLanguage" class="font-semibold text-sm">Language:</label>
+                        <select name="" id="UserLanguage" class="border border-zinc-900/20 bg-transparent p-2 px-4 rounded outline-none transition-all duration-[0.3s] hover:border-zinc-900">
+                            <option value="English">English(default)</option>
+                            <option value="Hindi">Hindi</option>
+                            <option value="Marathi">Marathi</option>
+                            <option value="Gujrati">Gujrati</option>
+                            <option value="Rajasthani">Rajasthani</option>
+                            <option value="French">French</option>
+                            <option value="Japanese">Japanese</option>
+                            {% if userSetting %}
+                            <option value="{{userSetting.WebLanguage}}" selected>{{userSetting.WebLanguage}}</option>
+                            {% endif %}
+                        </select>
+                    </div>
+                    <div class="flex flex-col justify-start gap-1 pb-2">
+                        <label for="UserTimeZone" class="font-semibold text-sm">Time-zone:</label>
+                        <select name="" id="UserTimeZone" class="border border-zinc-900/20 bg-transparent p-2 px-4 rounded outline-none transition-all duration-[0.3s] hover:border-zinc-900">
+                            <option value="GMT">GMT(Greenwich Mean Time)</option>
+                            <option value="IST">IST(India Standard Time)</option>
+                            {% if userSetting %}
+                            <option value="{{userSetting.WebTimeZone}}" selected>{{userSetting.WebTimeZone}}</option>
+                            {% endif %}
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        {% comment %} Data Storage {% endcomment %}
+        <div id="DataStorageSection" class="border p-4 mt-4 rounded-lg bg-white transition-all duration-[0.3s] hover:shadow scroll-mt-20">
+            <h2 class="text-md font-semibold text-zinc-900/90">Data & Storage</h2>
+            <div class="flex gap-4 mt-4">
+                <button class="p-2 px-4 text-sm rounded-lg bg-zinc-900/20 outline-none transition-all duration-[0.3s] hover:bg-zinc-900/30">Clear Cache</button>
+                <button class="p-2 px-4 text-sm rounded-lg bg-zinc-900/20 outline-none transition-all duration-[0.3s] hover:bg-zinc-900/30">Download My Data</button>
+            </div>
+        </div>
+
+        <button onclick="SaveSettingChanges(event)" class="mt-4 text-zinc-100 font-medium p-2 px-4 rounded-lg outline-none bg-green-700 transition-all duration-[0.4s] hover:bg-green-800">Save Changes</button>
+    </div>
+</div>
+{% endblock  %}
+
+{% block scripts %}
+<script>
+     function SaveSettingChanges(e){
+        e.preventDefault()
+
+        const UserTheme=document.getElementById('UserTheme')
+        const UserFontSize=document.getElementById('UserFontSize')
+        const UserEmailNotification=document.getElementById('UserEmailNotification')
+        const UserWebNotification=document.getElementById('UserWebNotification')
+        const UserLanguage=document.getElementById('UserLanguage')
+        const UserTimeZone=document.getElementById('UserTimeZone')
+
+        if(UserTheme.value=="" || UserFontSize.value=="" ||UserEmailNotification.value=="" || UserWebNotification.value=="" || UserLanguage.value=="" || UserTimeZone.value==""){
+            let settingIssueAlert=()=>{
+                Swal.fire({
+                    title:"Setting Update Failed!",
+                    text:'Please select valid options', //Something went wrong, Please try again.
+                    icon:'error',
+                    showClass:{
+                      popup:'animate__animated animate__fadeInDown animate__faster'
+                    },
+                    hideClass:{
+                      popup:'animate__animated animate__fadeOutUp animate__faster'
+                    },
+                })
+            }
+            settingIssueAlert()
+        }
+        else{
+            myUserSettingData={
+                UserTheme:UserTheme.value,
+                UserFontSize:UserFontSize.value,
+                UserEmailNotification:UserEmailNotification.value,
+                UserWebNotification:UserWebNotification.value,
+                UserLanguage:UserLanguage.value,
+                UserTimeZone:UserTimeZone.value,
+            }
+
+            $.ajax({
+                url:'{% url "change_Setting" %}',
+                method:"POST",
+                contentType:'application/json',
+                data:JSON.stringify(myUserSettingData),
+                headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+                success:(e)=>{
+                    Swal.fire({
+                        toast:true,
+                        position:'top',
+                        title:'Setting changed successfully',
+                        background:'#008e3b',
+                        color:'#fff',
+                        icon:'success',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true
+                    })
+
+                    setTimeout(()=>{
+                        window.location.href='{% url "mySetting" %}'
+                    },3000)
+                },
+                error:(e)=>{
+                    Swal.fire({
+                        title:"Setting Update Failed",
+                        text:'Something went wrong', //Something went wrong, Please try again.
+                        icon:'error',
+                        showClass:{
+                          popup:'animate__animated animate__fadeInDown animate__faster'
+                        },
+                        hideClass:{
+                          popup:'animate__animated animate__fadeOutUp animate__faster'
+                        },
+                    })
+
+                }
+            })
+        }
+     }
+</script>
+{% endblock  %}

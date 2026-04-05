@@ -1,0 +1,67 @@
+{% extends 'NavbarModel.html' %}
+
+{% load static %}
+
+{% block title %}
+  Pricing – Find the Perfect Plan for You
+{% endblock %}
+
+{% block body %}
+  <div class="relative">
+    {% comment %}Header{% endcomment %}
+    <div class="h-[50vh] sm:h-[60vh] md:h-[60vh] lg:h-[60vh] w-full overflow-hidden bg-[url('{% static 'pricing.jpg' %}')] relative top-0 bg-cover bg-no-repeat bg-center">
+      <div class="h-full w-full top-0 bg-black bg-opacity-60 backdrop-blur-[3px] flex flex-col justify-center items-center">
+        <div class="relative top-[-5%] px-10 w-full">
+          <h1 class="text-[2rem] sm:[2.7rem] md:text-[3rem] xl:text-[4rem] text-center text-white font-extrabold leading-[1.2] text-shadow-lg text-shadow-zinc-500">Our <span class="text-green-700">Pricing </span>Plans</h1>
+          <p class="text-sm sm:text-md md:text-lg xl:text-lg text-center text-white py-4 font-semibold">Clear estimates. Personalized service. No surprises.</p>
+        </div>
+        <p class="absolute bottom-0 left-2 text-xs sm:text-md xl:text-md text-white py-4 flex justify-center items-center gap-2">
+          <i class="fa-solid fa-bookmark text-xl"></i> Final pricing is determined after a brief verification of your residential or commercial property to ensure accurate and fair pricing.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  {% comment %}Pricing plans{% endcomment %}
+  <div class="flex flex-col justify-center items-center gap-4 mt-10 text-zinc-800">
+    <div class="space-y-4">
+      <div class="text-center space-y-3 mb-10">
+        <h1 class="text-sm sm:text-base uppercase font-semibold text-green-700">Our Cleaning Plans & Pricing</h1>
+        <h2 class="text-2xl sm:text-3xl md:text-4xl xl:text-5xl font-extrabold leading-tight">Choose the <span class="text-green-700">plan that fits your</span><br class="hidden sm:block" /> needs and budget</h2>
+      </div>
+    </div>
+
+    <div class="flex flex-wrap justify-center gap-6">
+      {% for key, plans in PricingPlan.items %}
+        {% for plan in plans %}
+          <div class="w-[90%] min-[560px]:w-[80%] md:w-[350px] lg:w-[450px] xl:w-[30%] md:h-[87vh] lg:h-[80vh] relative p-4 rounded-xl outline-none border-[2px] border-gray-500 text-zinc-700 space-y-4">
+            <div class="space-y-1">
+              <h1 class="text-xl md:text-2xl font-bold">{{ plan.name }}</h1>
+              <p class="text-xs sm:text-sm">{{ plan.tagline }}</p>
+            </div>
+            <h1 class=""><span class="text-2xl md:text-4xl font-extrabold text-green-700">{{ plan.price }}</span> /month</h1>
+            <p class="text-xs sm:text-sm">{{ plan.perfectFor }}</p>
+            <ul class="flex flex-col gap-2">
+              {% for include in plan.includes %}
+                <li class="flex justify-start items-center text-xs sm:text-sm font-semibold gap-2">
+                  <i class="fa-solid fa-circle-check text-green-700 text-2xl"></i>{{ include }}
+                </li>
+              {% endfor %}
+            </ul>
+            <div class="lg:w-[90%] flex flex-wrap items-center justify-between gap-3 md:absolute md:bottom-4 !mt-[35px] md:mt-0">
+              <h1 class="text-center"> <span class="block text-md md:text-lg font-extrabold text-zinc-900">{{ plan.serviceFrequency.visitsPerWeek }} visits/week</span><span class="block text-sm md:text-md text-zinc-600">({{ plan.serviceFrequency.hoursPerVisit }} hours per visit)</span>
+              </h1>
+              <a href="tel:+911234567890" class="w-full min-[357px]:w-auto px-6 py-3 sm:py-4 bg-teal-900 text-xs sm:text-sm md:text-md font-semibold text-white rounded-full transition-color duration-300 hover:bg-green-700">Call Us Now</a href="tel:+911234567890">
+            </div>
+          </div>
+        {% endfor %}
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}
+{% block scripts %}
+  <script>
+    const PricingPlan='{{PricingPlan}}'
+    {% comment %} for() {% endcomment %}
+</script>
+{% endblock %}

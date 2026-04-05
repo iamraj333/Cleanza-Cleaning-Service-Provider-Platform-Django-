@@ -1,0 +1,197 @@
+{% extends "NavbarModel.html" %}
+
+{% block title %}Reschedule Your Booking | CleanZa{% endblock %}
+
+{% block body %}
+    <style>
+        .BtnActive{
+            background-color: green;
+            color: white;
+        }
+    </style>
+
+    <div class="w-full h-20 bg-zinc-900/100 flex items-center justify-center"></div>
+
+    <div class="w-full h-full flex justify-center items-center mt-4">
+        <div class="w-full max-w-2xl rounded-xl shadow-xl overflow-hidden">
+            {% comment %} Heading {% endcomment %}
+            <div class="bg-green-700 p-4 text-white space-y-1">
+                <h1 class="text-xl font-bold">Reschedule Your Booking</h1>
+                <p class="text-sm ">Choose a new date and time that works better for you.</p>
+            </div>
+
+            {% comment %} Booking details {% endcomment %}
+            <div class="mx-6 mt-6 mb-2 bg-zinc-200 p-4 rounded-lg">
+                <h1 class="text-md font-semibold">Booking Details</h1>
+                <div class="grid grid-cols-[_1.2fr,_0.9fr,_0.9fr] justify-center gap-2 mt-3">
+                    <div class="w-full rounded-lg p-4 bg-zinc-100 border border-zinc-900/20">
+                        <h1 class="text-sm text-zinc-900/50">Service</h1>
+                        <h2 class="font-semibold text-zinc-800">{{bookedService.Service_name}}</h2>
+                    </div>
+                    <div class="w-full rounded-lg p-4 bg-zinc-100 border border-zinc-900/20">
+                        <h1 class="text-sm text-zinc-900/50">Current Date</h1>
+                        <h2 class="font-semibold text-zinc-800">{{bookedService.date}}</h2>
+                    </div>
+                    <div class="w-full rounded-lg p-4 bg-zinc-100 border border-zinc-900/20">
+                        <h1 class="text-sm text-zinc-900/50">Current Time</h1>
+                        <h2 class="font-semibold text-zinc-800">{{bookedService.time}}</h2>
+                    </div>
+                </div>
+            </div>
+
+            {% comment %} Form for updating time and date {% endcomment %}
+            <form action="" class="p-6 flex flex-col gap-4">
+                <div class="flex flex-col gap-1">
+                    <label for="SelectedDate" class="text-zinc-900/50 text-sm font-medium">Select New Date:</label>
+                    <input type="date" id="SelectedDate" name="SelectedDate" class="p-2 rounded-lg outline-none border border-zinc-900/20 bg-transparent" required>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <label for="SelectedTime " class="text-zinc-900/50 text-sm font-medium">Select New Date:</label>
+                    <div class="timeSlots grid grid-cols-3 gap-3 justify-center">
+                        <button type="button" class="SelectedTime outline-none rounded-lg border border-zinc-900/20 bg-transparent p-3 px-6 text-sm text-center transition-all duration-[0.4s] hover:border-green-600 hover:shadow hover:-translate-y-[1.8px] BtnActive">8:00 AM</button>
+                        <button type="button" class="SelectedTime outline-none rounded-lg border border-zinc-900/20 bg-transparent p-3 px-6 text-sm text-center transition-all duration-[0.4s] hover:border-green-600 hover:shadow hover:-translate-y-[1.8px]">10:00 AM</button>
+                        <button type="button" class="SelectedTime outline-none rounded-lg border border-zinc-900/20 bg-transparent p-3 px-6 text-sm text-center transition-all duration-[0.4s] hover:border-green-600 hover:shadow hover:-translate-y-[1.8px]">12:00 PM</button>
+                        <button type="button" class="SelectedTime outline-none rounded-lg border border-zinc-900/20 bg-transparent p-3 px-6 text-sm text-center transition-all duration-[0.4s] hover:border-green-600 hover:shadow hover:-translate-y-[1.8px]">3:00 PM</button>
+                        <button type="button" class="SelectedTime outline-none rounded-lg border border-zinc-900/20 bg-transparent p-3 px-6 text-sm text-center transition-all duration-[0.4s] hover:border-green-600 hover:shadow hover:-translate-y-[1.8px]">5:00 PM</button>
+                    </div>
+                </div> 
+                <hr class="border-zinc-900/10 mt-2">
+                <div class="flex justify-end gap-3 mt-2">
+                    <a href="{% url "dashboard" %}" id="RescheduleCancel" class="rounded-lg cursor-pointer outline-none border border-zinc-900/30 bg-transparent p-3 px-6 text-sm text-center transition-all duration-[0.4s] hover:bg-zinc-200">Cancel</a>
+                    <button id="RescheduleConfirmation" class="rounded-lg outline-none text-white border border-zinc-900/30 bg-green-800 p-3 px-6 text-sm text-center transition-all duration-[0.4s] hover:bg-green-700">Confirm Reschedule</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% comment %} Message box {% endcomment %}
+    <div id="ConfirmationDeletionMessage" class="w-[50%] fixed text-white shadow-xl inset-x-0 -top-20  left-1/2 -translate-x-1/2 rounded bg-green-500 z-30 flex justify-between items-center transition-all duration-500 p-5">
+      
+      <div class="flex gap-2 items-center"><i class="fa-solid fa-circle-check scale-[1.5]"></i> <span id="mymessage"></span></div>
+      <button id="MessageDeleteBtn" class="transition-all duration-400 hover:text-zinc-800"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const SelectedDate=document.getElementById('SelectedDate')
+    const SelectedTime=document.querySelectorAll('.SelectedTime')
+
+    let RescheduledDate=null
+    let RescheduledTime="8:00 AM"
+    SelectedTime.forEach((timeBtn)=>{
+        timeBtn.addEventListener('click',()=>{
+
+            SelectedTime.forEach(btn=>{
+                btn.classList.remove('BtnActive')
+            })
+            timeBtn.classList.add('BtnActive')
+            RescheduledTime=timeBtn.innerText
+        })
+    })
+
+    
+    //Confirmation and Cancellation buttons
+    const RescheduleCancel=document.getElementById('RescheduleCancel')
+    const RescheduleConfirmation=document.getElementById('RescheduleConfirmation')
+
+    //Message Box 
+    {% comment %} const ConfirmationDeletionMessage=document.getElementById('ConfirmationDeletionMessage')
+    const MessageDeleteBtn=document.getElementById('MessageDeleteBtn') {% endcomment %}
+    
+
+    RescheduleConfirmation.addEventListener('click', (e)=>{
+        e.preventDefault()
+
+        RescheduledDate=SelectedDate.value
+        let currentDate=new Date()
+        let FormattedCurrentDate=`${currentDate.getFullYear()}-${currentDate.getMonth()+1}-${currentDate.getDate()}`
+    
+        //Checking range or difference between two date
+        let mycurrentDate=new Date(FormattedCurrentDate.toString())
+        let myscheduledDate=new Date(RescheduledDate.toString())
+        let DateDiffInMiliSecond=myscheduledDate-mycurrentDate
+        let DateDayDiff=Math.floor(DateDiffInMiliSecond/(1000*60*60*24))
+
+        //check if date is possible for schedule
+        if(RescheduledDate==""){
+            ConfirmationDeletionMessage.classList.remove('-top-20')
+            ConfirmationDeletionMessage.classList.add('top-0', 'bg-red-500')
+            ConfirmationDeletionMessage.querySelector('#mymessage').textContent="Please Enter Valid Date"
+            MessageDeleteBtn.addEventListener('click', ()=>{
+              ConfirmationDeletionMessage.classList.add('-top-20')
+            })
+        
+            setTimeout(()=>{
+              ConfirmationDeletionMessage.classList.add('-top-20')
+            },2000)
+            
+        }
+        if(DateDayDiff<1){
+            ConfirmationDeletionMessage.classList.remove('-top-20')
+            ConfirmationDeletionMessage.classList.add('top-0', 'bg-red-500')
+            ConfirmationDeletionMessage.querySelector('#mymessage').textContent="Date schedule not possible"
+            MessageDeleteBtn.addEventListener('click', ()=>{
+              ConfirmationDeletionMessage.classList.add('-top-20')
+            })
+        
+            setTimeout(()=>{
+              ConfirmationDeletionMessage.classList.add('-top-20')
+            },2000)
+        }
+        else{
+            let myRescheduleData={
+                RescheduleService:'{{bookedService.Service_name}}',
+                RescheduledDate:RescheduledDate,
+                RescheduledTime:RescheduledTime
+            }
+
+            console.log(myRescheduleData)
+
+            //sending Reschedule data to the views using ajax+jquery
+            if(RescheduledDate && RescheduledTime){
+                $.ajax({
+                url:'{% url "booking_Reschedule_Submission" %}',
+                type:"POST",
+                contentType:"application/json",
+                data:JSON.stringify(myRescheduleData),
+                headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+                success:()=>{
+                    ConfirmationDeletionMessage.classList.remove('-top-20')
+                    ConfirmationDeletionMessage.classList.add('top-0', 'bg-green-500')
+                    ConfirmationDeletionMessage.querySelector('#mymessage').textContent="Booking reschedule successfully"
+                    MessageDeleteBtn.addEventListener('click', ()=>{
+                      ConfirmationDeletionMessage.classList.add('-top-20')
+                    })
+                
+                    setTimeout(()=>{
+                      ConfirmationDeletionMessage.classList.add('-top-20')
+                    },2000)
+
+                    setTimeout(()=>{
+                        window.location.href='/dashboard'
+                    },2001)
+                },
+                error:(e)=>{
+                    ConfirmationDeletionMessage.classList.remove('-top-20')
+                    ConfirmationDeletionMessage.classList.add('top-0', 'bg-red-500')
+                    ConfirmationDeletionMessage.querySelector('#mymessage').textContent="Failed to reschedule booking"
+                    MessageDeleteBtn.addEventListener('click', ()=>{
+                      ConfirmationDeletionMessage.classList.add('-top-20')
+                    })
+                
+                    setTimeout(()=>{
+                      ConfirmationDeletionMessage.classList.add('-top-20')
+                    },2000)
+
+                    console.log(e)
+                }
+            })
+            }
+        }
+    })
+
+    
+</script>
+{% endblock  %}
+

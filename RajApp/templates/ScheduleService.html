@@ -1,0 +1,2032 @@
+{% extends 'NavbarModel.html' %}
+{% block title %}
+Schedule Service
+{% endblock %}
+
+{% block body %}
+<style>
+  .clip-step {
+    clip-path: polygon(0% 0%, 90% 0%, 100% 50%, 90% 100%, 0% 100%, 10% 50%);
+  }
+
+  .clip-step:first-child {
+    clip-path: polygon(0% 0%, 90% 0%, 100% 50%, 90% 100%, 0% 100%, 0% 50%);
+  }
+
+  .clip-step:last-child {
+    clip-path: polygon(0% 0%, 100% 0%, 100% 50%, 100% 100%, 0% 100%, 10% 50%);
+  }
+
+  .active {
+    background-color: #696969ff;
+  }
+
+  .date .inactive {
+    color: #747373ff;
+  }
+
+  #MonthDates li {
+    position: relative;
+    z-index: 1;
+    cursor: pointer;
+  }
+
+  #MonthDates .dateItems::before {
+    position: absolute;
+    content: '';
+    width: 35px;
+    height: 35px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 100%;
+    z-index: -1;
+    transition: all 0.5s ease;
+  }
+
+  #MonthDates .dateItems:hover::before {
+    background-color: #aeaeaeff;
+  }
+
+  .no-before-hover::before {
+    background-color: transparent !important;
+    /* override the hover */
+  }
+
+  #MonthDates .DatesActive::before {
+    background-color: #039c31ff;
+  }
+
+  .PaymentMethodActive {
+    display: block;
+  }
+</style>
+
+{% comment %} ERROR BOX {% endcomment %}
+<div id="ErrorBox"
+  class="fixed z-[50] w-[50%] left-1/2 !-translate-x-[50%] group top-[-10%] transition-all duration-400">
+  <div
+    class="bg-red-600/90 shadow shadow-zinc-800 w-full flex justify-between items-center text-white transition-all duration-500 group-hover:bg-red-600 group-hover:shadow">
+    <h1 class="text-center p-4" id="ErrorBoxMessage"></h1>
+    <button id="ErrorBoxClose" class="text-sm p-4 transition duration-300 hover:text-zinc-900"><i
+        class="fa-solid fa-x"></i></button>
+  </div>
+</div>
+
+
+<div
+  class="bg-[url('https://images4.alphacoders.com/594/thumb-1920-594600.jpg')] bg-norepeat bg-cover relative w-full space-y-3 pt-[5rem] h-auto">
+  <div class="p-4 w-full bg-zinc-100 mx-auto">
+    <div class="px-8 py-1 w-full">
+      <a href="/services/"
+        class="group inline-flex items-center text-md font-semibold text-zinc-900 transition-all duration-300 ease-in-out">
+        <i class="fa fa-angle-left text-sm transition-transform duration-300 group-hover:-translate-x-1"></i>
+        <span class="relative">
+          Services
+          <span
+            class="absolute left-0 -bottom-0.5 h-[1px] w-0 bg-zinc-900 transition-all duration-300 group-hover:w-full"></span>
+        </span>
+      </a>
+    </div>
+    <div class="mx-auto w-[70%]">
+      <div class="flex">
+        <div id="ServiceSlide"
+          class="BookProcess clip-step -ml-4 text-sm bg-green-600 w-[230px] text-center text-white px-6 py-3 duration-400 transition-all hover:bg-green-700 active">
+          1 Service Details</div>
+        <div id="ScheduleSlide"
+          class="BookProcess clip-step -ml-4 text-sm bg-green-600 w-[230px] text-center text-white px-6 py-3 duration-400 transition-all hover:bg-green-700">
+          2 Schedule</div>
+        <div id="UserSlide"
+          class="BookProcess clip-step -ml-4 text-sm bg-green-600 w-[230px] text-center text-white px-6 py-3 duration-400 transition-all hover:bg-green-700">
+          3 Your details</div>
+        <div id="PaymentSlide"
+          class="BookProcess clip-step -ml-4 text-sm bg-green-600 w-[230px] text-center text-white px-6 py-3 duration-400 transition-all hover:bg-green-700">
+          4 Payment and confirm</div>
+        <div id="ConfirmationSlide"
+          class="BookProcess clip-step -ml-4 text-sm bg-green-600 w-[230px] text-center text-white px-6 py-3 duration-400 transition-all hover:bg-green-700">
+          5 Confirmation</div>
+      </div>
+    </div>
+
+    <div class="mt-4 w-[90%] mx-auto overflow-hidden relative h-[74vh]">
+      {% comment %}Service Details{% endcomment %}
+      <div class="w-full p-4 rounded-xl absolute top-0 right-[0%] transition-all duration-500" id="serviceDetails">
+        <h1 class="text-2xl text-zinc-900 font-bold pb-2">Service Details</h1>
+        <hr class="border-zinc-400 py-1 w-[70%]" />
+        <div class="pb-4">
+          <h3 class="text-lg text-zinc-900 font-semibold">Service: {{ ServiceForBooking.title }}</h3>
+          <p class="text-zinc-900 text-sm">
+            <span class="text-md font-semibold">Description: </span>{{ ServiceForBooking.description }}
+          </p>
+        </div>
+        <hr class="border-zinc-400 w-[50%]" />
+        {% comment %} {% if serv %}{% endif %} {% endcomment %}
+        {% if ServiceForBooking.id == 1 or ServiceForBooking.id == 2 or ServiceForBooking.id == 12 %}
+          <form action="" class="text-md text-zinc-900 pt-2 space-y-3">
+            <h2 class="text-lg font-semibold">Fill Details</h2>
+            <label for="property">Property type:</label>
+            <select name="property" id="property"
+              class="outline-none px-2 p-1 rounded bg-transparent border-[1px] border-zinc-400 mx-2 hover:border-zinc-600">
+              <option class="bg-opacity-40 bg-zinc-400" value="Apartment">Apartment</option>
+              <option class="bg-opacity-40 bg-zinc-400" value="House">House</option>
+            </select>
+            <div class="space-y-3">
+              <div class="flex gap-3 items-center">
+                <label for="bedroom">Number of bedroom:</label>
+                <span class="border-[1px] border-zinc-400 text-sm">
+                  <button type="button" onclick="DecBed()"
+                    class="bg-zinc-400 p-1 px-2 text-zinc-800 outline-none hover:text-zinc-600"><i
+                      class="fa-solid fa-minus"></i></button>
+                  <input id="roomCount" type="text" value="1" class="p-1 px-2 bg-transparent text-center outline-none"
+                    readonly />
+                  <button type="button" onclick="IncBed()"
+                    class="bg-zinc-400 p-1 px-2 text-zinc-800 outline-none hover:text-zinc-600"><i
+                      class="fa-solid fa-plus"></i></button>
+                </span>
+              </div>
+              <p class="text-yellow-600 text-sm">(₹499/additional bedroom)</p>
+            </div>
+            <div class="space-y-3">
+              <div class="flex gap-3 items-center">
+                <label for="bathroom">Number of bathroom:</label>
+                <span class="border-[1px] border-zinc-400 text-sm">
+                  <button type="button" onclick="DecBath()"
+                    class="bg-zinc-400 p-1 px-2 text-zinc-800 outline-none hover:text-zinc-600"><i
+                      class="fa-solid fa-minus"></i></button>
+                  <input id="bathCount" type="text" value="1" class="p-1 px-2 bg-transparent text-center outline-none"
+                    readonly />
+                  <button type="button" onclick="IncBath()"
+                    class="bg-zinc-400 p-1 px-2 text-zinc-800 outline-none hover:text-zinc-600"><i
+                      class="fa-solid fa-plus"></i></button>
+                </span>
+              </div>
+              <p class="text-yellow-600 text-sm">(₹499/additional bathroom)</p>
+            </div>
+            <div class="">
+              <h3 class="">Service Add-Ons:</h3>
+              <span class="text-sm p-4">
+                <input type="checkbox" name="" id="isUVCheck" class="scale-[1.5] ml-4 mr-1" />
+                <label for="isUVCheck">Advanced UV Light Sanitization (Starting at ₹499/room)</label>
+              </span>
+            </div>
+            <div class="flex gap-2 font-semibold text-lg py-2">
+              <span class="">Estimated Price:</span>
+              <p id="totalPrice" class="text-green-900"></p>
+            </div>
+            <button type="button" onclick="MoveSchedule(event)"
+              class="p-2 text-zinc-100 rounded-lg bg-green-700 transition-all duration-300 hover:bg-green-800">Continue to
+              Schedule<i class="fa-solid fa-angle-right"></i></button>
+          </form>
+        {% elif ServiceForBooking.id == 3 %}
+          <form action="" class="text-md text-zinc-900 pt-2 space-y-3">
+            <h2 class="text-lg font-semibold">Fill Details</h2>
+            <div class="flex flex-col gap-5 justify-center items-start">
+              <div class="flex gap-2 w-full items-center">
+                <label for="property">Type:</label>
+                <select name="KitchenType" id="KitchenType"
+                  class="w-[30%] outline-none px-2 p-2 rounded bg-transparent border-[1px] border-zinc-400 hover:border-zinc-600">
+                  <option class="bg-opacity-40 bg-zinc-400" value="Residential">Residential</option>
+                  <option class="bg-opacity-40 bg-zinc-400" value="Commercial">Commercial</option>
+                </select>
+              </div>
+
+              <div class="flex gap-2 w-full items-center">
+                <label for="property">Grease Level:</label>
+                <select name="GreaseLevel" id="GreaseLevel"
+                  class="w-[30%] outline-none px-2 p-2 rounded bg-transparent border-[1px] border-zinc-400 hover:border-zinc-600">
+                  <option class="bg-opacity-40 bg-zinc-400" value="">Not Selected</option>
+                  <option class="bg-opacity-40 bg-zinc-400" value="Light">Light</option>
+                  <option class="bg-opacity-40 bg-zinc-400" value="Medium">Medium</option>
+                  <option class="bg-opacity-40 bg-zinc-400" value="Heavy">Heavy</option>
+                </select>
+              </div>
+
+              <div class="flex gap-2 w-full items-center">
+                <label for="property">Chimney Cleaning Required? :</label>
+                <select name="isChimneyCleaning" id="isChimneyCleaning"
+                  class="w-[19.5%] outline-none px-2 p-2 rounded bg-transparent border-[1px] border-zinc-400 hover:border-zinc-600">
+                  <option class="bg-opacity-40 bg-zinc-400" value="">Not Selected</option>
+                  <option class="bg-opacity-40 bg-zinc-400" value="Yes">Yes</option>
+                  <option class="bg-opacity-40 bg-zinc-400" value="No">No</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="flex gap-2 font-semibold text-lg py-2">
+              <span class="">Estimated Price:</span>
+              <p id="totalPrice" class="text-green-900">₹0</p>
+            </div>
+            <button type="button" onclick="MoveSchedule(event)"
+              class="p-2 text-zinc-100 rounded-lg bg-green-700 transition-all duration-300 hover:bg-green-800">Continue to
+              Schedule<i class="fa-solid fa-angle-right"></i></button>
+          </form>
+        {% elif ServiceForBooking.id == 4 %}
+          <form action="" class="w-[40%] text-md text-zinc-900 pt-2 space-y-3">
+            <h2 class="text-lg font-semibold">Fill Details</h2>
+            <div class="flex flex-col gap-5 justify-center items-start">
+              <div class="flex gap-2 w-full items-center">
+                <label for="property">Type:</label>
+                <select name="BathroomType" id="BathroomType"
+                  class="w-full outline-none px-2 p-2 rounded bg-transparent border-[1px] border-zinc-400 hover:border-zinc-600">
+                  <option class="bg-opacity-40 bg-zinc-400" value="Residential">Residential</option>
+                  <option class="bg-opacity-40 bg-zinc-400" value="Commercial">Commercial</option>
+                </select>
+              </div>
+
+              <div class="flex gap-3 items-center">
+                <label for="bathroom">Number of Bathroom:</label>
+                <span class="border-[1px] border-zinc-400 text-sm">
+                  <button type="button" onclick="DecBath()"
+                    class="bg-zinc-400 p-2 px-2 text-zinc-800 outline-none hover:text-zinc-600"><i
+                      class="fa-solid fa-minus"></i></button>
+                  <input id="bathroomCount" type="text" value="0" class="p-2 px-2 bg-transparent text-center outline-none"
+                    readonly />
+                  <button type="button" onclick="IncBath()"
+                    class="bg-zinc-400 p-2 px-2 text-zinc-800 outline-none hover:text-zinc-600"><i
+                      class="fa-solid fa-plus"></i></button>
+                </span>
+              </div>
+
+              <div class="flex gap-3 items-center">
+                <label for="toilet">Number of Toilet:</label>
+                <span class="border-[1px] border-zinc-400 text-sm">
+                  <button type="button" onclick="DecToilet()"
+                    class="bg-zinc-400 p-2 px-2 text-zinc-800 outline-none hover:text-zinc-600"><i
+                      class="fa-solid fa-minus"></i></button>
+                  <input id="toiletCount" type="text" value="1" class="p-2 px-2 bg-transparent text-center outline-none"
+                    readonly />
+                  <button type="button" onclick="IncToilet()"
+                    class="bg-zinc-400 p-2 px-2 text-zinc-800 outline-none hover:text-zinc-600"><i
+                      class="fa-solid fa-plus"></i></button>
+                </span>
+              </div>
+
+              <div class="flex gap-2 w-full items-center">
+                <label for="property">Is Hard Water Stain? :</label>
+                <select name="IsHardWaterStain" id="IsHardWaterStain"
+                  class="w-[50%] outline-none px-2 p-2 rounded bg-transparent border-[1px] border-zinc-400 hover:border-zinc-600">
+                  <option class="bg-opacity-40 bg-zinc-400" value="">Not Selected</option>
+                  <option class="bg-opacity-40 bg-zinc-400" value="Yes">Yes</option>
+                  <option class="bg-opacity-40 bg-zinc-400" value="No">No</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="flex gap-2 font-semibold text-lg py-2">
+              <span class="">Estimated Price:</span>
+              <p id="totalPrice" class="text-green-900">₹0</p>
+            </div>
+            <button type="button" onclick="MoveSchedule(event)"
+              class="p-2 text-zinc-100 rounded-lg bg-green-700 transition-all duration-300 hover:bg-green-800">Continue to
+              Schedule<i class="fa-solid fa-angle-right"></i></button>
+          </form>
+
+        {% elif ServiceForBooking.id == 5 or ServiceForBooking.id == 6 or ServiceForBooking.id == 13 %}
+          <form action="" class="text-md text-zinc-900 pt-2 space-y-3">
+            <h2 class="text-lg font-semibold">Fill Details</h2>
+            <div class="flex flex-col gap-5 justify-center items-start">
+              <div class="flex gap-2 w-full items-center">
+                <label for="property">Office Size:</label>
+                <select name="OfficeSize" id="OfficeSize"
+                  class="w-[30%] outline-none px-2 p-2 rounded bg-transparent border-[1px] border-zinc-400 hover:border-zinc-600">
+                  <option class="bg-opacity-40 bg-zinc-400" value="Small">Small</option>
+                  <option class="bg-opacity-40 bg-zinc-400" value="Medium">Medium</option>
+                  <option class="bg-opacity-40 bg-zinc-400" value="Large">Large</option>
+                </select>
+              </div>
+
+              <div class="flex gap-3 items-center">
+                <label for="bathroom">Number of Washroom:</label>
+                <span class="border-[1px] border-zinc-400 text-sm">
+                  <button type="button" onclick="DecWash()"
+                    class="bg-zinc-400 p-2 px-2 text-zinc-800 outline-none hover:text-zinc-600"><i
+                      class="fa-solid fa-minus"></i></button>
+                  <input id="WashroomCount" type="text" value="0" class="p-2 px-2 bg-transparent text-center outline-none"
+                    readonly />
+                  <button type="button" onclick="IncWash()"
+                    class="bg-zinc-400 p-2 px-2 text-zinc-800 outline-none hover:text-zinc-600"><i
+                      class="fa-solid fa-plus"></i></button>
+                </span>
+              </div>
+
+              <div class="flex gap-2 w-full items-center">
+                <label for="property">Is Glass Partition?:</label>
+                <select name="IsGlassPartition" id="IsGlassPartition"
+                  class="w-[20%] outline-none px-2 p-2 rounded bg-transparent border-[1px] border-zinc-400 hover:border-zinc-600">
+                  <option class="bg-opacity-40 bg-zinc-400" value="">Not Selected</option>
+                  <option class="bg-opacity-40 bg-zinc-400" value="Yes">Yes</option>
+                  <option class="bg-opacity-40 bg-zinc-400" value="No">No</option>
+                </select>
+              </div>
+
+              <div class="">
+                <h3 class="">Service Add-Ons:</h3>
+                <span class="text-sm p-4">
+                  <input type="checkbox" name="" id="isUVSanitization" class="scale-[1.5] ml-4 mr-1" />
+                  <label for="isUVCheck">Advanced UV Light Sanitization (Starting at ₹499/room)</label>
+                </span>
+              </div>
+            </div>
+
+            <div class="flex gap-2 font-semibold text-lg py-2">
+              <span class="">Estimated Price:</span>
+              <p id="totalPrice" class="text-green-900">₹0</p>
+            </div>
+            <button type="button" onclick="MoveSchedule(event)"
+              class="p-2 text-zinc-100 rounded-lg bg-green-700 transition-all duration-300 hover:bg-green-800">Continue to
+              Schedule<i class="fa-solid fa-angle-right"></i></button>
+          </form>
+
+        {% elif ServiceForBooking.id == 7 %}
+          <form action="" class="text-md text-zinc-900 pt-2 space-y-3">
+            <h2 class="text-lg font-semibold">Fill Details</h2>
+            <div class="flex flex-col gap-5 justify-center items-start">
+              <div class="flex gap-2 w-full items-center">
+                <label for="property">Garden Size:</label>
+                <select name="GardenSize" id="GardenSize"
+                  class="w-[30%] outline-none px-2 p-2 rounded bg-transparent border-[1px] border-zinc-400 hover:border-zinc-600">
+                  <option class="bg-opacity-40 bg-zinc-400" value="Small">Small</option>
+                  <option class="bg-opacity-40 bg-zinc-400" value="Medium">Medium</option>
+                  <option class="bg-opacity-40 bg-zinc-400" value="Large">Large</option>
+                </select>
+              </div>
+
+              <div class="flex gap-2 w-full items-center">
+                <label for="property">Grass Trimming Required? :</label>
+                <select name="IsGrassTriming" id="IsGrassTriming"
+                  class="w-[20%] outline-none px-2 p-2 rounded bg-transparent border-[1px] border-zinc-400 hover:border-zinc-600">
+                  <option class="bg-opacity-40 bg-zinc-400" value="">Not Selected</option>
+                  <option class="bg-opacity-40 bg-zinc-400" value="Yes">Yes</option>
+                  <option class="bg-opacity-40 bg-zinc-400" value="No">No</option>
+                </select>
+              </div>
+
+              <div class="flex gap-2 w-full items-center">
+                <label for="property">Tress Trimming Required? :</label>
+                <select name="IsTreeTriming" id="IsTreeTriming"
+                  class="w-[20%] outline-none px-2 p-2 rounded bg-transparent border-[1px] border-zinc-400 hover:border-zinc-600">
+                  <option class="bg-opacity-40 bg-zinc-400" value="">Not Selected</option>
+                  <option class="bg-opacity-40 bg-zinc-400" value="Yes">Yes</option>
+                  <option class="bg-opacity-40 bg-zinc-400" value="No">No</option>
+                </select>
+              </div>
+            </div>
+
+              <div class="flex gap-2 font-semibold text-lg">
+                <span class="">Estimated Price:</span>
+                <p id="totalPrice" class="text-green-900">₹0</p>
+              </div>
+              <button type="button" onclick="MoveSchedule(event)"
+                class="p-2 text-zinc-100 rounded-lg bg-green-700 transition-all duration-300 hover:bg-green-800">Continue
+                to Schedule<i class="fa-solid fa-angle-right"></i></button>
+          </form>
+
+        {% elif ServiceForBooking.id == 8 %}
+          <form action="" class="text-md text-zinc-900 pt-2 space-y-3">
+            <h2 class="text-lg font-semibold">Fill Details</h2>
+            <div class="flex flex-col gap-5 justify-center items-start">
+              <div class="flex gap-2 w-full items-center">
+                <label for="property">Service Type:</label>
+                <select name="TreeServiceType" id="TreeServiceType" class="w-[30%] outline-none px-2 p-2 rounded bg-transparent border-[1px] border-zinc-400 hover:border-zinc-600">
+                  <option class="bg-opacity-40 bg-zinc-400" value="">No Select</option>
+                  <option class="bg-opacity-40 bg-zinc-400" value="Trimming">Trimming</option>
+                  <option class="bg-opacity-40 bg-zinc-400" value="Full Removing">Full Removing</option>
+                </select>
+              </div>
+            
+              <div class="flex gap-3 items-center">
+                <label for="bathroom">Number of Trees:</label>
+                <span class="border-[1px] border-zinc-400 text-sm">
+                  <button type="button" onclick="DecTree()" class="bg-zinc-400 p-2 px-2 text-zinc-800 outline-none hover:text-zinc-600"><i class="fa-solid fa-minus"></i></button>
+                  <input id="TreeCount" type="text" value="1" class="p-2 px-2 bg-transparent text-center outline-none" readonly />
+                  <button type="button" onclick="IncTree()" class="bg-zinc-400 p-2 px-2 text-zinc-800 outline-none hover:text-zinc-600"><i class="fa-solid fa-plus"></i></button>
+                </span>
+              </div>
+            
+              <div class="flex gap-2 w-full items-center">
+                <label for="property">Max Tree Height :</label>
+                <select name="MaxTreeHeight" id="MaxTreeHeight" class="w-[20%] outline-none px-2 p-2 rounded bg-transparent border-[1px] border-zinc-400 hover:border-zinc-600">
+                  <option class="bg-opacity-40 bg-zinc-400" value="">Not Selected</option>
+                  <option class="bg-opacity-40 bg-zinc-400" value="Below 10ft">Below 10ft</option>
+                  <option class="bg-opacity-40 bg-zinc-400" value="10-20ft">10-20ft</option>
+                  <option class="bg-opacity-40 bg-zinc-400" value="Above 20ft">Above 20ft</option>
+                </select>
+              </div>
+            </div>
+            <div class="flex gap-2 font-semibold text-lg">
+              <span class="">Estimated Price:</span>
+              <p id="totalPrice" class="text-green-900">₹0</p>
+            </div>
+            <button type="button" onclick="MoveSchedule(event)" class="p-2 text-zinc-100 rounded-lg bg-green-700 transition-all duration-300 hover:bg-green-800">Continue to Schedule<i class="fa-solid fa-angle-right"></i></button>
+          </form>
+        {% elif ServiceForBooking.id == 9 %}
+          <form action="" class="text-md text-zinc-900 pt-2 space-y-3">
+            <h2 class="text-lg font-semibold">Fill Details</h2>
+            <div class="flex flex-col gap-5 justify-center items-start">
+              <div class="flex gap-2 w-full items-center">
+                <label for="SofaType">Sofa Type:</label>
+                <select name="SofaType" id="SofaType" class="w-[30%] outline-none px-2 p-2 rounded bg-transparent border-[1px] border-zinc-400 hover:border-zinc-600">
+                  <option class="bg-opacity-40 bg-zinc-400" value="">No Select</option>
+                  <option class="bg-opacity-40 bg-zinc-400" value="Febric Sofa">Febric Sofa (cotton/polyster/velvet)</option>
+                  <option class="bg-opacity-40 bg-zinc-400" value="Leather Sofa">Leather Sofa (Natural/Artificial)</option>
+                  <option class="bg-opacity-40 bg-zinc-400" value="others">Others</option>
+                </select>
+              </div>
+            
+              <div class="flex gap-3 items-center">
+                <label for="SeatCount">Number of Seat:</label>
+                <span class="border-[1px] border-zinc-400 text-sm">
+                  <button type="button" onclick="DecSeat()" class="bg-zinc-400 p-2 px-2 text-zinc-800 outline-none hover:text-zinc-600"><i class="fa-solid fa-minus"></i></button>
+                  <input id="SeatCount" type="text" value="1" class="p-2 px-2 bg-transparent text-center outline-none" readonly />
+                  <button type="button" onclick="IncSeat()" class="bg-zinc-400 p-2 px-2 text-zinc-800 outline-none hover:text-zinc-600"><i class="fa-solid fa-plus"></i></button>
+                </span>
+              </div>
+            
+              <div class="flex gap-2 w-full items-center">
+                <label for="property">Stain Cleaning Required? :</label>
+                <select name="IsStainCleaning" id="IsStainCleaning" class="w-[20%] outline-none px-2 p-2 rounded bg-transparent border-[1px] border-zinc-400 hover:border-zinc-600">
+                  <option class="bg-opacity-40 bg-zinc-400" value="">Not Selected</option>
+                  <option class="bg-opacity-40 bg-zinc-400" value="No">No</option>
+                  <option class="bg-opacity-40 bg-zinc-400" value="Basic Stain">Yes-Basic Stain</option>
+                  <option class="bg-opacity-40 bg-zinc-400" value="Deep Stain">Yes-Deep Stain</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="flex gap-2 font-semibold text-lg">
+              <span class="">Estimated Price:</span>
+              <p id="totalPrice" class="text-green-900">₹0</p>
+            </div>
+            <button type="button" onclick="MoveSchedule(event)" class="p-2 text-zinc-100 rounded-lg bg-green-700 transition-all duration-300 hover:bg-green-800">Continue to Schedule<i class="fa-solid fa-angle-right"></i></button>
+          </form>
+        {% elif ServiceForBooking.id == 10 %}
+          <form action="" class="text-md text-zinc-900 pt-2 space-y-3">
+            <h2 class="text-lg font-semibold">Fill Details</h2>
+            <div class="flex flex-col gap-5 justify-center items-start">
+              <div class="flex gap-2 w-full items-center">
+                <label for="WindowType">Property Type:</label>
+                <select name="WindowType" id="WindowType" class="w-[30%] outline-none px-2 p-2 rounded bg-transparent border-[1px] border-zinc-400 hover:border-zinc-600">
+                  <option class="bg-opacity-40 bg-zinc-400" value="Apartment">Apartment</option>
+                  <option class="bg-opacity-40 bg-zinc-400" value="Office">Office</option>
+                </select>
+              </div>
+            
+              <div class="flex gap-3 items-center">
+                <label for="WindowCount">Number of Windows:</label>
+                <span class="border-[1px] border-zinc-400 text-sm">
+                  <button type="button" onclick="DecWindow()" class="bg-zinc-400 p-2 px-2 text-zinc-800 outline-none hover:text-zinc-600"><i class="fa-solid fa-minus"></i></button>
+                  <input id="WindowCount" type="text" value="1" class="p-2 px-2 bg-transparent text-center outline-none" readonly />
+                  <button type="button" onclick="IncWindow()" class="bg-zinc-400 p-2 px-2 text-zinc-800 outline-none hover:text-zinc-600"><i class="fa-solid fa-plus"></i></button>
+                </span>
+              </div>
+
+              <div class="flex gap-2 w-full items-center">
+                <label for="WindowCleaningSide">Outside + Inside? :</label>
+                <select name="WindowCleaningSide" id="WindowCleaningSide" class="w-[30%] outline-none px-2 p-2 rounded bg-transparent border-[1px] border-zinc-400 hover:border-zinc-600">
+                  <option class="bg-opacity-40 bg-zinc-400" value="">No Select</option>
+                  <option class="bg-opacity-40 bg-zinc-400" value="Inside">Only Inside</option>
+                  <option class="bg-opacity-40 bg-zinc-400" value="Both">Both (Inside & Outside)</option>
+                </select>
+              </div>
+            
+              <div class="flex gap-2 w-full items-center">
+                <label for="WindowHeight">Window Height :</label>
+                <select name="WindowHeight" id="WindowHeight" class="w-[20%] outline-none px-2 p-2 rounded bg-transparent border-[1px] border-zinc-400 hover:border-zinc-600">
+                  <option class="bg-opacity-40 bg-zinc-400" value="">Not Selected</option>
+                  <option class="bg-opacity-40 bg-zinc-400" value="High">High (Above Ground-floor)</option>
+                  <option class="bg-opacity-40 bg-zinc-400" value="Low">Low (Ground floor)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="flex gap-2 font-semibold text-lg">
+              <span class="">Estimated Price:</span>
+              <p id="totalPrice" class="text-green-900">₹0</p>
+            </div>
+            <button type="button" onclick="MoveSchedule(event)" class="p-2 text-zinc-100 rounded-lg bg-green-700 transition-all duration-300 hover:bg-green-800">Continue to Schedule<i class="fa-solid fa-angle-right"></i></button>
+          </form>
+        {% elif ServiceForBooking.id == 11 %}
+          <form action="" class="text-md text-zinc-900 pt-2 space-y-3">
+            <h2 class="text-lg font-semibold">Fill Details</h2>
+            <div class="flex flex-col gap-5 justify-center items-start">
+              <div class="flex gap-2 w-full items-center">
+                <label for="ConstructionType">Property Type:</label>
+                <select name="ConstructionType" id="ConstructionType" class="w-[30%] outline-none px-2 p-2 rounded bg-transparent border-[1px] border-zinc-400 hover:border-zinc-600">
+                  <option class="bg-opacity-40 bg-zinc-400" value="">Not Selected</option>
+                  <option class="bg-opacity-40 bg-zinc-400" value="New Built">New Built</option>
+                  <option class="bg-opacity-40 bg-zinc-400" value="Renovation">Renovation</option>
+                </select>
+              </div>
+
+              <div class="flex gap-2 w-full items-center">
+                <label for="PropertySize">Property Size:</label>
+                <select name="PropertySize" id="PropertySize" class="w-[30%] outline-none px-2 p-2 rounded bg-transparent border-[1px] border-zinc-400 hover:border-zinc-600">
+                  <option class="bg-opacity-40 bg-zinc-400" value="1BHK">1BHK</option>
+                  <option class="bg-opacity-40 bg-zinc-400" value="2BHK">2BHK</option>
+                  <option class="bg-opacity-40 bg-zinc-400" value="3BHK">3BHK</option>
+                  <option class="bg-opacity-40 bg-zinc-400" value="Office">Office</option>
+                </select>
+              </div>
+            
+              <div class="flex gap-2 w-full items-center">
+                <label for="IsConstructionStain">Paint/Cement Stain? :</label>
+                <select name="IsConstructionStain" id="IsConstructionStain" class="w-[20%] outline-none px-2 p-2 rounded bg-transparent border-[1px] border-zinc-400 hover:border-zinc-600">
+                  <option class="bg-opacity-40 bg-zinc-400" value="">Not Selected</option>
+                  <option class="bg-opacity-40 bg-zinc-400" value="No">No</option>
+                  <option class="bg-opacity-40 bg-zinc-400" value="Yes">Yes</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="flex gap-2 font-semibold text-lg">
+              <span class="">Estimated Price:</span>
+              <p id="totalPrice" class="text-green-900">₹0</p>
+            </div>
+            <button type="button" onclick="MoveSchedule(event)" class="p-2 text-zinc-100 rounded-lg bg-green-700 transition-all duration-300 hover:bg-green-800">Continue to Schedule<i class="fa-solid fa-angle-right"></i></button>
+          </form>
+        {% endif %}
+      </div>
+    {% comment %}Schduling{% endcomment %}
+    <div class="w-full p-4 rounded-xl absolute top-0 right-[-100%] transition-all duration-500" id="serviceSchedule">
+      <h1 class="text-2xl text-zinc-900 font-bold pb-2">Schedule Your Service</h1>
+      <hr class="border-zinc-400 py-1" />
+
+      <div class="flex gap-6 justify-around w-[90%] pt-4">
+        {% comment %}Calender making{% endcomment %}
+        <div class="w-[50%] date p-1 rounded border-[2px] border-zinc-400 w-[40%]">
+          <div class="flex justify-between items-center px-2">
+            <div class="text-lg font-semibold" id="MonthYear"></div>
+            <div class="flex gap-2">
+              <span
+                class="font-semibold w-[40px] h-[40px] flex justify-center items-center cursor-pointer text-xl hover:text-zinc-500"
+                id="prevMonthBtn"><i class="fa-solid fa-angle-left"></i></span>
+              <span
+                class="font-semibold w-[40px] h-[40px] flex justify-center items-center cursor-pointer text-xl hover:text-zinc-500"
+                id="nextMonthBtn"><i class="fa-solid fa-angle-right"></i></span>
+            </div>
+          </div>
+          <div class="w-full p-2">
+            <ul id="weekDays" class="list-none grid grid-cols-7 gap-2 text-center font-semibold text-black pb-1">
+              <li class="w-[calc(100%/7)]">Sun</li>
+              <li class="w-[calc(100%/7)]">Mon</li>
+              <li class="w-[calc(100%/7)]">Tue</li>
+              <li class="w-[calc(100%/7)]">Wed</li>
+              <li class="w-[calc(100%/7)]">Thu</li>
+              <li class="w-[calc(100%/7)]">Fri</li>
+              <li class="w-[calc(100%/7)]">Sat</li>
+            </ul>
+            <ul id="MonthDates" class="grid grid-cols-7 grid-rows-6 text-center text-black"></ul>
+          </div>
+        </div>
+        <div class="w-[25%] time">
+          <h3 class="text-lg font-semibold">Availabel time slots:</h3>
+          <label
+            class="p-2 border-[1px] m-2 border-green-900 rounded-lg cursor-pointer transition-all duration-300 hover:bg-zinc-400 flex gap-3"><input
+              class="scale-[1.3]" type="radio" name="serviceSlot" value="8:00 AM"
+              onclick="timeslot(this.value)" /><span>8:00 AM</span></label>
+          <label
+            class="p-2 border-[1px] m-2 border-green-900 rounded-lg cursor-pointer transition-all duration-300 hover:bg-zinc-400 flex gap-3"><input
+              class="scale-[1.3]" type="radio" name="serviceSlot" value="10:00 AM"
+              onclick="timeslot(this.value)" /><span>10:00 AM</span></label>
+          <label
+            class="p-2 border-[1px] m-2 border-green-900 rounded-lg cursor-pointer transition-all duration-300 hover:bg-zinc-400 flex gap-3"><input
+              class="scale-[1.3]" type="radio" name="serviceSlot" value="12:00 PM"
+              onclick="timeslot(this.value)" /><span>12:00 PM</span></label>
+          <label
+            class="p-2 border-[1px] m-2 border-green-900 rounded-lg cursor-pointer transition-all duration-300 hover:bg-zinc-400 flex gap-3"><input
+              class="scale-[1.3]" type="radio" name="serviceSlot" value="3:00 PM"
+              onclick="timeslot(this.value)" /><span>3:00 PM</span></label>
+          <label
+            class="p-2 border-[1px] m-2 border-green-900 rounded-lg cursor-pointer transition-all duration-300 hover:bg-zinc-400 flex gap-3"><input
+              class="scale-[1.3]" type="radio" name="serviceSlot" value="5:00 PM"
+              onclick="timeslot(this.value)" /><span>5:00 PM</span></label>
+        </div>
+        <div class="w-[25%] space-y-3">
+          <h3 class="text-lg font-semibold">Schedule Summary:</h3>
+          <h4 class="font-semibold">Date: <span id="selectedDate" class="font-normal text-sm"></span></h4>
+          <h4 class="font-semibold">Time: <span id="selectedTime" class="font-normal text-sm"></span></h4>
+        </div>
+      </div>
+      <div>
+        <h1 class="text-md sm:text-lg font-bold text-green-900 mt-2 leading-snug">Need urgent cleaning? Call us now for
+          fast, reliable service!</h1>
+        <p class="text-sm sm:text-sm text-zinc-600">Our team is available 24/7 to handle spills, messes, or emergency
+          cleaning requests. Quick, professional, and thorough service guaranteed!</p>
+        <div class="flex gap-3">
+          <button type="button" onclick="BackToService(event)"
+            class="mt-2 px-4 p-2 text-zinc-100 rounded-lg bg-green-700 transition-all duration-300 hover:bg-green-800"><i
+              class="fa-solid fa-angle-left"></i>Back</button>
+          <button type="button" onclick="MoveUserDetails(event)"
+            class="mt-2 p-2 text-zinc-100 rounded-lg bg-green-700 transition-all duration-300 hover:bg-green-800">Continue
+            to your details<i class="fa-solid fa-angle-right"></i></button>
+        </div>
+      </div>
+    </div>
+
+    {% comment %}Customer details{% endcomment %}
+    <div class="w-full p-4 rounded-xl absolute top-0 right-[-100%] transition-all duration-500" id="userDetails">
+      <h1 class="text-2xl text-zinc-900 font-bold pb-2">Your Details</h1>
+      <hr class="border-zinc-400 py-1" />
+      <form class="pt-2 text-md">
+        <div class="grid grid-cols-2 gap-3">
+          <div class="flex flex-col gap-4 w-full">
+            <label class="flex gap-2 items-start font-semibold w-full"><span class="w-[15%]">Name:</span> <input
+                type="text" id="yourName"
+                class="w-[70%] ml-2 bg-transparent p-2 font-normal rounded outline-none border-[1px] border-zinc-600"
+                readonly disabled /></label>
+            <label class="flex gap-2 items-start font-semibold w-full"><span class="w-[15%]">Email:</span> <input
+                type="text" id="yourEmail"
+                class="w-[70%] ml-2 bg-transparent p-2 font-normal rounded outline-none border-[1px] border-zinc-600"
+                readonly disabled /></label>
+            <label class="flex gap-2 items-start font-semibold w-full"><span class="w-[15%]">Phone:</span> <input
+                type="text" id="yourPhone"
+                class="w-[70%] ml-2 bg-transparent p-2 font-normal rounded outline-none border-[1px] border-zinc-600" /></label>
+            <label class="flex gap-2 items-start font-semibold w-full"><span class="w-[15%]">Address:</span> <input
+                type="text" id="yourAddress"
+                class="w-[70%] ml-2 bg-transparent p-2 font-normal rounded outline-none border-[1px] border-zinc-600" /></label>
+            <label class="flex gap-2 items-start font-semibold w-full"><span class="w-[15%]">Pincode:</span> <input
+                type="text" id="yourPincode"
+                class="w-[70%] ml-2 bg-transparent p-2 font-normal rounded outline-none border-[1px] border-zinc-600" /></label>
+          </div>
+          <div class="w-full">
+            <label class="flex flex-col gap-2 items-start font-semibold"><span class="w-full">Additional Instructions
+                (Optional):</span> <textarea id="yourInstruction" rows="4" cols="10" type="text"
+                class="resize-none w-full bg-transparent p-2 font-normal rounded outline-none border-[1px] border-zinc-600"
+                placeholder="Enter your suggestion or instruction"></textarea></label>
+          </div>
+        </div>
+        <p id="userDetailMessage" class="text-sm mt-4"></p>
+        <div class="flex flex-wrap gap-2 mt-6">
+          <button type="button" onclick="BackToSchedule(event)"
+            class="inline-block px-4 p-2 text-zinc-100 px-4 rounded-lg bg-green-700 transition-all duration-300 hover:bg-green-800"><i
+              class="fa-solid fa-angle-left"></i> Back</button>
+          <button type="button" onclick="MovePayment(event)"
+            class="inline-block p-2 text-zinc-100 rounded-lg bg-green-700 transition-all duration-300 hover:bg-green-800">Summary
+            & Payment<i class="fa-solid fa-angle-right"></i></button>
+        </div>
+      </form>
+    </div>
+
+    {% comment %}Payment and Summary{% endcomment %}
+    <div class="w-full p-4 rounded-xl absolute top-0 right-[-100%] transition-all duration-500" id="paymentSummary">
+      <h1 class="text-2xl text-zinc-900 font-bold pb-2">Payment & Booking Summary</h1>
+      <hr class="border-zinc-400 py-1" />
+      <div class="grid grid-cols-2 gap-2">
+        <!-- Payment Options -->
+        <div class="w-full grid grid-cols-1 gap-2 px-2 pt-2">
+          {% comment %}Card Payment{% endcomment %}
+          <div class="w-full text-zinc-900 font-semibold rounded-lg border-[1px] border-zinc-600/20 overflow-hidden">
+            <button onclick="PaymentOptionShow('CardPaymentOption')"
+              class="w-full p-2 flex justify-between items-center transition-all duration-300 hover:bg-zinc-200 cursor-pointer">
+              <div class="flex gap-3 items-center">
+                <img src="https://cdn-icons-png.flaticon.com/512/6963/6963703.png" class="w-[30px] h-[30px]"
+                  alt="paymentOption" />
+                <h1>Card Payment</h1>
+              </div>
+              <span class="block"><i class="fa-solid fa-angle-right"></i><i
+                  class="fa-solid fa-angle-down hidden"></i></span>
+            </button>
+            <div class="p-2 h-[27vh] PaymentMethodActive transition-all duration-500" id="CardPaymentOption">
+              <form action="" method="" class="flex flex-col justify-center px-2 gap-2 font-normal">
+                <div class="grid grid-cols-[0.8fr_1.2fr] gap-3">
+                  <select
+                    class="p-3 px-4 bg-transparent outline-none border-[1px] border-zinc-700/20 rounded-lg transition-all duration-300 focus:border-emerald-600">
+                    <option value="Select Card">Select Card</option>
+                    <option value="Mastercard">Mastercard</option>
+                    <option value="Visa">Visa</option>
+                    <option value="RuPay">RuPay</option>
+                    <option value="Others">Others</option>
+                  </select>
+                  <input type="text" name="CardNum" id="CardNum"
+                    class="p-3 px-4 border-[1px] bg-transparent border-zinc-700/20 rounded-lg outline-none transition-all duration-300 focus:border-emerald-600"
+                    placeholder="card number" />
+                </div>
+                <div class="grid grid-cols-2 gap-3 mb-3">
+                  <input type="text" name="CardValidity" id="CardValidity"
+                    class="p-3 px-4 border-[1px] bg-transparent border-zinc-700/20 rounded-lg outline-none transition-all duration-300 focus:border-emerald-600"
+                    placeholder="MM/YY" />
+                  <input type="text" name="CardCvv" id="CardCvv"
+                    class="p-3 px-4 border-[1px] bg-transparent border-zinc-700/20 rounded-lg outline-none transition-all duration-300 focus:border-emerald-600"
+                    placeholder="CVV" />
+                </div>
+
+                <button
+                  class="text-zinc-100 p-3 px-4 bg-green-800 rounded-lg transition-all duration-300 hover:bg-green-800"
+                  disabled>Proceed To Pay <span class="text-sm text-red-500">(Currently Not Supporting)</span></button>
+              </form>
+            </div>
+          </div>
+
+          {% comment %}UPI PAYMENT{% endcomment %}
+          <div class="w-full text-zinc-800 rounded-lg border-[1px] border-zinc-600/20 overflow-hidden">
+            <button onclick="PaymentOptionShow('UPIPaymentOption')"
+              class="w-full p-2 flex justify-between items-center transition-all duration-300 hover:bg-zinc-200 cursor-pointer">
+              <div class="flex gap-3 items-center">
+                <img
+                  src="https://cdni.iconscout.com/illustration/premium/thumb/qr-code-payment-illustration-svg-download-png-6294392.png"
+                  class="w-[30px] h-[30px]" alt="paymentOption" />
+                <h1 class="font-semibold">UPI Payment</h1>
+              </div>
+              <span class="block"><i class="fa-solid fa-angle-right"></i><i
+                  class="fa-solid fa-angle-down hidden"></i></span>
+            </button>
+            <div id="UPIPaymentOption" class="h-[27vh] hidden transition-all duration-500">
+              <div class="h-full grid grid-cols-[0.7fr_0.1fr_1.3fr] justify-center items-end gap-2 mb-4">
+                <div class="flex flex-col gap-2 justify-center items-center">
+                  <img src="https://pngimg.com/uploads/qr_code/qr_code_PNG5.png" class="w-[150px] h-[150px] opacity-10"
+                    alt="QRCode" />
+                  <h2 class="text-center font-semibold">Scan To Pay</h2>
+                </div>
+                <span class="text-lg font-semibold block h-auto">OR</span>
+                <div class="flex text-md flex-col gap-6 justify-end items-center h-full">
+                  <img src="https://printlele.com/wp-content/uploads/2025/03/payment-logo-icons-1024x272-1.png"
+                    class="w-[50%]" alt="UPIOptions" />
+                  <span class="flex flex-col justify-center items-center gap-2 w-full block p-4">
+                    <input type="text" name="" id=""
+                      class="p-2 w-full px-4 border-[1px] bg-transparent border-zinc-700/20 rounded-lg outline-none transition-all duration-300 focus:border-emerald-600"
+                      placeholder="Enter UPI ID (example@upi)" />
+                    <button class="text-center text-zinc-100 bg-green-800 p-2 px-3 rounded-xl" disabled>Pay Using UPI ID
+                      <span class="text-sm text-red-500">(Currently not Supporting)</span></button>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="w-full text-zinc-800 rounded-lg border-[1px] border-zinc-600/20 overflow-hidden">
+            <button onclick="PaymentOptionShow('PayAfterService')"
+              class="w-full p-2 flex justify-between items-center transition-all duration-300 hover:bg-zinc-200 cursor-pointer">
+              <div class="flex gap-3 items-center">
+                <img src="https://cdn-icons-png.flaticon.com/512/9198/9198192.png" class="w-[30px] h-[30px]"
+                  alt="paymentOption" />
+                <h1 class="font-semibold">Pay After Service</h1>
+              </div>
+              <span class="block"><i class="fa-solid fa-angle-right"></i><i
+                  class="fa-solid fa-angle-down hidden"></i></span>
+            </button>
+            <div id="PayAfterService" class="h-[27vh] px-4 pt-2 hidden transition-all duration-500 relative">
+              <h2 class="font-semibold text-green-800">Clean First. Pay Later.</h2>
+              <p class="text-sm text-zinc-900/70">You will pay the service provider in cash after the cleaning service
+                is completed.</p>
+              <h3 class="font-semibold text-green-800 mt-2">Payment Methods: <span
+                  class="text-zinc-900 font-normal">Cash, Bank Transfer, Credit/Debit Card, etc.</span></h3>
+              <button id="ConfirmBooking"
+                class="absolute w-[90%] bottom-5 left-[50%] translate-x-[-50%] text-zinc-100 p-3 px-4 bg-green-700 rounded-lg transition-all duration-300 hover:bg-green-800">Confirm
+                Booking</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Booking Summary -->
+        <div class="w-full space-y-2 border-[1px] border-zinc-600/40 rounded-lg p-4">
+          <h2 class="text-zinc-900 text-lg font-bold">Booking Summary</h2>
+          <div>
+            <p class="font-semibold text-md">
+              Service: <span class="font-normal">{{ServiceForBooking.title}}</span>
+            </p>
+            <p class="font-semibold text-sm">
+              Date & Time: <span class="font-normal" id="SummaryDateTime"></span>
+            </p>
+          </div>
+          <hr class="border-zinc-400 py-1" />
+          {% if ServiceForBooking.id == 1 or ServiceForBooking.id == 2 or ServiceForBooking.id == 12%}
+            <div>
+              <p class="font-semibold text-sm">
+                Property: <span class="text-md px-1 font-normal" id="SummaryProperty"></span>
+              </p>
+              <p class="font-semibold text-sm">
+                Bedroom: <span class="text-md px-1 font-normal" id="SummaryBedCount"></span>
+              </p>
+              <p class="font-semibold text-sm">
+                Bathroom: <span class="text-md px-1 font-normal" id="SummaryBathCount"></span>
+              </p>
+              <p class="font-semibold text-sm">
+                UV Sanitization: <span class="text-md px-1 font-normal" id="SummaryUVSanitization"></span>
+              </p>
+            </div>
+          {% elif ServiceForBooking.id == 3 %}
+            <div>
+              <p class="font-semibold text-sm">
+                Kitchen Type: <span class="text-md px-1 font-normal" id="SummaryKitchen"></span>
+              </p>
+              <p class="font-semibold text-sm">
+                Grease Level: <span class="text-md px-1 font-normal" id="SummaryGrease"></span>
+              </p>
+              <p class="font-semibold text-sm">
+                Is Chimney Cleaning: <span class="text-md px-1 font-normal" id="SummaryChimney"></span>
+              </p>
+            </div>
+          {% elif ServiceForBooking.id == 4 %}
+            <div>
+              <p class="font-semibold text-sm">
+                Washroom Type: <span class="text-md px-1 font-normal" id="SummaryBathroomType"></span>
+              </p>
+              <p class="font-semibold text-sm">
+                Bathroom: <span class="text-md px-1 font-normal" id="SummaryBathroomCount"></span>
+              </p>
+              <p class="font-semibold text-sm">
+                Toilet: <span class="text-md px-1 font-normal" id="SummaryToiletCount"></span>
+              </p>
+              <p class="font-semibold text-sm">
+                Is HardWater Stain? : <span class="text-md px-1 font-normal" id="SummaryHardwaterStain"></span>
+              </p>
+            </div>
+          {% elif ServiceForBooking.id == 5 or ServiceForBooking.id == 6 or ServiceForBooking.id == 13%}
+            <div>
+              <p class="font-semibold text-sm">
+                Office Size: <span class="text-md px-1 font-normal" id="SummaryOfficeSize"></span>
+              </p>
+              <p class="font-semibold text-sm">
+                Washroom: <span class="text-md px-1 font-normal" id="SummaryWashroomCount"></span>
+              </p>
+              <p class="font-semibold text-sm">
+                Is Glass Partition: <span class="text-md px-1 font-normal" id="SummaryGlassPartition"></span>
+              </p>
+              <p class="font-semibold text-sm">
+                Is UV Sanitization? : <span class="text-md px-1 font-normal" id="SummaryOfficeUVSanitization"></span>
+              </p>
+            </div>
+          {% elif ServiceForBooking.id == 7 %}
+            <div>
+              <p class="font-semibold text-sm">
+                Garden Size: <span class="text-md px-1 font-normal" id="SummaryGardenSize"></span>
+              </p>
+              <p class="font-semibold text-sm">
+                Grass Trimming Required: <span class="text-md px-1 font-normal" id="SummaryGrassTriming"></span>
+              </p>
+              <p class="font-semibold text-sm">
+                Tree Trimming Required: <span class="text-md px-1 font-normal" id="SummaryTreeTriming"></span>
+              </p>
+            </div>
+          {% elif ServiceForBooking.id == 8 %}
+            <div>
+              <p class="font-semibold text-sm">
+                Service Type: <span class="text-md px-1 font-normal" id="SummaryTreeServiceType"></span>
+              </p>
+              <p class="font-semibold text-sm">
+                Number of Trees: <span class="text-md px-1 font-normal" id="SummaryTreeNumber"></span>
+              </p>
+              <p class="font-semibold text-sm">
+                Tree Max Length: <span class="text-md px-1 font-normal" id="SummaryTreeMaxLength"></span>
+              </p>
+            </div>
+          
+          {% elif ServiceForBooking.id == 9 %}
+            <div>
+              <p class="font-semibold text-sm">
+                Sofa Type: <span class="text-md px-1 font-normal" id="SummarySofaType"></span>
+              </p>
+              <p class="font-semibold text-sm">
+                Number of Seat: <span class="text-md px-1 font-normal" id="SummarySeatCount"></span>
+              </p>
+              <p class="font-semibold text-sm">
+                Is Stain Cleaning: <span class="text-md px-1 font-normal" id="SummaryStainCleaning"></span>
+              </p>
+            </div>
+          {% elif ServiceForBooking.id == 10 %}
+            <div>
+              <p class="font-semibold text-sm">
+                Window Type: <span class="text-md px-1 font-normal" id="SummaryWindowType"></span>
+              </p>
+              <p class="font-semibold text-sm">
+                Number of Windows: <span class="text-md px-1 font-normal" id="SummaryWindowCount"></span>
+              </p>
+              <p class="font-semibold text-sm">
+                Outside/Inside? : <span class="text-md px-1 font-normal" id="SummaryWindowCleaningSide"></span>
+              </p>
+              <p class="font-semibold text-sm">
+                Window's Height: <span class="text-md px-1 font-normal" id="SummaryWindowHeight"></span>
+              </p>
+            </div>
+          {% elif ServiceForBooking.id == 11 %}
+            <div>
+              <p class="font-semibold text-sm">
+                Property Type: <span class="text-md px-1 font-normal" id="SummaryConstructionType"></span>
+              </p>
+              <p class="font-semibold text-sm">
+                Property Size: <span class="text-md px-1 font-normal" id="SummaryPropertySize"></span>
+              </p>
+              <p class="font-semibold text-sm">
+                Is Pain/Cement Stain: <span class="text-md px-1 font-normal" id="SummaryConstructionStain"></span>
+              </p>
+            </div>
+          {% endif %}
+          <hr class="border-zinc-400 py-1" />
+          <div>
+            <p class="font-semibold text-sm">
+              Email: <span class="font-normal" id="SummaryUserEmail"></span>
+            </p>
+            <p class="font-semibold text-sm">
+              Phone: <span class="font-normal" id="SummaryUserPhone"></span>
+            </p>
+            <p class="font-semibold text-sm">
+              Address: <span class="font-normal" id="SummaryUserAddress"></span>
+            </p>
+          </div>
+          <hr class="border-zinc-400 py-1" />
+          <p class="font-semibold text-zinc-900 text-lg">
+            Estimated Price: <span class="font-bold text-lg text-green-800" id="SummaryTotalAmount"></span> <span
+              class="text-zinc-900 text-sm">(pricing may vary by area size)</span>
+          </p>
+        </div>
+      </div>
+      <div class="flex flex-wrap gap-2 mt-6">
+        <button type="button" onclick="BackToUserDetails(event)"
+          class="inline-block px-4 p-2 text-zinc-100 px-4 rounded-lg bg-green-700 transition-all duration-300 hover:bg-green-800"><i
+            class="fa-solid fa-angle-left"></i> Back</button>
+        {% comment %} <button type="button" onclick="MoveConfirmation(event)"
+          class="inline-block p-2 text-zinc-100 rounded-lg bg-green-700 transition-all duration-300 hover:bg-green-800">Proceed
+          to Payment<i class="fa-solid fa-angle-right"></i></button> {% endcomment %}
+      </div>
+    </div>
+
+    {% comment %}Confirmation{% endcomment %}
+    <div class="w-full p-4 rounded-xl absolute top-0 right-[-100%] transition-all duration-500" id="confirmation">
+      <div class="flex flex-col justify-center items-center mt-[2rem] gap-1">
+        <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExZnUyeGwwZGZpM3loM3B6N3MxdnphcjA3MnRxbXJ4ZzhnNzN6OHYyaCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/FsApMLSUmvHsYTsDb9/giphy.webp" alt="BookingDoneGif" class="w-[150px] h-[150px hue-rotate-[25deg]">
+        <h3 class="text-zinc-900 font-bold text-2xl">🎉 Booking Confirmed Successfully!</h3>
+        <p class="text-zinc-600/90">Thank you for choosing us. Your service has been successfully scheduled.</p>
+        <div class="w-[50%] bg-zinc-200/50 border-[2px] border-zinc-400/30 rounded-lg p-4 flex flex-col justify-center items-center my-3 transition-all duration-500 hover:bg-zinc-200/100">
+          <p class="text-sm text-zinc-600/60">Your Booking Reference</p>
+          <p class="text-zinc-800/90 font-semibold">#64521SKW2327</p>
+        </div>
+        
+        <p class="text-zinc-600/90">You can manage, reschedule, or track your booking anytime from your dashboard.</p>
+        <p class="text-zinc-600/90">Redirecting you to your dashboard in <span class="font-semibold text-zinc-800"><span id="timeCount">5</span>s...</span></p>
+
+        <a href="{% url "dashboard" %}" 
+           class="inline-block outline-none border-none bg-green-600 text-white px-6 py-3 rounded-full font-medium hover:bg-green-600/90 transition duration-300 mt-2">
+            Go to Dashboard
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  {% comment %} console.log("Current Service for Booking: ", {{ ServiceForBooking }}) {% endcomment %}
+  {% comment %} Data From session Which access through views.py {% endcomment %}
+  currentUser = '{{currentUser}}'
+  currentCustomer = '{{currentCustomer}}'
+
+  {% comment %} ERROR BOX MESSAGe {% endcomment %}
+  const ErrorBox = document.getElementById('ErrorBox')
+  const ErrorBoxMessage = document.getElementById('ErrorBoxMessage')
+  const ErrorBoxClose = document.getElementById('ErrorBoxClose')
+
+  ErrorBoxClose.addEventListener('click', (e) => {
+    e.stopPropagation()
+    ErrorBox.style.top = '-10%'
+    ErrorBoxMessage.textContent = null
+  })
+
+  document.body.addEventListener('click', (e) => {
+    e.stopPropagation()
+    ErrorBox.style.top = '-10%'
+    ErrorBoxMessage.textContent = null
+  })
+
+  {% comment %} Service Slide process stages {% endcomment %}
+  const ServiceSlide = document.getElementById('ServiceSlide')
+  const ScheduleSlide = document.getElementById('ScheduleSlide')
+  const UserSlide = document.getElementById('UserSlide')
+  const PaymentSlide = document.getElementById('PaymentSlide')
+  const ConfirmationSlide = document.getElementById('ConfirmationSlide')
+
+  {% comment %} Process block components {% endcomment %}
+  let serviceDetails = document.getElementById('serviceDetails')
+  let serviceSchedule = document.getElementById('serviceSchedule')
+  let userDetails = document.getElementById('userDetails')
+  let paymentSummary = document.getElementById('paymentSummary')
+  let confirmation = document.getElementById('confirmation')
+
+  /* SERVICE DETAIL SECTION */
+
+  //If residential
+  {% if ServiceForBooking.id == 1 or ServiceForBooking.id == 2 or ServiceForBooking.id == 12%}
+    let UserPropertyType = document.getElementById('property')
+    {% if ServiceForBooking.id == 1 %}
+      let PropertyFees = 1000
+    {% endif %}
+    {% if ServiceForBooking.id == 2 %}
+      let PropertyFees = 2000
+    {% endif %}
+    {% if ServiceForBooking.id == 12 %}
+      let PropertyFees = 14000
+    {% endif %}
+    let roomCount = document.getElementById('roomCount')//room count
+    let currentRoomCount = parseInt(roomCount.value)
+    let bathCount = document.getElementById('bathCount') //bathroom count
+    let currentBathCount = parseInt(bathCount.value)
+    let roomPrice = 499
+    let bathPrice = 499
+    let isUVCheck = document.getElementById('isUVCheck') //check whether the checkbox add on
+    let totalServiceFees = 1998
+    let UVPrice = 0
+    let totalPrice = document.getElementById('totalPrice')
+
+    function updateTotal() {
+      totalServiceFees = (currentRoomCount * roomPrice) + (currentBathCount * bathPrice) + UVPrice + PropertyFees
+      totalPrice.textContent = totalServiceFees
+      console.log("Update price", roomCount)
+    }
+
+    let DecBed = () => {
+      currentRoomCount = currentRoomCount > 0 ? currentRoomCount - 1 : 0
+      roomCount.value = currentRoomCount
+      updateTotal()
+    }
+
+    let IncBed = () => {
+      currentRoomCount = currentRoomCount <= 10 ? currentRoomCount + 1 : 11
+      roomCount.value = currentRoomCount
+      updateTotal()
+    }
+
+    let DecBath = () => {
+      currentBathCount = currentBathCount > 0 ? currentBathCount - 1 : 0
+      bathCount.value = currentBathCount
+      updateTotal()
+    }
+    let IncBath = () => {
+      currentBathCount = currentBathCount <= 5 ? currentBathCount + 1 : 6
+      bathCount.value = currentBathCount
+      updateTotal()
+    }
+
+    {% if ServiceForBooking.id == 1 %}
+      UserPropertyType.addEventListener('change', () => {
+      PropertyFees = (UserPropertyType.value == 'Apartment') ? 1000 : (UserPropertyType.value == 'House') ? 1500: 1000
+      updateTotal()
+    })
+    {% endif %}
+    {% if ServiceForBooking.id == 2 %}
+      UserPropertyType.addEventListener('change', () => {
+      PropertyFees = (UserPropertyType.value == 'Apartment') ? 2000 : (UserPropertyType.value == 'House') ? 3000: 2000
+      updateTotal()
+    })
+    {% endif %}
+    {% if ServiceForBooking.id == 12 %}
+      UserPropertyType.addEventListener('change', () => {
+      PropertyFees = (UserPropertyType.value == 'Apartment') ? 12000 : (UserPropertyType.value == 'House') ? 15000: 12000
+      updateTotal()
+    })
+    {% endif %}
+
+    isUVCheck.addEventListener('change', () => {
+      UVPrice = (isUVCheck.checked) ? 499 : 0
+      updateTotal()
+    })
+
+    updateTotal()
+
+    function MoveSchedule(e) {
+      serviceDetails.style.right = '100%'
+      serviceSchedule.style.right = '0'
+      ServiceSlide.classList.remove('active')
+      ScheduleSlide.classList.add('active')
+    }
+  {% endif %}
+
+  //if kitchen
+  {% if ServiceForBooking.id == 3 %}
+    let totalServiceFees = 0
+    const KitchenType = document.getElementById('KitchenType')
+    let typePrice = 500
+    const GreaseLevel = document.getElementById('GreaseLevel')
+    let greasePrice = 0
+    const isChimneyCleaning = document.getElementById('isChimneyCleaning')
+    let chimneyPrice = 0
+    const totalPrice = document.getElementById('totalPrice')
+
+    function updateTotal() {
+      totalServiceFees = typePrice + greasePrice + chimneyPrice
+      totalPrice.textContent = `₹ ${totalServiceFees}`
+    }
+
+    KitchenType.addEventListener('change', () => {
+      if (KitchenType.value == "Residential") {
+        typePrice = 500
+        updateTotal()
+      }
+      else if (KitchenType.value == "Commercial") {
+        typePrice = 1000
+        updateTotal()
+      }
+    })
+
+    GreaseLevel.addEventListener('change', () => {
+      greasePrice = (GreaseLevel.value == "Light") ? 100 : (GreaseLevel.value == "Medium") ? 300 : (GreaseLevel.value == "Heavy") ? 800 : 0
+      updateTotal()
+    })
+
+    isChimneyCleaning.addEventListener('change', () => {
+      chimneyPrice = (isChimneyCleaning.value == "Yes") ? 500 : (isChimneyCleaning.value == "No") ? 0 : 0
+      updateTotal()
+    })
+
+    updateTotal()
+
+
+    function MoveSchedule(e) {
+      if (KitchenType.value == "" || GreaseLevel.value == "" || isChimneyCleaning.value == "") {
+        e.stopPropagation()
+        ErrorBox.style.top = '5%'
+        ErrorBoxMessage.textContent = "Please fill details"
+
+        setTimeout((e) => {
+          e.stopPropagation()
+          ErrorBox.style.top = '-10%'
+          ErrorBoxMessage.textContent = null
+        }, 5000)
+      }
+      else {
+        serviceDetails.style.right = '100%'
+        serviceSchedule.style.right = '0'
+        ServiceSlide.classList.remove('active')
+        ScheduleSlide.classList.add('active')
+      }
+    }
+  {% endif %}
+
+  //if bathroom & toilet
+  {% if ServiceForBooking.id == 4 %}
+    let typePrice = 500
+    const BathroomType = document.getElementById("BathroomType")
+    let bathroomPrice = 450
+    const bathroomCount = document.getElementById("bathroomCount")
+    let toiletPrice = 450
+    const toiletCount = document.getElementById("toiletCount")
+    const IsHardWaterStain = document.getElementById("IsHardWaterStain")
+    const totalPrice = document.getElementById("totalPrice")
+
+    function updateTotal() {
+      totalServiceFees = typePrice + (bathroomPrice * bathroomCount.value) + (toiletPrice * toiletCount.value)
+      totalPrice.textContent = `₹ ${totalServiceFees}`
+    }
+
+    const IncBath = () => {
+      bathroomCount.value = (parseInt(bathroomCount.value) <= 5) ? parseInt(bathroomCount.value) + 1 : 6
+      updateTotal()
+    }
+    const DecBath = () => {
+      bathroomCount.value = (parseInt(bathroomCount.value) > 0) ? parseInt(bathroomCount.value) - 1 : 0
+      updateTotal()
+    }
+    const IncToilet = () => {
+      toiletCount.value = (parseInt(toiletCount.value) <= 5) ? parseInt(toiletCount.value) + 1 : 6
+      updateTotal()
+    }
+    const DecToilet = () => {
+      toiletCount.value = (parseInt(toiletCount.value) > 0) ? parseInt(toiletCount.value) - 1 : 0
+      updateTotal()
+    }
+
+    BathroomType.addEventListener('change', () => {
+      typePrice = (BathroomType.value == "Residential") ? 500 : 1000
+      updateTotal()
+    })
+
+    updateTotal()
+
+    function MoveSchedule(e) {
+      if (BathroomType.value == "" || IsHardWaterStain.value == "") {
+        e.stopPropagation()
+        ErrorBox.style.top = '5%'
+        ErrorBoxMessage.textContent = "Please fill details"
+
+        setTimeout((e) => {
+          e.stopPropagation()
+          ErrorBox.style.top = '-10%'
+          ErrorBoxMessage.textContent = null
+        }, 5000)
+      }
+      else {
+        serviceDetails.style.right = '100%'
+        serviceSchedule.style.right = '0'
+        ServiceSlide.classList.remove('active')
+        ScheduleSlide.classList.add('active')
+      }
+    }
+  {% endif %}
+
+  //if office cleaning
+  {% if ServiceForBooking.id == 5 or ServiceForBooking.id == 6 or ServiceForBooking.id == 13%}
+    let totalServiceFees = 0
+    const OfficeSize = document.getElementById('OfficeSize')
+    {% if ServiceForBooking.id == 5 %}
+    let sizePrice = 3000
+    {% endif %}
+    {% if ServiceForBooking.id == 6 %}
+    let sizePrice = 6000
+    {% endif %}
+    {% if ServiceForBooking.id == 13 %}
+    let sizePrice = 20000
+    {% endif %}
+    const WashroomCount = document.getElementById('WashroomCount')
+    let washroomPrice = 400
+    const IsGlassPartition = document.getElementById('IsGlassPartition')
+    let glassPrice = 0
+    const isUVSanitization = document.getElementById('isUVSanitization')
+    let UVPrice = 0
+    const totalPrice = document.getElementById('totalPrice')
+
+    function updateTotal() {
+      totalServiceFees = sizePrice + (washroomPrice * WashroomCount.value) + glassPrice + UVPrice
+      totalPrice.textContent = `₹${totalServiceFees}`
+    }
+
+    {% if ServiceForBooking.id == 5 %}
+    OfficeSize.addEventListener('change', () => {
+      sizePrice = (OfficeSize.value == "Small") ? 3000 : (OfficeSize.value == "Medium") ? 5000 : (OfficeSize.value == "Large") ? 10000 : 0
+      updateTotal()
+    })
+    {% endif %}
+    {% if ServiceForBooking.id == 6 %}
+    OfficeSize.addEventListener('change', () => {
+      sizePrice = (OfficeSize.value == "Small") ? 5000 : (OfficeSize.value == "Medium") ? 7000 : (OfficeSize.value == "Large") ? 15000 : 0
+      updateTotal()
+    })
+    {% endif %}
+    {% if ServiceForBooking.id == 13 %}
+    OfficeSize.addEventListener('change', () => {
+      sizePrice = (OfficeSize.value == "Small") ? 25000 : (OfficeSize.value == "Medium") ? 35000 : (OfficeSize.value == "Large") ? 60000 : 0
+      updateTotal()
+    })
+    {% endif %}
+
+    const IncWash = () => {
+      WashroomCount.value = (parseInt(WashroomCount.value) <= 5) ? parseInt(WashroomCount.value) + 1 : 6
+      updateTotal()
+    }
+    const DecWash = () => {
+      WashroomCount.value = (parseInt(WashroomCount.value) > 0) ? parseInt(WashroomCount.value) - 1 : 0
+      updateTotal()
+    }
+
+    IsGlassPartition.addEventListener('change', () => {
+      glassPrice = (IsGlassPartition.value == "Yes") ? 300 : 0
+      updateTotal()
+    })
+
+    isUVSanitization.addEventListener('click', () => {
+      UVPrice = (isUVSanitization.checked) ? 499 : 0
+      updateTotal()
+    })
+
+    updateTotal()
+
+    function MoveSchedule(e) {
+      if (OfficeSize.value == "" || IsGlassPartition.value == "") {
+        e.stopPropagation()
+        ErrorBox.style.top = '5%'
+        ErrorBoxMessage.textContent = "Please fill details"
+
+        setTimeout((e) => {
+          e.stopPropagation()
+          ErrorBox.style.top = '-10%'
+          ErrorBoxMessage.textContent = null
+        }, 5000)
+      }
+      else {
+        serviceDetails.style.right = '100%'
+        serviceSchedule.style.right = '0'
+        ServiceSlide.classList.remove('active')
+        ScheduleSlide.classList.add('active')
+      }
+    }
+  {% endif %}
+
+  //if garden cleaning 
+  {% if ServiceForBooking.id == 7 %}
+    let totalServiceFees = 0
+    const GardenSize = document.getElementById('GardenSize')
+    let gardenPrice = 500
+    const IsGrassTriming = document.getElementById('IsGrassTriming')
+    let grassPrice = 0
+    const IsTreeTriming = document.getElementById('IsTreeTriming')
+    let treePrice = 0
+    const totalPrice = document.getElementById('totalPrice')
+    
+    function updateTotal() {
+      totalServiceFees = gardenPrice + grassPrice + treePrice
+      totalPrice.textContent = `₹${totalServiceFees}`
+    }
+  
+    GardenSize.addEventListener('change', () => {
+      gardenPrice = (GardenSize.value == "Small") ? 500 : (GardenSize.value == "Medium") ? 2000 : (GardenSize.value == "Large") ? 5000 : 0
+      updateTotal()
+    })
+  
+    IsGrassTriming.addEventListener('change', () => {
+      grassPrice = (IsGrassTriming.value == "Yes") ? 200 : 0
+      updateTotal()
+    })
+  
+    IsTreeTriming.addEventListener('change', () => {
+      treePrice = (IsTreeTriming.value == "Yes") ? 500 : 0
+      updateTotal()
+    })
+  
+    updateTotal()
+  
+    function MoveSchedule(e) {
+      if (IsGrassTriming.value == "" || IsTreeTriming.value == "") {
+        e.stopPropagation()
+        ErrorBox.style.top = '5%'
+        ErrorBoxMessage.textContent = "Please fill details"
+      
+        setTimeout((e) => {
+          {% comment %} e.stopPropagation() {% endcomment %}
+          ErrorBox.style.top = '-10%'
+          ErrorBoxMessage.textContent = null
+        }, 5000)
+      }
+      else {
+        serviceDetails.style.right = '100%';
+        serviceSchedule.style.right = '0';
+        userDetails.style.right = "-100%"
+        paymentSummary.style.right = "-100%"
+        ServiceSlide.classList.remove('active')
+        ScheduleSlide.classList.add('active')
+      }
+    }
+  {% endif %}
+
+  //if tree cutting 
+  {% if ServiceForBooking.id == 8 %}
+    serviceSchedule = document.getElementById('serviceSchedule')
+    userDetails = document.getElementById('userDetails')
+    paymentSummary = document.getElementById('paymentSummary')
+
+    let totalServiceFees=0
+    const TreeServiceType=document.getElementById('TreeServiceType')
+    let TreeServicePrice=0
+    const TreeCount=document.getElementById('TreeCount')
+    let PriceTree=300
+    const MaxTreeHeight=document.getElementById('MaxTreeHeight')
+    let heightPrice=0
+    const totalPrice=document.getElementById('totalPrice')
+
+    function updateTotal(){
+      totalServiceFees=TreeServicePrice+(PriceTree*TreeCount.value)+heightPrice
+      totalPrice.textContent=`₹${totalServiceFees}`
+    }
+
+    TreeServiceType.addEventListener('change',()=>{
+      TreeServicePrice=(TreeServiceType.value=="Trimming")?500: (TreeServiceType.value=="Full Removing")?1000:0
+      updateTotal()
+    })
+
+    const IncTree = () => {
+      TreeCount.value = (parseInt(TreeCount.value) <= 9) ? parseInt(TreeCount.value) + 1 : 10
+      updateTotal()
+    }
+    const DecTree = () => {
+      TreeCount.value = (parseInt(TreeCount.value) > 0) ? parseInt(TreeCount.value) - 1 : 0
+      updateTotal()
+    }
+
+    MaxTreeHeight.addEventListener('click',()=>{
+      heightPrice=(MaxTreeHeight.value=="Below 10ft")?10:(MaxTreeHeight.value=="10-20ft")?100:(MaxTreeHeight.value=="Above 20ft")?300:0
+      updateTotal()
+    })
+
+    updateTotal()
+
+    function MoveSchedule(e){
+      if(TreeServiceType.value=="" || MaxTreeHeight.value==""){
+        e.stopPropagation()
+        ErrorBox.style.top = '5%'
+        ErrorBoxMessage.textContent = "Please fill details"
+
+        setTimeout((e) => {
+          e.stopPropagation()
+          ErrorBox.style.top = '-10%'
+          ErrorBoxMessage.textContent = null
+        }, 5000)
+      }
+      else{
+        serviceDetails.style.right = '100%'
+        serviceSchedule.style.right = '0'
+        userDetails.style.right='-100%'
+        paymentSummary.style.right='-100%'
+        ServiceSlide.classList.remove('active')
+        ScheduleSlide.classList.add('active')
+      }
+    }
+  {% endif %}
+
+  //if sofa carpet cleaning 
+  {% if ServiceForBooking.id == 9 %}
+    let totalServiceFees=0
+    const SofaType=document.getElementById('SofaType')  
+    let sofaTypePrice=0
+    const SeatCount=document.getElementById('SeatCount')  
+    let SofaPrice=150
+    const IsStainCleaning=document.getElementById('IsStainCleaning')
+    let StainPrice=0
+    const totalPrice=document.getElementById('totalPrice')
+
+    function updateTotal(){
+      totalServiceFees=sofaTypePrice+(SofaPrice*SeatCount.value)+StainPrice
+      totalPrice.textContent=`₹${totalServiceFees}`
+    }
+
+
+    const IncSeat = () => {
+      SeatCount.value = (parseInt(SeatCount.value) <= 9) ? parseInt(SeatCount.value) + 1 : 10
+      updateTotal()
+    }
+    const DecSeat = () => {
+      SeatCount.value = (parseInt(SeatCount.value) > 1) ? parseInt(SeatCount.value) - 1 : 1
+      updateTotal()
+    }
+
+    SofaType.addEventListener('change', ()=>{
+      sofaTypePrice=(SofaType.value=="Febric Sofa")?500: (SofaType.value=="Leather Sofa")?300:(SofaType.value=="others")?500:0
+      updateTotal()
+    })
+
+    IsStainCleaning.addEventListener('change', ()=>{
+      StainPrice=(IsStainCleaning.value=="No")?0: (IsStainCleaning.value=="Basic Stain")?200:(IsStainCleaning.value=="Deep Stain")?400:0
+      updateTotal()
+    })
+
+    updateTotal()
+
+    function MoveSchedule(e) {
+      if (SofaType.value == "" || IsStainCleaning.value == "") {
+        e.stopPropagation()
+        ErrorBox.style.top = '5%'
+        ErrorBoxMessage.textContent = "Please fill details"
+      
+        setTimeout((e) => {
+          {% comment %} e.stopPropagation() {% endcomment %}
+          ErrorBox.style.top = '-10%'
+          ErrorBoxMessage.textContent = null
+        }, 5000)
+      }
+      else {
+        serviceDetails.style.right = '100%';
+        serviceSchedule.style.right = '0';
+        userDetails.style.right = "-100%"
+        paymentSummary.style.right = "-100%"
+        ServiceSlide.classList.remove('active')
+        ScheduleSlide.classList.add('active')
+      }
+    }    
+  {% endif %}
+
+  //if window cleaning
+  {% if ServiceForBooking.id == 10 %}
+    let totalServiceFees=0
+    const WindowType=document.getElementById('WindowType')
+    let windowTypePrice=300
+    const WindowCount=document.getElementById('WindowCount')
+    let WindowPrice=150
+    const WindowCleaningSide=document.getElementById('WindowCleaningSide')
+    let WindowSidePrice=0
+    const WindowHeight=document.getElementById('WindowHeight')  
+    let WindowHeightPrice=0
+    const totalPrice=document.getElementById('totalPrice')  
+
+    function updateTotal(){
+      totalServiceFees=windowTypePrice+(WindowPrice*WindowCount.value)+WindowSidePrice+WindowHeightPrice
+      totalPrice.textContent=`₹${totalServiceFees}`
+    }
+
+    const IncWindow = () => {
+      WindowCount.value = (parseInt(WindowCount.value) <= 9) ? parseInt(WindowCount.value) + 1 : 10
+      updateTotal()
+    }
+    const DecWindow = () => {
+      WindowCount.value = (parseInt(WindowCount.value) > 1) ? parseInt(WindowCount.value) - 1 : 1
+      updateTotal()
+    }
+
+    WindowType.addEventListener('change', ()=>{
+      windowTypePrice=(WindowType.value=="Apartment")?300:500
+      updateTotal()
+    })
+
+    WindowCleaningSide.addEventListener('change', ()=>{
+      WindowSidePrice=(WindowCleaningSide.value=="Inside")?0: (WindowCleaningSide.value=="Both")?50:0
+      updateTotal()
+    })
+
+    WindowHeight.addEventListener('change', ()=>{
+      WindowHeightPrice=(WindowHeight.value=="Low")?0: (WindowHeight.value=="High")?50:0
+      updateTotal()
+    })
+    
+
+    updateTotal()
+
+    function MoveSchedule(e) {
+      if (WindowCleaningSide.value == "" || WindowHeight.value == "") {
+        e.stopPropagation()
+        ErrorBox.style.top = '5%'
+        ErrorBoxMessage.textContent = "Please fill details"
+      
+        setTimeout((e) => {
+          {% comment %} e.stopPropagation() {% endcomment %}
+          ErrorBox.style.top = '-10%'
+          ErrorBoxMessage.textContent = null
+        }, 5000)
+      }
+      else {
+        serviceDetails.style.right = '100%';
+        serviceSchedule.style.right = '0';
+        userDetails.style.right = "-100%"
+        paymentSummary.style.right = "-100%"
+        ServiceSlide.classList.remove('active')
+        ScheduleSlide.classList.add('active')
+      }
+    }
+  {% endif %}
+
+  //if post-construction
+  {% if ServiceForBooking.id == 11 %}
+    let totalServiceFees=0
+    const ConstructionType=document.getElementById('ConstructionType')  
+    let ConstructionTypePrice=0
+    const PropertySize=document.getElementById('PropertySize')  
+    let PropertySizePrice=1000
+    const IsConstructionStain=document.getElementById('IsConstructionStain')  
+    let ConstructionStainPrice=0
+    const totalPrice=document.getElementById('totalPrice')  
+
+    function updateTotal(){
+      totalServiceFees=ConstructionTypePrice+PropertySizePrice+ConstructionStainPrice //line 803
+      totalPrice.textContent=`₹${totalServiceFees}`
+    }
+
+    ConstructionType.addEventListener('change', ()=>{
+      ConstructionTypePrice=(ConstructionType.value=="New Built")?500:(ConstructionType.value=="Renovation")?300:0
+      updateTotal()
+    })
+
+    PropertySize.addEventListener('change', ()=>{
+      PropertySizePrice=(PropertySize.value=="1BHK")?800:(PropertySize.value=="2BHK")?1200:(PropertySize.value=="3BHK")?2000:(PropertySize.value=="Office")?5000:0
+      updateTotal()
+    })
+
+    IsConstructionStain.addEventListener('change', ()=>{
+      ConstructionStainPrice=(IsConstructionStain.value=="Yes")?500:(IsConstructionStain.value=="No")?0:0
+      updateTotal()
+    })
+  
+    updateTotal()
+
+    function MoveSchedule(e) {
+      if (ConstructionType.value == "" || PropertySize.value == "") {
+        e.stopPropagation()
+        ErrorBox.style.top = '5%'
+        ErrorBoxMessage.textContent = "Please fill details"
+      
+        setTimeout((e) => {
+          {% comment %} e.stopPropagation() {% endcomment %}
+          ErrorBox.style.top = '-10%'
+          ErrorBoxMessage.textContent = null
+        }, 5000)
+      }
+      else {
+        serviceDetails.style.right = '100%';
+        serviceSchedule.style.right = '0';
+        userDetails.style.right = "-100%"
+        paymentSummary.style.right = "-100%"
+        ServiceSlide.classList.remove('active')
+        ScheduleSlide.classList.add('active')
+      }
+    }
+  {% endif %}
+  
+
+
+
+
+
+
+
+
+
+  //SERVICE SCHEDULE SECTION
+
+  /*Calender JS*/
+  const MonthYear = document.getElementById('MonthYear')
+  const selectedDate = document.getElementById('selectedDate')
+  const selectedTime = document.getElementById('selectedTime')
+  const MonthDates = document.getElementById('MonthDates')
+  const prevMonthBtn = document.getElementById('prevMonthBtn')
+  const nextMonthBtn = document.getElementById('nextMonthBtn')
+  const MonthsArray = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+  //Current date
+  const d = new Date()
+  let CurrentYear = d.getFullYear()
+  let CurrentMonth = d.getMonth()
+
+  //THINGS THAT I WANT
+  let userSelectedDate = null
+  let userSelectedTime = null
+
+  console.log('Current Month and Year: ' + CurrentMonth, CurrentYear)
+  console.log('current Day: ' + d.getDay()) //here it return the day of the week [0 (sunday)-6 (saturday)]
+
+  //CHECK WHETHER THE DATE IS SAME OR NOT
+  function sameDate(d1, d2) {
+    //first we check whether both given date is exists or not, if exists then it check whether it is same or not
+    return d1 && d2 && d1.toDateString() === d2.toDateString()
+  }
+
+  prevMonthBtn.addEventListener('click', () => {
+    if (CurrentMonth === 0) {
+      CurrentMonth = 11
+      CurrentYear--
+    } else {
+      CurrentMonth--
+    }
+    MyCalender()
+  })
+
+  nextMonthBtn.addEventListener('click', () => {
+    if (CurrentMonth === 11) {
+      CurrentMonth = 0
+      CurrentYear++
+    } else {
+      CurrentMonth++
+    }
+    MyCalender()
+  })
+
+  const MyCalender = () => {
+    MonthDates.innerHTML = ''
+    //check what is the last date of current MonthDates
+    let lastDateOfCurrentMonth = new Date(CurrentYear, CurrentMonth + 1, 0).getDate() //here +1 is used because in js month starts with 0-11 instead 1-12, and getDate() gives exact date
+    let firstDayOfMonth = new Date(CurrentYear, CurrentMonth, 1).getDay()
+    let lastDayOfMonth = new Date(CurrentYear, CurrentMonth + 1, 0).getDay()
+    let lastDateOfLastMonth = new Date(CurrentYear, CurrentMonth, 0).getDate()
+    let firstDayofNextMonth = new Date(CurrentYear, CurrentMonth + 1, 1).getDate()
+    MonthYear.textContent = `${MonthsArray[CurrentMonth]} ${CurrentYear}`
+    let today = new Date()
+
+    //Now, we print the date in 7*6=42 formate, and date start with 1
+    let day = 1
+    for (let i = 0; i < 42; i++) {
+      let liTag = document.createElement('li')
+      liTag.className = 'w-[35px] h-[35px] p-1 my-1 flex justify-center items-center'
+
+      //Now, print the date of the month by checking its month starts from which week day and what is the last date of month
+      if (i >= firstDayOfMonth && day <= lastDateOfCurrentMonth) {
+        let dateBox = new Date(CurrentYear, CurrentMonth, day)
+        liTag.textContent = day
+        liTag.classList.add('dateItems')
+
+        //check whether the current iterated day and current date is equal or not
+        if (sameDate(dateBox, today)) {
+          liTag.classList.add('border-[2px]', 'outline-none', 'border-green-900', 'rounded-full', 'dateItems')
+        }
+
+        liTag.onclick = () => {
+          userSelectedDate = dateBox
+          console.log(userSelectedDate)
+          const prevSelected = document.querySelector('.dateItems.bg-green-700')
+          if (prevSelected) prevSelected.classList.remove('bg-green-700', 'rounded-full', 'text-zinc-100')
+          liTag.classList.add('rounded-full', 'bg-green-700', 'text-zinc-100')
+          liTag.classList.add('no-before-hover')
+          selectedDate.textContent = userSelectedDate.getDate() + ' ' + MonthsArray[userSelectedDate.getMonth()] + ' ' + userSelectedDate.getFullYear()
+        }
+        day++ //after adding day in page then day is increased by 1
+      }
+      MonthDates.appendChild(liTag)
+    }
+  }
+
+  MyCalender() //calling the function which return the dates of month
+
+  function timeslot(time) {
+    userSelectedTime = time
+    selectedTime.textContent = userSelectedTime
+  }
+
+  //BACK TO SERVICE SECTION button
+  function BackToService(e) {
+    serviceDetails.style.right = '0'
+    serviceSchedule.style.right = '-100%'
+    ServiceSlide.classList.add('active')
+    ScheduleSlide.classList.remove('active')
+  }
+
+  //MOVE TO USER DETAILS SECTION Button
+  function MoveUserDetails(e) {
+    if (userSelectedTime && userSelectedDate) {
+      userDetails.style.right = '0'
+      serviceSchedule.style.right = "100%"
+      ScheduleSlide.classList.remove('active')
+      UserSlide.classList.add('active')
+    } else {
+      e.stopPropagation()
+      ErrorBox.style.top = '5%'
+      ErrorBoxMessage.textContent = "Please Select Valid Date & Time"
+
+      setTimeout((e) => {
+        e.stopPropagation()
+        ErrorBox.style.top = '-10%'
+        ErrorBoxMessage.textContent = null
+      }, 5000)
+
+    }
+  }
+
+
+  /*USER DETAILS SECTION*/
+  const yourName = document.getElementById('yourName')
+  const yourEmail = document.getElementById('yourEmail')
+  const yourPhone = document.getElementById('yourPhone')
+  const yourAddress = document.getElementById('yourAddress')
+  const yourPincode = document.getElementById('yourPincode')
+  const yourInstruction = document.getElementById('yourInstruction')
+  const userDetailMessage = document.getElementById('userDetailMessage')
+  yourName.value = '{{currentCustomer.name}}'
+  yourEmail.value = '{{currentCustomer.email}}'
+  yourPhone.value = '{{currentCustomer.phone}}'
+  yourPincode.value = '{{currentCustomer.areaCode}}'
+  yourAddress.value = `${'{{currentCustomer.address}}'}, ${'{{currentCustomer.city}}'}, ${'{{currentCustomer.areaCode}}'}, ${'{{currentCustomer.state}}'}, ${'{{currentCustomer.country}}'}`
+
+
+  //BACK TO SCHEDULE SECTION
+  function BackToSchedule(e) {
+    userDetails.style.right = '-100%'
+    serviceSchedule.style.right = "0"
+    UserSlide.classList.remove('active')
+    ScheduleSlide.classList.add('active')
+  }
+
+  //MOVE TO PAYMENT SECTION Button
+  async function MovePayment(e) {
+    if (yourName.value == '' || yourEmail.value == '' || yourPhone.value == '' || yourAddress.value == '' || yourPincode.value == '') {
+      e.stopPropagation()
+      ErrorBox.style.top = '5%'
+      ErrorBoxMessage.textContent = "User details is required"
+
+      setTimeout((e) => {
+        e.stopPropagation()
+        ErrorBox.style.top = '-10%'
+        ErrorBoxMessage.textContent = null
+      }, 5000)
+    } else {
+      userDetails.style.right = '100%'
+      paymentSummary.style.right = "0"
+      ServiceSlide.classList.remove('active')
+      UserSlide.classList.remove('active')
+      PaymentSlide.classList.add('active')
+
+      {% comment %} PAYMENT SUMMARY SECTION {% endcomment %}
+      //User details Summary
+      const SummaryUserEmail = document.getElementById('SummaryUserEmail')
+      const SummaryUserPhone = document.getElementById('SummaryUserPhone')
+      const SummaryUserAddress = document.getElementById('SummaryUserAddress')
+      SummaryUserEmail.textContent = yourEmail.value
+      SummaryUserPhone.textContent = yourPhone.value
+      SummaryUserAddress.textContent = yourAddress.value
+
+      //residential
+      {% if ServiceForBooking.id == 1 or ServiceForBooking.id == 2 or ServiceForBooking.id == 12%}
+        const SummaryProperty = document.getElementById('SummaryProperty')
+        const SummaryBedCount = document.getElementById('SummaryBedCount')
+        const SummaryBathCount = document.getElementById('SummaryBathCount')
+        const SummaryUVSanitization = document.getElementById('SummaryUVSanitization')
+        SummaryProperty.textContent = UserPropertyType.value
+        SummaryBedCount.textContent = roomCount.value
+        SummaryBathCount.textContent = bathCount.value
+        SummaryUVSanitization.textContent = (isUVCheck.checked) ? "Yes" : "No"
+      {% endif %}
+
+      //kitchen
+      {% if ServiceForBooking.id == 3 %}
+        const SummaryKitchen = document.getElementById('SummaryKitchen')
+        const SummaryGrease = document.getElementById('SummaryGrease')
+        const SummaryChimney = document.getElementById('SummaryChimney')
+        SummaryKitchen.textContent = KitchenType.value
+        SummaryGrease.textContent = GreaseLevel.value
+        SummaryChimney.textContent = isChimneyCleaning.value
+      {% endif %}
+
+      //bathroom and toilet
+      {% if ServiceForBooking.id == 4 %}
+        const SummaryBathroomType = document.getElementById('SummaryBathroomType')
+        const SummaryBathroomCount = document.getElementById('SummaryBathroomCount')
+        const SummaryToiletCount = document.getElementById('SummaryToiletCount')
+        const SummaryHardwaterStain = document.getElementById('SummaryHardwaterStain')
+        SummaryBathroomType.textContent = BathroomType.value
+        SummaryBathroomCount.textContent = bathroomCount.value
+        SummaryToiletCount.textContent = toiletCount.value
+        SummaryHardwaterStain.textContent = IsHardWaterStain.value
+      {% endif %}
+
+      //office 
+      {% if ServiceForBooking.id == 5 or ServiceForBooking.id == 6 or ServiceForBooking.id == 13%}
+        const SummaryOfficeSize = document.getElementById('SummaryOfficeSize')
+        const SummaryWashroomCount = document.getElementById('SummaryWashroomCount')
+        const SummaryGlassPartition = document.getElementById('SummaryGlassPartition')
+        const SummaryOfficeUVSanitization = document.getElementById('SummaryOfficeUVSanitization')
+        SummaryOfficeSize.textContent = OfficeSize.value
+        SummaryWashroomCount.textContent = WashroomCount.value
+        SummaryGlassPartition.textContent = IsGlassPartition.value
+        SummaryOfficeUVSanitization.textContent = (isUVSanitization.checked) ? "Yes" : "No"
+      {% endif %}
+
+      //Garden
+      {% if ServiceForBooking.id == 7 %}
+        const SummaryGardenSize = document.getElementById('SummaryGardenSize')
+        const SummaryGrassTriming = document.getElementById('SummaryGrassTriming')
+        const SummaryTreeTriming = document.getElementById('SummaryTreeTriming')
+        SummaryGardenSize.textContent = GardenSize.value
+        SummaryGrassTriming.textContent = IsGrassTriming.value
+        SummaryTreeTriming.textContent = IsTreeTriming.value
+      {% endif %}
+
+      //Tree
+      {% if ServiceForBooking.id == 8 %}
+        const SummaryTreeServiceType=document.getElementById('SummaryTreeServiceType')
+        const SummaryTreeNumber=document.getElementById('SummaryTreeNumber')
+        const SummaryTreeMaxLength=document.getElementById('SummaryTreeMaxLength')
+        SummaryTreeServiceType.textContent=TreeServiceType.value
+        SummaryTreeNumber.textContent=TreeCount.value
+        SummaryTreeMaxLength.textContent=MaxTreeHeight.value
+      {% endif %}
+      
+      //Sofa carpet
+      {% if ServiceForBooking.id == 9 %}
+        const SummarySofaType=document.getElementById('SummarySofaType')
+        const SummarySeatCount=document.getElementById('SummarySeatCount')
+        const SummaryStainCleaning=document.getElementById('SummaryStainCleaning')
+        SummarySofaType.textContent=SofaType.value
+        SummarySeatCount.textContent=SeatCount.value
+        SummaryStainCleaning.textContent=IsStainCleaning.value
+      {% endif %}
+
+      //window 
+      {% if ServiceForBooking.id == 10 %}
+        const SummaryWindowType=document.getElementById('SummaryWindowType')
+        const SummaryWindowCount=document.getElementById('SummaryWindowCount')
+        const SummaryWindowCleaningSide=document.getElementById('SummaryWindowCleaningSide')
+        const SummaryWindowHeight=document.getElementById('SummaryWindowHeight')
+        SummaryWindowType.textContent=WindowType.value
+        SummaryWindowCount.textContent=WindowCount.value
+        SummaryWindowCleaningSide.textContent=WindowCleaningSide.value
+        SummaryWindowHeight.textContent=WindowHeight.value
+      {% endif %}
+
+      //post-construction
+      {% if ServiceForBooking.id == 11 %}
+        const SummaryConstructionType=document.getElementById('SummaryConstructionType')
+        const SummaryPropertySize=document.getElementById('SummaryPropertySize')
+        const SummaryConstructionStain=document.getElementById('SummaryConstructionStain')
+        SummaryConstructionType.textContent=ConstructionType.value
+        SummaryPropertySize.textContent=PropertySize.value
+        SummaryConstructionStain.textContent=IsConstructionStain.value
+      {% endif %}
+
+      //total service charge and schedule date time
+      const SummaryDateTime = document.getElementById('SummaryDateTime')
+      const SummaryTotalAmount = document.getElementById('SummaryTotalAmount')
+      SummaryDateTime.textContent = `${userSelectedDate} (${userSelectedTime})`
+      SummaryTotalAmount.textContent = totalServiceFees
+
+    }
+  }
+
+
+  /*PAYMENT AND SUMMARY SECTION*/
+
+  function BackToUserDetails(e) {
+    paymentSummary.style.right = '-100%'
+    userDetails.style.right = '0'
+    UserSlide.classList.add('active')
+    PaymentSlide.classList.remove('active')
+    ServiceSlide.classList.remove('active')
+  }
+
+  const PaymentOptionShow = (WantToShow) => {
+    const AllPaymentOptionSectionIDs = ['CardPaymentOption', 'UPIPaymentOption', 'PayAfterService']
+    //initially i want that all section should be hidden
+    AllPaymentOptionSectionIDs.forEach(section => {
+      document.getElementById(section).classList.add('hidden')
+      document.getElementById(section).classList.remove('PaymentMethodActive')
+    })
+
+    //when user clicked function the argument works as ID of section to display
+    document.getElementById(WantToShow).classList.remove('hidden')
+    document.getElementById(WantToShow).classList.add('PaymentMethodActive')
+    console.log(document.getElementById(WantToShow))
+
+  }
+
+  const ConfirmBooking = document.getElementById('ConfirmBooking')
+  ConfirmBooking.addEventListener('click', (e) => {
+    e.preventDefault()
+    console.log('Booking is confirmed and placed')
+
+    //Initial Common Data
+    let bookingData = {
+      Customer: '{{currentCustomer.id}}',
+      service_name: '{{ServiceForBooking.title}}',
+      time: userSelectedTime,
+      date: new Date(userSelectedDate).toDateString(),
+      {% if ServiceForBooking.id == 1 or ServiceForBooking.id == 2 %}
+        propertyType: UserPropertyType.value,
+        No_Of_Bedroom: roomCount.value,
+        No_Of_Bathroom: bathCount.value,
+        Is_UV_Sanitization: (isUVCheck.checked) ? "Yes" : "No",
+      {% elif ServiceForBooking.id == 3 %}
+        KitchenType: KitchenType.value,
+        GreaseLevel: GreaseLevel.value,
+        Is_Chimney_Cleaning: isChimneyCleaning.value,
+      {% elif ServiceForBooking.id == 4 %}
+        BathroomType:BathroomType.value,
+        No_Of_Bathroom:bathroomCount.value,
+        No_Of_Toilet:toiletCount.value,
+        Is_Hardwater_Stain:IsHardWaterStain.value,
+      {% elif ServiceForBooking.id == 5 or ServiceForBooking.id == 6 %}
+        OfficeSize:OfficeSize.value,
+        No_Of_Washroom:WashroomCount.value,
+        Is_Glass_Partition:IsGlassPartition.value,
+        Is_UV_Sanitization:(isUVSanitization.checked) ? "Yes" : "No",
+      {% elif ServiceForBooking.id == 7 %}
+        GardenSize:GardenSize.value,
+        Is_Grass_Trimming:IsGrassTriming.value,
+        Is_Tree_Trimming:IsTreeTriming.value,
+      {% elif ServiceForBooking.id == 8 %}
+        Tree_Service_Type:TreeServiceType.value,
+        No_of_Tree:TreeCount.value,
+        Tree_Max_Height:MaxTreeHeight.value,
+      {% elif ServiceForBooking.id == 9 %}
+        SofaType:SofaType.value,
+        No_of_Seat:SeatCount.value,
+        Is_Stain_Cleaning:IsStainCleaning.value,
+      {% elif ServiceForBooking.id == 10 %}
+        WindowType:WindowType.value,
+        No_of_Window:WindowCount.value,
+        Window_Side:WindowCleaningSide.value,
+        Window_Height:WindowHeight.value,
+      {% elif ServiceForBooking.id == 11 %}
+        ConstructionType:ConstructionType.value,
+        PropertySize:PropertySize.value,
+        Is_Construction_Stain:IsConstructionStain.value,
+      {% endif %}
+      Service_Address: yourAddress.value,
+      Customer_Instruction: yourInstruction.value,
+      TotalCharge: totalServiceFees,
+      Booking_DateTime: new Date().toDateString(),
+      Customer_Name: yourName.value,
+      Customer_Email: yourEmail.value,
+      Customer_Phone: yourPhone.value,
+    }
+
+    console.log(bookingData)
+
+
+
+    $.ajax({
+      url: '{% url "service_booking_submission" %}',
+      type: 'POST',
+      contentType: "application/json",
+      data: JSON.stringify(bookingData),
+      headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+      success: () => {
+        paymentSummary.style.right = '100%'
+        confirmation.style.right = "0"
+        PaymentSlide.classList.remove('active')
+        UserSlide.classList.remove('active')
+        ConfirmationSlide.classList.add('active')
+
+        const timeCount=document.getElementById('timeCount')
+        let mytime=5
+
+        const TimeCountInterval=setInterval(()=>{
+          mytime--;
+          timeCount.textContent=mytime;
+
+          if(mytime==0){
+            clearInterval(TimeCountInterval)
+            window.location.href={% url "dashboard" %}
+          }
+        },1000)
+
+        //alert("Every thing is fine")
+      },
+      error: (error) => {
+        console.log("Error: ", error)
+        alert("Something is wrong: ")
+      }
+
+    })
+  })
+
+
+</script>
+{% endblock %}

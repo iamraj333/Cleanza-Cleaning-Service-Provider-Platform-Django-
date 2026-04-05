@@ -1,0 +1,16 @@
+{% extends "NavbarModel.html" %}
+{% block title %}Page Not Found | Cleanza{% endblock  %}
+
+{% comment %} body {% endcomment %}
+{% block body %}
+<div class="w-full h-20 bg-zinc-900/100 flex items-center justify-center"></div>
+<div class="w-full min-h-[80vh] mt-6 flex flex-col justify-center items-center text-center">
+    <h1 class="text-[10rem] font-extrabold text-zinc-700">404</h1>
+    <h2 class="text-5xl font-bold text-zinc-700">Page Not Found</h2>
+    <div class="py-6 text-center text-zinc-900/80">
+        <p>The page you’re looking for isn’t available or may have been moved.</p>
+        <p>Please return to the homepage or explore our services below.</p>
+    </div>
+    <a href="{% url "home" %}" class="p-3 px-10 rounded-lg bg-green-800 outline-none text-white font-semibold transition-all duration-[0.4s] hover:bg-green-800/90">Back to Home</a>
+</div>
+{% endblock  %}

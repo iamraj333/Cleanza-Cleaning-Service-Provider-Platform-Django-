@@ -1,0 +1,58 @@
+{% extends 'NavbarModel.html' %}
+
+{% load static %}
+
+{% block title %}
+  Register - Become a Member
+{% endblock %}
+
+{% block body %}
+  <div class="w-full h-screen bg-[url('{% static 'hero.jpg' %}')] bg-norepeat bg-cover overflow-hidden">
+    <div class="w-full h-full bg-black bg-opacity-50 backdrop-blur-[2px]">
+      <div class="relative top-[55%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-[40%] h-[620px] bg-zinc-100 text-zinc-700 rounded p-6">
+        <div class="space-y-1 pb-3">
+          <h1 class="text-2xl font-bold">Register <span class="text-green-700">Now to Book</span> Service</h1>
+          <p class="text-[0.8rem]">Create your account to access exclusive benefits, updates, and offers from Cleanify.</p>
+        </div>
+        <form action="" method="post" class="">
+          {% csrf_token %}
+          <div class="flex justify-between">
+            <input type="text" name="name" id="" placeholder="Enter full name" class="text-sm p-2 w-full m-2 rounded border-[1px] border-zinc-300 outline-none" />
+            <input type="text" name="username" id="" placeholder="e.g., user123" class="text-sm p-2 w-full m-2 rounded border-[1px] border-zinc-300 outline-none" />
+          </div>
+          <div class="flex justify-between">
+            <input type="text" name="phone" id="" placeholder="e.g, +1234567890" class="text-sm p-2 w-full m-2 rounded border-[1px] border-zinc-300 outline-none" />
+            <input type="email" name="email" id="" placeholder="example@mail.com" class="text-sm p-2 w-full m-2 rounded border-[1px] border-zinc-300 outline-none" />
+          </div>
+          <textarea name="address" id="" placeholder="Enter full address" style="resize: none;" class="p-3 w-full m-2 rounded border-[1px] border-zinc-300 flex text-sm outline-none"></textarea>
+          <div class="flex justify-between">
+            <input type="text" name="city" id="" placeholder="Enter your city" class="text-sm p-2 w-full m-2 rounded border-[1px] border-zinc-300 outline-none" />
+            <input type="text" name="state" id="" placeholder="State / Province" class="text-sm p-2 w-full m-2 rounded border-[1px] border-zinc-300 outline-none" />
+          </div>
+          <div class="flex justify-between">
+            <input type="text" name="areaCode" id="" placeholder="ZIP / Postal Code" class="text-sm p-2 w-full m-2 rounded border-[1px] border-zinc-300 outline-none" />
+            <input type="text" name="country" id="" placeholder="Enter country" class="text-sm p-2 w-full m-2 rounded border-[1px] border-zinc-300 outline-none" />
+          </div>
+          <div class="flex p-1 w-full m-1">
+            <div class="px-2 flex justify-between items-center">
+              <input type="radio" name="gender" id="male" class="scale-[1.2] outline-none" value="male"/><label for="male" class="px-1 text-sm" >Male</label>
+            </div>
+            <div class="px-2 flex justify-between items-center">
+              <input type="radio" name="gender" id="female" class="scale-[1.2] outline-none" value="female"/><label for="female" class="px-1 text-sm" >Female</label>
+            </div>
+          </div>
+          <div class="flex justify-between">
+            <input type="text" name="password" id="" placeholder="Create secure password" class="text-sm p-2 w-full m-2 rounded border-[1px] border-zinc-300 outline-none" />
+            <input type="text" name="confirmPassword" id="" placeholder="Re-enter password" class="text-sm p-2 w-full m-2 rounded border-[1px] border-zinc-300 outline-none" />
+          </div>
+          <div class="p-1 px-3 text-sm">
+            <input type="checkbox" class="scale-[1.2] outline-none" name="remember"/>Accept <a href="" class="underline text-green-600 hover:text-green-800">term & policies</a>
+          </div>
+          <p class="p-3 text-[0.8rem] text-red-600" id="message">{{error}} {{loginEmail}}</p>
+
+          <button type="submit" class="text-sm p-3 w-full m-2 rounded border-[1px] border-zinc-300 bg-emerald-600 hover:bg-emerald-700 text-white">Create My Account</button>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}
