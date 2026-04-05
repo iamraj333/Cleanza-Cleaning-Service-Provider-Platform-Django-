@@ -1547,7 +1547,7 @@ def email_verification(request):
             message=message,
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[receiverEmail],
-            fail_silently=True
+            fail_silently=False
         )
         return render(request, "EmailVerification.html",{"currentCustomer":currentCustomer,"services":CleaningServices,"currentUser":request.session.get('user_name', "")})
     else:
