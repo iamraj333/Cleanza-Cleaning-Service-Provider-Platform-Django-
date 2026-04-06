@@ -1199,21 +1199,24 @@ def register(request):
         password=request.POST.get("password").strip()
         confirmPassword=request.POST.get("confirmPassword").strip()
         remember=request.POST.get("remember").strip()
-        if(password!=confirmPassword):
-            return render(request, "register.html", {"error":"Password should be same"})
-        
-        if(Customer.objects.filter(username=username).exists()):
-            return render(request, "register.html", {"error":"Username is already exists"})
-        
-        if(Customer.objects.filter(email=email).exists()):
-            return render(request, "register.html", {"error":"email is already exists"})
-        
-        try:
-            customer= Customer(name=name,username=username,phone=phone,email=email.lower(),address=address,city=city,state=state,areaCode=areaCode,country=country,gender=gender,password=make_password(password),remember=True if remember=="on" else False,time=datetime.today())
-            customer.save()
-            return render(request, "register.html", {"error":"Registration Successful", "open_login":True})
-        except Exception as e:
-           return render(request, "register.html", {"error":"Registration Failed"})
+        if(name=="" or username=="" or phone=="" or email=="" or address=="" or city=="" or state=="" or areaCode=="" or country=="" or gender=="" or password=="" or confirmPassword=="" or remember==""):
+          return render(request, "register.html", {"error":"All fields in the form must be completed correctly before submission."})
+        else:  
+          if(password!=confirmPassword):
+              return render(request, "register.html", {"error":"Password should be same"})
+
+          if(Customer.objects.filter(username=username).exists()):
+              return render(request, "register.html", {"error":"Username is already exists"})
+
+          if(Customer.objects.filter(email=email).exists()):
+              return render(request, "register.html", {"error":"email is already exists"})
+
+          try:
+              customer= Customer(name=name,username=username,phone=phone,email=email.lower(),address=address,city=city,state=state,areaCode=areaCode,country=country,gender=gender,password=make_password(password),remember=True if remember=="on" else False,time=datetime.today())
+              customer.save()
+              return render(request, "register.html", {"error":"Registration Successful", "open_login":True})
+          except Exception as e:
+             return render(request, "register.html", {"error":"Registration Failed"})
     else:
         return render(request, "register.html")
    
