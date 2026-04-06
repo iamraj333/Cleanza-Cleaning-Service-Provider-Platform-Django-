@@ -1522,46 +1522,42 @@ def generatOtp():
     return randomEmailCode
 
 def email_verification(request):
-    if not request.session.get('user_id'):
-      return render(request, "home.html", {"message":"Login to Access Your Account & Settings", "open_login":True, "cleaningService":CleaningServices})
-    currentCustomer=get_object_or_404(Customer,id=request.session.get('user_id'))
+    try:
+        if not request.session.get('user_id'):
+            return render(request, "home.html", {
+                "message":"Login to Access Your Account & Settings",
+                "open_login":True,
+                "cleaningService":CleaningServices
+            })
 
-    if currentCustomer.isEmailVerified!='Verified':
-        randomEmailCode=generatOtp()
-        request.session["email_otp"]=randomEmailCode
-        #sending email using SendMail function module
-        subject = "Your Email Verification OTP"
-        message = f"""
-        Hello,
-        Thank you for registering.
+        currentCustomer = get_object_or_404(Customer, id=request.session.get('user_id'))
 
-        Your One-Time Password (OTP) for email verification is:
-        OTP: {randomEmailCode}
+        if currentCustomer.isEmailVerified != 'Verified':
+            randomEmailCode = generatOtp()
+            request.session["email_otp"] = randomEmailCode
 
-        This OTP is valid for the next 10 minutes. Please do not share this code with anyone.
-        If you did not request this verification, please ignore this email.
+            subject = "Your Email Verification OTP"
+            message = f"OTP: {randomEmailCode}"
 
-        Best regards,
-        Cleanify Application Team
-        """
-        receiverEmail=currentCustomer.email
-        try:
-          send_mail(
-            subject=subject,
-            message=message,
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[receiverEmail],
-            fail_silently=False
-          )
-          return render(request, "EmailVerification.html",{"currentCustomer":currentCustomer,"services":CleaningServices,"currentUser":request.session.get('user_name', "")})
-        except Exception as e:
-            print("EMAIL ERROR:", e)
-            messages.error(request, "Unable to send verification email. Please try again later.")
+            send_mail(
+                subject=subject,
+                message=message,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[currentCustomer.email],
+                fail_silently=False
+            )
+
+            return render(request, "EmailVerification.html", {
+                "currentCustomer": currentCustomer,
+                "services": CleaningServices,
+                "currentUser": request.session.get('user_name', "")
+            })
+        else:
             return redirect('myAccount')
-    else:
-        messages.error(request, "You are email is already verified")
-        return redirect('myAccount')
 
+    except Exception as e:
+        print("🔥 ERROR:", e)
+        return HttpResponse(f"ERROR: {e}")
 
 #check email verification code validity
 def emailVerifiedCodeCheck(request):
