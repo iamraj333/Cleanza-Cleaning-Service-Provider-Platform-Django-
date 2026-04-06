@@ -1199,7 +1199,7 @@ def register(request):
         password=request.POST.get("password").strip()
         confirmPassword=request.POST.get("confirmPassword").strip()
         remember=request.POST.get("remember")
-        if(name=="" or username=="" or phone=="" or email=="" or address=="" or city=="" or state=="" or areaCode=="" or country=="" or gender=="" or password=="" or confirmPassword=="" or remember is None):
+        if(name=="" or username=="" or phone=="" or email=="" or address=="" or city=="" or state=="" or areaCode=="" or country=="" or gender=="" or password=="" or confirmPassword==""):
           return render(request, "register.html", {"error":"All fields in the form must be completed correctly before submission."})
         else:  
           if(password!=confirmPassword):
