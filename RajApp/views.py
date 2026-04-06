@@ -1051,7 +1051,7 @@ def home(request):
         if (email=="" or password==""):
             return render(request, "home.html", {"message":"email and password is required", "open_login":True, "cleaningService":CleaningServices})
         else:
-            customer=Customer.objects.get(email=email)
+            customer=Customer.objects.filter(email=email).first()
             if (customer.email==email and check_password(password, customer.password) or customer.password==password):
                 
                 #Creating session with id
