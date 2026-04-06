@@ -1551,14 +1551,19 @@ def email_verification(request):
         Cleanify Application Team
         """
         receiverEmail=currentCustomer.email
-        send_mail(
+        try:
+          send_mail(
             subject=subject,
             message=message,
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[receiverEmail],
             fail_silently=False
-        )
-        return render(request, "EmailVerification.html",{"currentCustomer":currentCustomer,"services":CleaningServices,"currentUser":request.session.get('user_name', "")})
+          )
+          return render(request, "EmailVerification.html",{"currentCustomer":currentCustomer,"services":CleaningServices,"currentUser":request.session.get('user_name', "")})
+        except Exception as e:
+            print("EMAIL ERROR:", e)
+            messages.error(request, "Unable to send verification email. Please try again later.")
+            return redirect('myAccount')
     else:
         messages.error(request, "You are email is already verified")
         return redirect('myAccount')
