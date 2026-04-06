@@ -1555,7 +1555,7 @@ def email_verification(request):
           )
           return render(request, "EmailVerification.html",{"currentCustomer":currentCustomer,"services":CleaningServices,"currentUser":request.session.get('user_name', "")})
         except Exception as e:
-            messages.error(request, "Unable to send verification email. Please try again later.")
+            # messages.error(request, "Unable to send verification email. Please try again later.")
             return HttpResponse(f"Failed to send email {e}")
     else:
         messages.error(request, "You are email is already verified")
