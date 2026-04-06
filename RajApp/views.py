@@ -1524,7 +1524,7 @@ def generatOtp():
 def email_verification(request):
     if not request.session.get('user_id'):
       return render(request, "home.html", {"message":"Login to Access Your Account & Settings", "open_login":True, "cleaningService":CleaningServices})
-    currentCustomer=Customer.objects.get_object_or_404(id=request.session.get('user_id'))
+    currentCustomer=get_object_or_404(Customer,id=request.session.get('user_id'))
 
     if currentCustomer.isEmailVerified!='Verified':
         randomEmailCode=generatOtp()
@@ -1567,7 +1567,7 @@ def email_verification(request):
 def emailVerifiedCodeCheck(request):
     if not request.session.get('user_id'):
       return render(request, "home.html", {"message":"Login to Access Your Account & Settings", "open_login":True, "cleaningService":CleaningServices})
-    currentCustomer=Customer.objects.get_object_or_404(id=request.session.get('user_id'))
+    currentCustomer=get_object_or_404(Customer,id=request.session.get('user_id'))
     if request.method=="POST":
       emailWebData=json.loads(request.body)
       emailCode=int(emailWebData.get('inputCode') or 0)
