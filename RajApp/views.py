@@ -1521,12 +1521,6 @@ def generatOtp():
     randomEmailCode=random.randint(100001,999999)
     return randomEmailCode
 
-def test_email(request):
-    # Safe debug: check environment variables
-    email_user = settings.EMAIL_HOST_USER
-    email_pass = settings.EMAIL_HOST_PASSWORD
-    return HttpResponse(f"EMAIL_USER: {email_user} | EMAIL_PASS: {email_pass}")
-
 def email_verification(request):
     if not request.session.get('user_id'):
       return render(request, "home.html", {"message":"Login to Access Your Account & Settings", "open_login":True, "cleaningService":CleaningServices})

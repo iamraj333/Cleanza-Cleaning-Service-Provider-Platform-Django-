@@ -65,7 +65,6 @@ urlpatterns = [
     path('faqSupport/', views.faqSupport, name="faqSupport"),
 
     #email verification
-    path('test_email/', views.test_email, name="test_email"),
     path('email_verification/', views.email_verification, name="email_verification"),
     path('emailVerifiedCodeCheck/', views.emailVerifiedCodeCheck, name="emailVerifiedCodeCheck"),
     path('logout/',views.logout, name='logout'),
